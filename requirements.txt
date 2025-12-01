@@ -1,0 +1,11 @@
+pandas
+numpy
+scikit-learn
+matplotlib
+seaborn
+wordcloud
+shap
+lime
+fastapi
+uvicorn
+joblib
