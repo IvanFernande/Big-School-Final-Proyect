@@ -1,0 +1,25 @@
+Preguntas Frecuentes – Soporte TechNova
+
+1. ¿Cómo restablezco mi contraseña?
+   Puede hacerlo desde el portal interno seleccionando “Restablecer contraseña”. Si no funciona, abra un ticket.
+
+2. ¿Qué hago si no puedo acceder a la VPN?
+   Verifique su token/2FA y la conexión a internet. Si persiste, solicite la validación de su perfil VPN mediante un ticket.
+
+3. ¿Cuándo debo reiniciar un servicio?
+   Solo cuando el soporte lo indique o si el procedimiento interno lo permite explícitamente.
+
+4. ¿Cómo solicito los logs de un sistema?
+   Abra un ticket indicando rango de tiempo, servicio afectado y motivo de la solicitud.
+
+5. ¿Cuáles son los tiempos normales de respuesta?
+   Dependen de la severidad del ticket, pero generalmente entre 15 minutos y 2 horas.
+
+6. ¿Qué debo incluir al reportar una incidencia?
+   Capturas de pantalla, descripción del error, pasos previos y cualquier mensaje del sistema.
+
+7. ¿Puedo pedir acceso temporal a un sistema?
+   Sí, pero requiere aprobación del responsable de área y validación de soporte.
+
+8. ¿Qué hago si pasan los tiempos de SLA?
+   Debe solicitar un escalado indicando el motivo y el impacto generado.

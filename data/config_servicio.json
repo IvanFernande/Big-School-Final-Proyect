@@ -1,0 +1,32 @@
+{
+  "servicio": "core_api",
+  "version": "2.3.1",
+  "features": [
+    "autenticacion_segura",
+    "monitorizacion_activa",
+    "autoscaling",
+    "registro_extendido_de_logs"
+  ],
+  "alerting": {
+    "cpu": 85,
+    "memoria": 80,
+    "latencia_ms": 250
+  },
+  "contactos": [
+    {
+      "nombre": "Laura Gómez",
+      "rol": "Responsable de Soporte",
+      "email": "laura.gomez@technova.com"
+    },
+    {
+      "nombre": "Carlos Ruiz",
+      "rol": "Ingeniero Nivel 2",
+      "email": "carlos.ruiz@technova.com"
+    },
+    {
+      "nombre": "Ana Martínez",
+      "rol": "Especialista Nivel 3",
+      "email": "ana.martinez@technova.com"
+    }
+  ]
+}

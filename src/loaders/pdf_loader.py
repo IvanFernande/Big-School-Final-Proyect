@@ -1,12 +1,21 @@
-﻿from pathlib import Path
+from pathlib import Path
 from typing import Dict, List
-import PyPDF2
+import pdfplumber
+
 
 def load_pdf(path: Path) -> List[Dict]:
-    docs = []
-    with path.open("rb") as f:
-        reader = PyPDF2.PdfReader(f)
-        for i, page in enumerate(reader.pages):
+    """Extract text and tables from each page of a PDF."""
+    docs: List[Dict] = []
+    with pdfplumber.open(path) as pdf:
+        for i, page in enumerate(pdf.pages):
             text = page.extract_text() or ""
-            docs.append({"text": text, "metadata": {"source": str(path), "page": i}})
+            tables = page.extract_tables() or []
+            table_sections = []
+            for t in tables:
+                rows = [",".join(cell or "" for cell in row) for row in t]
+                table_sections.append("\n".join(rows))
+            combined = text
+            if table_sections:
+                combined += "\n\n[TABLAS]\n" + "\n\n".join(table_sections)
+            docs.append({"text": combined, "metadata": {"source": str(path), "page": i, "type": "pdf"}})
     return docs

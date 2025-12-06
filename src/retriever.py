@@ -1,9 +1,11 @@
 ﻿from typing import List, Dict
-from .embeddings import Embedder
-from .vectorstore import VectorStore
+
+from src.embeddings import Embedder
+from src.vectorstore import VectorStore
+
 
 class Retriever:
-    def __init__(self, embedder: Embedder, store: VectorStore, k: int = 5):
+    def __init__(self, embedder: Embedder, store: VectorStore, k: int = 8):
         self.embedder = embedder
         self.store = store
         self.k = k
