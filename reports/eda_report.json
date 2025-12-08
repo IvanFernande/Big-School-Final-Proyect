@@ -1,0 +1,494 @@
+{
+  "rows_after_drop": 29650,
+  "rows_dropped_due_to_missing_priority": 0,
+  "shape": {
+    "rows": 29650,
+    "cols": 6
+  },
+  "nulls": {
+    "Body": 0,
+    "Department": 0,
+    "Priority": 0,
+    "Tags": 0,
+    "n_tags": 0,
+    "len_words": 0
+  },
+  "empty_strings": {
+    "Body_empty": 0,
+    "Department_empty": 0,
+    "Priority_empty": 0
+  },
+  "class_counts": {
+    "medium": 12126,
+    "high": 11511,
+    "low": 6013
+  },
+  "class_balance_ratio_min_max": 0.495876628731651,
+  "majority_class_pct": 0.40897133220910625,
+  "gini_impurity": 0.6408928607787879,
+  "entropy": 1.5243028760930497,
+  "len_words_quantiles": {
+    "0.01": 5.0,
+    "0.25": 30.0,
+    "0.5": 55.0,
+    "0.75": 80.0,
+    "0.99": 175.0
+  },
+  "n_tags_quantiles": {
+    "0.01": 3.0,
+    "0.5": 5.0,
+    "0.99": 8.0
+  },
+  "top_departments": {
+    "Technical Support": 8617,
+    "Product Support": 5538,
+    "Customer Service": 4482,
+    "IT Support": 3500,
+    "Billing and Payments": 3017,
+    "Returns and Exchanges": 1467,
+    "Service Outages and Maintenance": 1157,
+    "Sales and Pre-Sales": 885,
+    "Human Resources": 568,
+    "General Inquiry": 419
+  },
+  "top_tags": {
+    "Tech Support": 14152,
+    "IT": 13993,
+    "Performance": 11410,
+    "Feedback": 8716,
+    "Documentation": 7644,
+    "Bug": 7532,
+    "Security": 6596,
+    "Feature": 5777,
+    "Disruption": 4244,
+    "Outage": 3593
+  },
+  "invalid_priority_count": 0,
+  "duplicate_id_count": 0,
+  "duplicate_rows_count": 4468,
+  "zero_length_text_count": 0,
+  "correlation_numeric": {
+    "len_words": {
+      "len_words": 1.0,
+      "n_tags": 0.3518
+    },
+    "n_tags": {
+      "len_words": 0.3518,
+      "n_tags": 1.0
+    }
+  },
+  "column_profile": {
+    "Body": {
+      "dtype": "object",
+      "missing_count": 0,
+      "missing_pct": 0.0,
+      "n_unique": 25055
+    },
+    "Department": {
+      "dtype": "object",
+      "missing_count": 0,
+      "missing_pct": 0.0,
+      "n_unique": 10
+    },
+    "Priority": {
+      "dtype": "object",
+      "missing_count": 0,
+      "missing_pct": 0.0,
+      "n_unique": 3
+    },
+    "Tags": {
+      "dtype": "object",
+      "missing_count": 0,
+      "missing_pct": 0.0,
+      "n_unique": 12945
+    },
+    "n_tags": {
+      "dtype": "int64",
+      "missing_count": 0,
+      "missing_pct": 0.0,
+      "n_unique": 8
+    },
+    "len_words": {
+      "dtype": "int64",
+      "missing_count": 0,
+      "missing_pct": 0.0,
+      "n_unique": 273
+    }
+  },
+  "tfidf_top_words": {
+    "high": [
+      [
+        "data",
+        0.04795446828869236
+      ],
+      [
+        "issue",
+        0.038513708420349436
+      ],
+      [
+        "software",
+        0.03189969974544393
+      ],
+      [
+        "support",
+        0.02861017283669838
+      ],
+      [
+        "security",
+        0.028370214632703703
+      ],
+      [
+        "assistance",
+        0.028106990937292946
+      ],
+      [
+        "information",
+        0.026551555211958774
+      ],
+      [
+        "provide",
+        0.02574352403761716
+      ],
+      [
+        "medical",
+        0.02480339025575227
+      ],
+      [
+        "analytics",
+        0.024481705747644227
+      ],
+      [
+        "problem",
+        0.02423279521360359
+      ],
+      [
+        "investment",
+        0.02351622466913471
+      ],
+      [
+        "appreciate",
+        0.02331796011373257
+      ],
+      [
+        "customer",
+        0.022859615595650168
+      ],
+      [
+        "issues",
+        0.022517999053540898
+      ]
+    ],
+    "medium": [
+      [
+        "data",
+        0.047997581596472605
+      ],
+      [
+        "issue",
+        0.03553639091097689
+      ],
+      [
+        "software",
+        0.030484332906271738
+      ],
+      [
+        "information",
+        0.029615326622986226
+      ],
+      [
+        "support",
+        0.029083010257009722
+      ],
+      [
+        "provide",
+        0.0282549009420915
+      ],
+      [
+        "assistance",
+        0.02801047150964421
+      ],
+      [
+        "security",
+        0.02667315510456049
+      ],
+      [
+        "analytics",
+        0.0249487855477265
+      ],
+      [
+        "investment",
+        0.024565933843321355
+      ],
+      [
+        "medical",
+        0.024540960797346138
+      ],
+      [
+        "customer",
+        0.024198526959345098
+      ],
+      [
+        "appreciate",
+        0.02414071326813098
+      ],
+      [
+        "integration",
+        0.02352270435759686
+      ],
+      [
+        "problem",
+        0.02321038161053684
+      ]
+    ],
+    "low": [
+      [
+        "data",
+        0.048708979689442204
+      ],
+      [
+        "issue",
+        0.036168510252596896
+      ],
+      [
+        "information",
+        0.030541241791640774
+      ],
+      [
+        "software",
+        0.03021314568587795
+      ],
+      [
+        "provide",
+        0.029816379908997725
+      ],
+      [
+        "support",
+        0.0293003707679815
+      ],
+      [
+        "assistance",
+        0.02789096240475604
+      ],
+      [
+        "security",
+        0.027785440307106123
+      ],
+      [
+        "analytics",
+        0.025139860959958005
+      ],
+      [
+        "investment",
+        0.025050321214807294
+      ],
+      [
+        "medical",
+        0.024881804860169714
+      ],
+      [
+        "integration",
+        0.024614699990945683
+      ],
+      [
+        "appreciate",
+        0.024614445381353336
+      ],
+      [
+        "customer",
+        0.02454745598199815
+      ],
+      [
+        "tools",
+        0.022663585817372777
+      ]
+    ]
+  },
+  "bigrams_top": {
+    "high": [
+      [
+        "customer support",
+        3660
+      ],
+      [
+        "greatly appreciate",
+        1785
+      ],
+      [
+        "medical data",
+        1772
+      ],
+      [
+        "data analytics",
+        1618
+      ],
+      [
+        "project management",
+        1375
+      ],
+      [
+        "dear customer",
+        1331
+      ],
+      [
+        "look forward",
+        1237
+      ],
+      [
+        "resolve issue",
+        1188
+      ],
+      [
+        "support team",
+        865
+      ],
+      [
+        "let know",
+        855
+      ],
+      [
+        "soon possible",
+        846
+      ],
+      [
+        "issue persists",
+        669
+      ],
+      [
+        "brand growth",
+        666
+      ],
+      [
+        "unauthorized access",
+        659
+      ],
+      [
+        "remains unresolved",
+        659
+      ]
+    ],
+    "medium": [
+      [
+        "customer support",
+        4094
+      ],
+      [
+        "greatly appreciate",
+        1946
+      ],
+      [
+        "medical data",
+        1815
+      ],
+      [
+        "data analytics",
+        1595
+      ],
+      [
+        "look forward",
+        1565
+      ],
+      [
+        "project management",
+        1452
+      ],
+      [
+        "dear customer",
+        1302
+      ],
+      [
+        "resolve issue",
+        1077
+      ],
+      [
+        "let know",
+        970
+      ],
+      [
+        "brand growth",
+        854
+      ],
+      [
+        "support team",
+        825
+      ],
+      [
+        "hello customer",
+        794
+      ],
+      [
+        "forward hearing",
+        790
+      ],
+      [
+        "provide details",
+        705
+      ],
+      [
+        "thank time",
+        703
+      ]
+    ],
+    "low": [
+      [
+        "customer support",
+        2040
+      ],
+      [
+        "greatly appreciate",
+        1017
+      ],
+      [
+        "medical data",
+        919
+      ],
+      [
+        "project management",
+        817
+      ],
+      [
+        "look forward",
+        796
+      ],
+      [
+        "data analytics",
+        776
+      ],
+      [
+        "dear customer",
+        601
+      ],
+      [
+        "resolve issue",
+        538
+      ],
+      [
+        "let know",
+        534
+      ],
+      [
+        "brand growth",
+        429
+      ],
+      [
+        "thank time",
+        414
+      ],
+      [
+        "provide details",
+        411
+      ],
+      [
+        "support team",
+        410
+      ],
+      [
+        "forward hearing",
+        406
+      ],
+      [
+        "hello customer",
+        396
+      ]
+    ]
+  }
+}

@@ -16,6 +16,7 @@ python -m venv .venv
 .\.venv\Scripts\activate
 pip install -r requirements.txt
 python -m src.data_prep
+python -m src.eda        # genera figuras y reporte EDA
 python -m src.train
 python -m src.evaluate
 python -m src.business_metrics
