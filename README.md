@@ -54,3 +54,12 @@ Base mÍnima para indexar y consultar documentos locales (PDF/MD/TXT/CSV/JSON). 
 - Indexación FAISS, embeddings y consulta.
 - Evaluación manual de ejemplos (usar batería arriba y registrar resultados).
 - Documentar configuración y uso en README.
+
+
+---
+
+# Notas del dev
+
+- Cambiar de modelo porque Google AI Studio ha quitado algunos
+- Reindexar y probar scripts/eval.py
+- Ver mejoras en los datos o en el embedding del csv y json

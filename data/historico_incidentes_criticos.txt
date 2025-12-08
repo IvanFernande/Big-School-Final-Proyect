@@ -1,0 +1,25 @@
+﻿Historico de Incidentes Criticos - TechNova
+
+INC-2024-001
+Descripcion: Caida total del servicio core_api.
+Causa raiz: Saturacion del pool de conexiones.
+Tiempo de resolucion: 3h 12m.
+Acciones correctivas: Incremento del limite del pool; revision de consultas lentas.
+
+INC-2024-009
+Descripcion: Interrupcion global de VPN.
+Causa raiz: Actualizacion fallida del gateway.
+Tiempo de resolucion: 1h 45m.
+Acciones correctivas: Implementacion de rollback automatico.
+
+INC-2024-015
+Descripcion: Latencia extrema en notificaciones.
+Causa raiz: Cola de mensajes bloqueada.
+Tiempo de resolucion: 54m.
+Acciones correctivas: Reconfiguracion de workers y alerta temprana anadida.
+
+INC-2025-004
+Descripcion: Perdida de nodo en cluster de base de datos.
+Causa raiz: Falla de hardware en srv-db-002.
+Tiempo de resolucion: 4h 22m.
+Acciones correctivas: Migracion automatica activada y reemplazo del hardware.

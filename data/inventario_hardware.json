@@ -1,0 +1,39 @@
+{
+  "datacenter": "TN-DC1",
+  "racks": [
+    {
+      "rack_id": "R12",
+      "equipos": [
+        {
+          "nombre": "srv-api-001",
+          "tipo": "servidor_app",
+          "cpu": 32,
+          "ram_gb": 128,
+          "estado": "operativo"
+        },
+        {
+          "nombre": "srv-db-002",
+          "tipo": "servidor_bd",
+          "cpu": 48,
+          "ram_gb": 256,
+          "estado": "operativo"
+        }
+      ]
+    },
+    {
+      "rack_id": "R7",
+      "equipos": [
+        {
+          "nombre": "fw-main-01",
+          "tipo": "firewall",
+          "estado": "operativo"
+        },
+        {
+          "nombre": "ups-05",
+          "tipo": "alimentaci\u00f3n",
+          "estado": "mantenimiento"
+        }
+      ]
+    }
+  ]
+}

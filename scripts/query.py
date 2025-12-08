@@ -38,7 +38,7 @@ def main():
         print(f"No se encontró un índice en {index_dir}. Ejecuta primero scripts/build_index.py.")
         return
     embedder = Embedder()
-    retriever = Retriever(embedder, store, k=16)
+    retriever = Retriever(embedder, store, k=8)
     results = retriever.retrieve(question)
     results = boost_by_type(question, results)
     if not results:
