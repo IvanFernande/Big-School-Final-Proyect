@@ -9,7 +9,7 @@ from src.config import get_secret
 class SimpleGenerator:
     def __init__(
         self,
-        model_name: str = "gemma-3-4b",
+        model_name: str = "gemini-2.5-flash-lite",
         temperature: float = 0.5,
         config_path: str = "config.json",
     ):
