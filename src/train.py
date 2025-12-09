@@ -72,6 +72,7 @@ def evaluate_candidates(models, X, y):
     cv = StratifiedKFold(n_splits=N_FOLDS, shuffle=True, random_state=SEED)
     results = {}
     for name, model in models.items():
+        print(f"[train] Evaluando {name} con CV={N_FOLDS}...")
         scores = cross_val_score(model, X, y, cv=cv, scoring="f1_macro", n_jobs=-1)
         results[name] = {"f1_macro_mean": scores.mean(), "f1_macro_std": scores.std()}
         print(f"{name}: F1_macro={scores.mean():.3f} (+/- {scores.std():.3f})")
@@ -126,14 +127,18 @@ def run_pycaret_benchmark(df):
 
 
 def main():
+    mode = "FAST" if FAST_MODE else "FULL"
+    print(f"[train] Inicio entrenamiento (modo {mode}). N_FOLDS={N_FOLDS}, NGRAM_RANGE={NGRAM_RANGE}, MAX_FEATURES={MAX_FEATURES}")
     df = add_features(load())
     X_train, X_test, y_train, y_test = split(df)
+    print(f"[train] Datos preparados. Train={len(X_train)}, Test={len(X_test)}")
 
     models = candidate_models()
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
     results = evaluate_candidates(models, X_train, y_train)
     with open(REPORTS_DIR / "metrics_baselines.json", "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2)
+    print("[train] Resultados guardados en reports/metrics_baselines.json")
 
     best_name, _ = select_best(results)
     best_model = models[best_name]
@@ -142,6 +147,7 @@ def main():
 
     MODEL_PATH.parent.mkdir(parents=True, exist_ok=True)
     joblib.dump(best_model, MODEL_PATH)
+    print(f"[train] Modelo guardado en {MODEL_PATH}")
 
     if os.getenv("RUN_PYCARET", "0") == "1":
         print("Ejecutando benchmark PyCaret...")
