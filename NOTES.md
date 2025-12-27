@@ -26,10 +26,17 @@
 - `src/config.py`: define rutas base (datos, modelos, reportes) y semilla reproducible.
 - `src/data_prep.py`: carga y limpia `data/raw/data.csv` (elimina columnas Unnamed, normaliza prioridad, rellena vacios, filtra prioridades invalidas y textos vacios), deriva `n_tags` y `len_words`, y realiza el split estratificado 80/20.
 - `src/eda.py`: valida columnas, calcula resumen de calidad/balance (`reports/eda_report.json`), top palabras/bigramas por clase, y genera figuras de distribucion, correlaciones y dispersion en `reports/figures/`.
-- `src/train.py`: construye el `ColumnTransformer` (TF-IDF + one-hot + numericas), define candidatos (LogReg, Linear SVM, Multinomial NB), ejecuta CV (F1_macro), guarda baselines (`reports/metrics_baselines.json`), entrena el mejor y lo serializa en `models/ticket_priority.joblib`; puede lanzar benchmark PyCaret si `RUN_PYCARET=1`.
+- `src/train.py`: entrypoint principal con la configuración ganadora actual (TF-IDF 1-2 gram + OHE completo de Department + numéricas). Ejecuta CV (F1_macro), guarda baselines (`reports/metrics_baselines.json`), entrena el mejor y lo serializa en `models/ticket_priority.joblib`.
+- `src/train_tfidf.py`: banco de pruebas para TF-IDF/Department (OHE full vs agrupado vs hash) y suite de experimentos (`RUN_EXPERIMENTS=1`). Guarda comparativas en `reports/metrics_dept_strategies.json` y `reports/experiments/`.
 - `src/evaluate.py`: carga el modelo serializado, evalua en test, imprime classification report, guarda `reports/metrics_test.json` y la matriz de confusion en `reports/figures/confusion_matrix.png`.
 - `src/business_metrics.py`: simula tiempos de resolucion segun SLA, compara violaciones con prioridad real vs. predicha y estima ahorro con penalizacion fija.
 - `src/serve_api.py`: API FastAPI con endpoint `/predict` que calcula features on the fly (Body, Department, len, n_tags) y devuelve prioridad usando el modelo entrenado.
+
+## Scripts (estructura actualizada)
+- `python -m src.train` → `src/train/main.py`: entrena el modelo TF-IDF ganador y calcula un baseline de embeddings (mpnet + concat num + LogReg) para comparar métricas.
+- `python -m src.train.tfidf_experiments` → comparativas TF-IDF/OHE/hash y suite (`RUN_EXPERIMENTS=1`).
+- `python -m src.train.embeddings_experiments` → pruebas con embeddings (Body/Department) y modelos lineales; guarda métricas en `reports/experiments/`.
+- Resto igual: `src.data_prep`, `src.eda`, `src.evaluate`, `src.business_metrics`, `src.serve_api`.
 
 ## Notas tecnicas y aclaraciones
 - Modos RAPIDO/COMPLETO: `FAST_MODE=1` baja folds a 2, usa solo uni-gramas y limita vocabulario (`max_features=8000`) para acelerar a costa de calidad. Por defecto se ejecuta modo completo (bi-gramas, folds=3, mas iteraciones).
@@ -43,6 +50,11 @@
 - Supuestos de negocio: SLA (4/12/48h) y penalizacion 200 por brecha son simulados; el ahorro depende del seed y no usa datos reales de resolucion.
 - Artefactos: modelo en `models/ticket_priority.joblib`; reportes en `reports/*.json` y figuras en `reports/figures/`. Regenerar tras cambios en datos/modelo.
 - API: payload requiere `Body` y `Department`; `Tags` opcional (lista). El endpoint calcula `len_words` y `n_tags` al vuelo.
+
+## Comparativa OHE vs hash (Department)
+- Cardinalidad: 10 departamentos (mínimo 419 casos), sin categorías raras. OHE añade solo 10 columnas frente a las ~decenas de miles del TF-IDF.
+- CV F1_macro (Linear SVM, TF-IDF 1-2 gram, full mode): OHE completo ≈0.706 (±0.004), OHE agrupado ≈0.706 (±0.004), hash (n_hash=2048) ≈0.706 (±0.004). `reports/metrics_dept_strategies.json` guarda el detalle.
+- Justificación: no hay riesgo de explosión de dimensionalidad ni rareza; OHE completo es viable. Si en el futuro sube la cardinalidad, se puede reactivar el script con `RUN_EXPERIMENTS=1 python -m src.train` y ajustar `min_freq`/`n_hash` para medir impacto.
 
 ## Figuras
 - `reports/figures/eda_priority_distribution.png`: conteo de tickets por clase (High/Medium/Low), evidencia el desbalanceo.

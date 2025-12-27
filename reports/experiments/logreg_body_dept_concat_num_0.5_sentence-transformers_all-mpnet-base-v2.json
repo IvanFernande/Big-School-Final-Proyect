@@ -1,0 +1,47 @@
+{
+  "id": "logreg_body_dept_concat_num_0.5_sentence-transformers_all-mpnet-base-v2",
+  "embedding_model": "sentence-transformers/all-mpnet-base-v2",
+  "feature_strategy": "body_dept_concat_num",
+  "classifier": "logreg",
+  "C": 0.5,
+  "mode": "FULL",
+  "cv": {
+    "f1_macro_mean": 0.5049175052487352,
+    "f1_macro_std": 0.0032231354625791167
+  },
+  "test": {
+    "classification_report": {
+      "high": {
+        "precision": 0.6070368800339127,
+        "recall": 0.6220677671589921,
+        "f1-score": 0.6144604162196954,
+        "support": 2302.0
+      },
+      "low": {
+        "precision": 0.36921360847741214,
+        "recall": 0.5502909393183707,
+        "f1-score": 0.44192256341789055,
+        "support": 1203.0
+      },
+      "medium": {
+        "precision": 0.5404949381327334,
+        "recall": 0.39628865979381445,
+        "f1-score": 0.4572924101832025,
+        "support": 2425.0
+      },
+      "accuracy": 0.515177065767285,
+      "macro avg": {
+        "precision": 0.5055818088813527,
+        "recall": 0.5228824554237258,
+        "f1-score": 0.5045584632735961,
+        "support": 5930.0
+      },
+      "weighted avg": {
+        "precision": 0.5315789365612601,
+        "recall": 0.515177065767285,
+        "f1-score": 0.5151863097173233,
+        "support": 5930.0
+      }
+    }
+  }
+}

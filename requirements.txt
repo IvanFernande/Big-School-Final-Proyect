@@ -9,3 +9,11 @@ lime
 fastapi
 uvicorn
 joblib
+sentence-transformers
+setfit
+torch
+datasets
+transformers
+requests
+python-dotenv
+google-genai

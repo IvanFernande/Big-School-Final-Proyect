@@ -1,0 +1,47 @@
+{
+  "id": "linear_svm_body_dept_concat_num_1.0_sentence-transformers_all-MiniLM-L6-v2",
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "feature_strategy": "body_dept_concat_num",
+  "classifier": "linear_svm",
+  "C": 1.0,
+  "mode": "FULL",
+  "cv": {
+    "f1_macro_mean": 0.5041806967199937,
+    "f1_macro_std": 0.0007035697605958904
+  },
+  "test": {
+    "classification_report": {
+      "high": {
+        "precision": 0.6052523594583504,
+        "recall": 0.6407471763683753,
+        "f1-score": 0.6224941970879933,
+        "support": 2302.0
+      },
+      "low": {
+        "precision": 0.39167309175019277,
+        "recall": 0.4222776392352452,
+        "f1-score": 0.4064,
+        "support": 1203.0
+      },
+      "medium": {
+        "precision": 0.5259562841530054,
+        "recall": 0.4762886597938144,
+        "f1-score": 0.49989179831205366,
+        "support": 2425.0
+      },
+      "accuracy": 0.5291736930860034,
+      "macro avg": {
+        "precision": 0.5076272451205163,
+        "recall": 0.5131044917991451,
+        "f1-score": 0.5095953318000156,
+        "support": 5930.0
+      },
+      "weighted avg": {
+        "precision": 0.5294970741854372,
+        "recall": 0.5291736930860034,
+        "f1-score": 0.5285191319735735,
+        "support": 5930.0
+      }
+    }
+  }
+}

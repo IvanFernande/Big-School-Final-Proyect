@@ -1,0 +1,39 @@
+{
+  "base_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "fast_mode": true,
+  "train_samples": 4000,
+  "test_samples": 5930,
+  "classification_report": {
+    "high": {
+      "precision": 0.6068752754517408,
+      "recall": 0.5981754995655951,
+      "f1-score": 0.6024939838109823,
+      "support": 2302.0
+    },
+    "low": {
+      "precision": 0.44638069705093836,
+      "recall": 0.27680798004987534,
+      "f1-score": 0.3417136993329913,
+      "support": 1203.0
+    },
+    "medium": {
+      "precision": 0.4922813036020583,
+      "recall": 0.5917525773195876,
+      "f1-score": 0.5374531835205992,
+      "support": 2425.0
+    },
+    "accuracy": 0.53035413153457,
+    "macro avg": {
+      "precision": 0.5151790920349125,
+      "recall": 0.4889120189783527,
+      "f1-score": 0.49388695555485757,
+      "support": 5930.0
+    },
+    "weighted avg": {
+      "precision": 0.5274544728292037,
+      "recall": 0.53035413153457,
+      "f1-score": 0.5229926983251134,
+      "support": 5930.0
+    }
+  }
+}
