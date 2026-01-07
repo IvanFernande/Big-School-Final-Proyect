@@ -1,0 +1,92 @@
+{
+  "runs": [
+    {
+      "name": "ollama-nomic-embed-text",
+      "backend": "ollama",
+      "model_name": "nomic-embed-text:latest",
+      "st_model": null,
+      "metrics_by_k": {
+        "4": {
+          "avg_score": 0.7878787878787878,
+          "min_score": 0.0,
+          "max_score": 1.0
+        },
+        "8": {
+          "avg_score": 0.9267676767676768,
+          "min_score": 0.0,
+          "max_score": 1.0
+        },
+        "12": {
+          "avg_score": 0.9343434343434344,
+          "min_score": 0.0,
+          "max_score": 1.0
+        },
+        "16": {
+          "avg_score": 0.941919191919192,
+          "min_score": 0.0,
+          "max_score": 1.0
+        }
+      },
+      "elapsed_seconds": 6.23
+    },
+    {
+      "name": "sentence-transformers-all-mpnet-base-v2",
+      "backend": "sentence-transformers",
+      "model_name": null,
+      "st_model": "all-mpnet-base-v2",
+      "metrics_by_k": {
+        "4": {
+          "avg_score": 0.8585858585858586,
+          "min_score": 0.0,
+          "max_score": 1.0
+        },
+        "8": {
+          "avg_score": 0.9065656565656566,
+          "min_score": 0.0,
+          "max_score": 1.0
+        },
+        "12": {
+          "avg_score": 0.9444444444444445,
+          "min_score": 0.0,
+          "max_score": 1.0
+        },
+        "16": {
+          "avg_score": 0.9520202020202021,
+          "min_score": 0.0,
+          "max_score": 1.0
+        }
+      },
+      "elapsed_seconds": 19.15
+    },
+    {
+      "name": "sentence-transformers-paraphrase-multilingual-mpnet-base-v2",
+      "backend": "sentence-transformers",
+      "model_name": null,
+      "st_model": "paraphrase-multilingual-mpnet-base-v2",
+      "metrics_by_k": {
+        "4": {
+          "avg_score": 0.8282828282828283,
+          "min_score": 0.0,
+          "max_score": 1.0
+        },
+        "8": {
+          "avg_score": 0.9090909090909091,
+          "min_score": 0.0,
+          "max_score": 1.0
+        },
+        "12": {
+          "avg_score": 0.9570707070707072,
+          "min_score": 0.3333333333333333,
+          "max_score": 1.0
+        },
+        "16": {
+          "avg_score": 0.9848484848484849,
+          "min_score": 0.5,
+          "max_score": 1.0
+        }
+      },
+      "elapsed_seconds": 13.18
+    }
+  ],
+  "timestamp": "2026-01-04 13:05:06"
+}

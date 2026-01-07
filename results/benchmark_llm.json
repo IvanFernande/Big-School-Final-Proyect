@@ -1,0 +1,170 @@
+{
+  "runs": [
+    {
+      "name": "ollama-llama3.2",
+      "provider": "ollama",
+      "model": "llama3.2:3b",
+      "avg_score": 0.5708333333333334,
+      "avg_context_coverage": 0.9374999999999998,
+      "avg_groundedness": 1.0,
+      "completeness_rate": 0.45,
+      "avg_retrieval_s": 0.5178,
+      "avg_generation_s": 1.3565,
+      "avg_total_s": 1.8743,
+      "breakdown": {
+        "tablas": {
+          "avg_score": 0.2,
+          "avg_context_coverage": 1.0,
+          "avg_groundedness": 1.0,
+          "completeness_rate": 0.2,
+          "avg_retrieval_s": 1.9998733601998537,
+          "avg_generation_s": 2.4610574178004754,
+          "avg_total_s": 4.460930778000329,
+          "count": 5
+        },
+        "configuracion": {
+          "avg_score": 1.0,
+          "avg_context_coverage": 1.0,
+          "avg_groundedness": 1.0,
+          "completeness_rate": 1.0,
+          "avg_retrieval_s": 0.018483046667824965,
+          "avg_generation_s": 0.9286003449997224,
+          "avg_total_s": 0.9470833916675474,
+          "count": 3
+        },
+        "identificadores": {
+          "avg_score": 1.0,
+          "avg_context_coverage": 1.0,
+          "avg_groundedness": 1.0,
+          "completeness_rate": 1.0,
+          "avg_retrieval_s": 0.023916191999887815,
+          "avg_generation_s": 0.449059185499209,
+          "avg_total_s": 0.4729753774990968,
+          "count": 2
+        },
+        "procedimientos": {
+          "avg_score": 0.5416666666666666,
+          "avg_context_coverage": 0.875,
+          "avg_groundedness": 1.0,
+          "completeness_rate": 0.3,
+          "avg_retrieval_s": 0.025347673499709344,
+          "avg_generation_s": 1.1139900120000674,
+          "avg_total_s": 1.1393376854997768,
+          "count": 10
+        }
+      },
+      "elapsed_seconds": 37.49
+    },
+    {
+      "name": "ollama-deepseek",
+      "provider": "ollama",
+      "model": "deepseek-r1:8b",
+      "avg_score": 0.7375,
+      "avg_context_coverage": 0.9374999999999998,
+      "avg_groundedness": 1.0,
+      "completeness_rate": 0.65,
+      "avg_retrieval_s": 0.0254,
+      "avg_generation_s": 3.9172,
+      "avg_total_s": 3.9426,
+      "breakdown": {
+        "tablas": {
+          "avg_score": 1.0,
+          "avg_context_coverage": 1.0,
+          "avg_groundedness": 1.0,
+          "completeness_rate": 1.0,
+          "avg_retrieval_s": 0.033204117199784375,
+          "avg_generation_s": 6.342700029199477,
+          "avg_total_s": 6.375904146399262,
+          "count": 5
+        },
+        "configuracion": {
+          "avg_score": 0.6666666666666666,
+          "avg_context_coverage": 1.0,
+          "avg_groundedness": 1.0,
+          "completeness_rate": 0.6666666666666666,
+          "avg_retrieval_s": 0.03252934433233653,
+          "avg_generation_s": 2.62749227100115,
+          "avg_total_s": 2.6600216153334864,
+          "count": 3
+        },
+        "identificadores": {
+          "avg_score": 1.0,
+          "avg_context_coverage": 1.0,
+          "avg_groundedness": 1.0,
+          "completeness_rate": 1.0,
+          "avg_retrieval_s": 0.026169278999077505,
+          "avg_generation_s": 2.227620662000845,
+          "avg_total_s": 2.2537899409999227,
+          "count": 2
+        },
+        "procedimientos": {
+          "avg_score": 0.575,
+          "avg_context_coverage": 0.875,
+          "avg_groundedness": 1.0,
+          "completeness_rate": 0.4,
+          "avg_retrieval_s": 0.019115128400153482,
+          "avg_generation_s": 3.4293420803995103,
+          "avg_total_s": 3.448457208799664,
+          "count": 10
+        }
+      },
+      "elapsed_seconds": 78.85
+    },
+    {
+      "name": "gemini-flash",
+      "provider": "gemini",
+      "model": "gemini-2.5-flash-lite",
+      "avg_score": 0.7958333333333333,
+      "avg_context_coverage": 0.9374999999999998,
+      "avg_groundedness": 1.0,
+      "completeness_rate": 0.7,
+      "avg_retrieval_s": 0.0324,
+      "avg_generation_s": 6.3625,
+      "avg_total_s": 6.3948,
+      "breakdown": {
+        "tablas": {
+          "avg_score": 0.9,
+          "avg_context_coverage": 1.0,
+          "avg_groundedness": 1.0,
+          "completeness_rate": 0.8,
+          "avg_retrieval_s": 0.029065137800353115,
+          "avg_generation_s": 5.416597604799608,
+          "avg_total_s": 5.4456627425999615,
+          "count": 5
+        },
+        "configuracion": {
+          "avg_score": 1.0,
+          "avg_context_coverage": 1.0,
+          "avg_groundedness": 1.0,
+          "completeness_rate": 1.0,
+          "avg_retrieval_s": 0.030607873001523938,
+          "avg_generation_s": 6.70433453100001,
+          "avg_total_s": 6.734942404001534,
+          "count": 3
+        },
+        "identificadores": {
+          "avg_score": 1.0,
+          "avg_context_coverage": 1.0,
+          "avg_groundedness": 1.0,
+          "completeness_rate": 1.0,
+          "avg_retrieval_s": 0.036258764997910475,
+          "avg_generation_s": 6.804512817501745,
+          "avg_total_s": 6.840771582499656,
+          "count": 2
+        },
+        "procedimientos": {
+          "avg_score": 0.6416666666666666,
+          "avg_context_coverage": 0.875,
+          "avg_groundedness": 1.0,
+          "completeness_rate": 0.5,
+          "avg_retrieval_s": 0.03373715529996844,
+          "avg_generation_s": 6.6444880069993815,
+          "avg_total_s": 6.67822516229935,
+          "count": 10
+        }
+      },
+      "elapsed_seconds": 127.9
+    }
+  ],
+  "timestamp": "2026-01-06 18:35:01"
+}

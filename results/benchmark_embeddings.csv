@@ -1,0 +1,13 @@
+model,backend,model_name,st_model,k,avg_score,min_score,max_score
+ollama-nomic-embed-text,ollama,nomic-embed-text:latest,,4,0.7878787878787878,0.0,1.0
+ollama-nomic-embed-text,ollama,nomic-embed-text:latest,,8,0.9267676767676768,0.0,1.0
+ollama-nomic-embed-text,ollama,nomic-embed-text:latest,,12,0.9343434343434344,0.0,1.0
+ollama-nomic-embed-text,ollama,nomic-embed-text:latest,,16,0.941919191919192,0.0,1.0
+sentence-transformers-all-mpnet-base-v2,sentence-transformers,,all-mpnet-base-v2,4,0.8585858585858586,0.0,1.0
+sentence-transformers-all-mpnet-base-v2,sentence-transformers,,all-mpnet-base-v2,8,0.9065656565656566,0.0,1.0
+sentence-transformers-all-mpnet-base-v2,sentence-transformers,,all-mpnet-base-v2,12,0.9444444444444445,0.0,1.0
+sentence-transformers-all-mpnet-base-v2,sentence-transformers,,all-mpnet-base-v2,16,0.9520202020202021,0.0,1.0
+sentence-transformers-paraphrase-multilingual-mpnet-base-v2,sentence-transformers,,paraphrase-multilingual-mpnet-base-v2,4,0.8282828282828283,0.0,1.0
+sentence-transformers-paraphrase-multilingual-mpnet-base-v2,sentence-transformers,,paraphrase-multilingual-mpnet-base-v2,8,0.9090909090909091,0.0,1.0
+sentence-transformers-paraphrase-multilingual-mpnet-base-v2,sentence-transformers,,paraphrase-multilingual-mpnet-base-v2,12,0.9570707070707072,0.3333333333333333,1.0
+sentence-transformers-paraphrase-multilingual-mpnet-base-v2,sentence-transformers,,paraphrase-multilingual-mpnet-base-v2,16,0.9848484848484849,0.5,1.0

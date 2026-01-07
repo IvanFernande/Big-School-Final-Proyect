@@ -1,8 +1,7 @@
 .venv/
 __pycache__/
 *.pyc
-index/
-results/
+
 
 GUIDE_RAG.md
 NOTES.md

@@ -1,0 +1,193 @@
+model_name,provider,model,question,expected,answer,score,context_coverage,groundedness,retrieval_s,generation_s,total_s
+ollama-llama3.2,ollama,llama3.2:3b,Cual es el SLA cumplido en Q4 y cuantos tickets abiertos hubo?,93.1|1500,"No esta disponible información sobre el SLA cumplido en Q4 ni la cantidad de tickets abiertos. Sin embargo, se puede ver que en Q3 se superó un tiempo máximo establecido por el SLA para resolver un ticket, pero no hay información específica sobre el número de tickets abiertos durante ese trimestre.",0.0,1.0,1.0,9.9276,10.3952,20.3228
+ollama-llama3.2,ollama,llama3.2:3b,Cual es el CSAT promedio en Q3?,4.4,No esta disponible la información para responder a la pregunta sobre el CSAT promedio en Q3.,0.0,1.0,1.0,0.0195,0.4286,0.448
+ollama-llama3.2,ollama,llama3.2:3b,Cual es el SLA cumplido en Q2 y cuantos tickets cerrados hubo?,92.7|1290,"La respuesta a la pregunta ""¿Cuál es el SLA cumplido en Q2 y cuántos tickets cerrados hubo?"" se encuentra disponible en el contexto proporcionado.
+
+En Q2, el SLA cumplido fue del 92.7% y hubo 1290 tickets cerrados.",1.0,1.0,1.0,0.017,0.7815,0.7985
+ollama-llama3.2,ollama,llama3.2:3b,Que trimestre tuvo el SLA mas bajo?,q3|89.9,No esta disponible información sobre el trimestre con el SLA más bajo.,0.0,1.0,1.0,0.018,0.3746,0.3926
+ollama-llama3.2,ollama,llama3.2:3b,Ordena los trimestres por tickets abiertos de mayor a menor,q4|q3|q2|q1,No tengo información sobre el contexto que requiere esta respuesta.,0.0,1.0,1.0,0.0173,0.3254,0.3427
+ollama-llama3.2,ollama,llama3.2:3b,Cual es el servicio principal configurado?,core_api,"El servicio principal configurado es el ""core_api"" con una criticidad de alta, siendo el más importante en términos de disponibilidad y impacto en los usuarios finales.",1.0,1.0,1.0,0.0181,0.4502,0.4684
+ollama-llama3.2,ollama,llama3.2:3b,Cual es la version del servicio principal?,2.3.1,La version del servicio principal es 2.3.1.,1.0,1.0,1.0,0.031,0.3462,0.3772
+ollama-llama3.2,ollama,llama3.2:3b,Que features principales incluye el servicio core_api?,autenticacion_segura|monitorizacion_activa|autoscaling,"El servicio core_api incluye las siguientes características principales:
+
+1. Autenticación segura (#autenticacion_segura)
+2. Monitorización activa (#monitorizacion_activa)
+3. Autoscaling (#autoscaling)
+4. Registro extendido de logs (#registro_extendido_de_logs)
+
+Estas características son fundamentales para garantizar la disponibilidad y rendimiento del servicio core_api, y están diseñadas para minimizar el impacto en los usuarios finales y asegurar la disponibilidad de los servicios esenciales.",1.0,1.0,1.0,0.0202,0.8262,0.8463
+ollama-llama3.2,ollama,llama3.2:3b,"Cuales son los umbrales de alerting cpu, memoria y latencia?",85|80|250,"No esta disponible información sobre los umbrales de alerting CPU, memoria y latencia específicos. Sin embargo, puedo proporcionarte una respuesta general basada en la información proporcionada.
+
+En general, los umbrales de alerting son valores críticos que indican cuando un sistema o componente comienza a experimentar problemas. Por lo general:
+
+* Alerting.cpu: 90-100% (indicando sobrecarga del procesador)
+* Alerting.memoria: 80-90% (indicando agotamiento de la memoria)
+* Alerting.latencia_ms: 200-300 ms (indicando latencia alta y potencial para errores)
+
+Sin embargo, estos valores pueden variar dependiendo del entorno y la configuración del sistema. En este caso, los valores proporcionados son:
+
+* alerting.cpu: 85
+* alerting.memoria: 80
+* alerting.latencia_ms: 250
+
+En este caso, no parece haber un problema crítico, ya que todos los valores están por debajo de los umbrales generales.",1.0,1.0,1.0,0.0172,1.5094,1.5266
+ollama-llama3.2,ollama,llama3.2:3b,Quien es la responsable de soporte y su email?,laura|gomez|@technova.com,"La persona responsable de soporte es Laura Gómez, quien tiene la función de recibir incidentes, clasificarlos por severidad y recopilar información inicial. Su correo electrónico para contactarla es laura.gomez@technova.com.",1.0,1.0,1.0,0.0168,0.552,0.5688
+ollama-llama3.2,ollama,llama3.2:3b,Como restablecer la contrasena?,restablecer|portal|ticket,"No está disponible información específica sobre cómo restablecer la contraseña en el contexto proporcionado, ya que se centra en otros temas como planes de continuidad, diagnóstico técnico avanzado y políticas de negocio. Sin embargo, puedo ofrecerte una respuesta general basada en prácticas comunes de seguridad:
+
+1. Verifica la documentación del proveedor de servicios o la política de contraseña de la empresa para obtener instrucciones específicas.
+2. Si tienes acceso a un portal de administración, busca una opción para restablecer o cambiar la contraseña.
+3. Si no puedes acceder al portal, contacta con el soporte técnico de tu proveedor o empresa para obtener ayuda.
+4. En caso de que la contraseña esté configurada en un token o 2FA (seguridad por dos factores), asegúrate de tener acceso a ese dispositivo como well.
+
+Es importante recordar que es una buena práctica utilizar contraseñas fuertes y únicas para cada cuenta, y considerar el uso de herramientas de gestión de contraseñas.",0.6666666666666666,1.0,1.0,0.0269,1.6009,1.6278
+ollama-llama3.2,ollama,llama3.2:3b,Que hacer si no puedo acceder a la vpn?,vpn|ticket,"No esta disponible información sobre procedimientos específicos para acceder a VPN o solicitar ayuda en caso de que no se pueda acceder a ella. Sin embargo, se puede recomendar verificar el token o 2FA, la conexión a internet y solicitar validación de perfil VPN a través de un ticket si la situación persiste.",1.0,1.0,1.0,0.0277,0.7653,0.793
+ollama-llama3.2,ollama,llama3.2:3b,Que datos debo incluir al reportar una incidencia?,capturas|descripcion|pasos,"Al reportar una incidencia, debes incluir:
+
+1. Descripción clara del problema.
+2. Impacto detectado.
+3. Urgencia estimada.
+4. Evidencias disponibles (logs, capturas).
+5. Hora de detección y acciones iniciales.
+
+También es recomendable incluir:
+
+* Capturas de pantalla
+* Descripción del error
+* Pasos previos
+* Cualquier mensaje del sistema
+
+Y ante una incidencia crítica, el agente debe seguir los pasos obligatorios:
+
+1. Clasificar la incidencia como severidad crítica.
+2. Evaluar el impacto en usuarios y sistemas.
+3. Determinar la urgencia de actuación.
+4. Validar los SLA aplicables.
+5. Iniciar el proceso de escalado inmediato.
+
+Es importante seguir el procedimiento de escalado para minimizar el impacto en el negocio, incluyendo:
+
+* Responder alertas en menos de 10 minutos
+* Registrar toda acción realizada en el sistema de incidencias
+* Escalar al equipo especializado cuando la causa excede sus atribuciones
+* Activar protocolo de emergencia si el servicio cae completamente.",0.6666666666666666,0.6666666666666666,1.0,0.0268,1.7603,1.7872
+ollama-llama3.2,ollama,llama3.2:3b,Cuales son los tiempos normales de respuesta?,15|2 horas,"Basándome en el contexto proporcionado, puedo responder a las preguntas de la siguiente manera:
+
+* **15 minutos y 2 horas**: Estos son los tiempos normales de respuesta para solucionar tickets de soporte, dependiendo de la severidad del problema. El tiempo de respuesta es determinado por la clasificación de la severidad del ticket.
+* **Capturas de pantalla, descripción del error, pasos previos y cualquier mensaje del sistema**: Estas son las cosas que se deben incluir al reportar una incidencia para proporcionar información detallada sobre el problema y facilitar su resolución.",1.0,1.0,1.0,0.0311,1.0813,1.1123
+ollama-llama3.2,ollama,llama3.2:3b,Resume el flujo de escalado del sistema.,escalado|sla|nivel 1,"La respuesta al problema 7 es: ""Sí, pero requiere aprobación del responsable de área y validación de soporte"".",0.0,1.0,1.0,0.0293,0.5486,0.5779
+ollama-llama3.2,ollama,llama3.2:3b,Que modulos componen el sistema de soporte?,tickets|monitorizacion|diagnóstico|kpi,"No esta disponible la información sobre los módulos del sistema de soporte en el contexto proporcionado. Sin embargo, se menciona que el sistema está compuesto por:
+
+- Una plataforma central de tickets
+- Módulos de monitorización
+- Herramientas de diagnóstico automático
+- Paneles de KPIs
+
+Cada componente interactúa a través de APIs internas.",0.75,0.75,1.0,0.0173,0.8023,0.8197
+ollama-llama3.2,ollama,llama3.2:3b,Que pasos de troubleshooting se realizan antes de escalar?,verificar|credenciales|logs,"Antes de escalar, el técnico de primer nivel debe realizar los siguientes pasos de troubleshooting:
+
+1. Recepción del ticket por Nivel 1.
+2. Clasificación por severidad e impacto.
+3. Ejecución de troubleshooting básico.
+4. Escalado automático o manual según SLA (Severdad, SLA y Respuesta).
+5. Resolución final y documentación del caso.
+
+Estos pasos permiten que el técnico de primer nivel pueda diagnosticar la incidencia, clasificar su gravedad y realizar acciones de soporte adecuadas antes de escalar a un equipo especializado para resolverla de manera más profunda.",0.0,1.0,1.0,0.0196,1.231,1.2507
+ollama-llama3.2,ollama,llama3.2:3b,Cual es el horario de guardia entre semana y fin de semana?,18:00|08:00|24h,"No está disponible información sobre horarios específicos para los técnicos de guardia, incluyendo los tiempos normales de respuesta o resolución de incidentes. Sin embargo, se menciona que:
+
+* Entre semana: 18:00 - 08:00
+* Fines de semana y festivos: 24h
+
+Además, se proporcionan acuerdos sobre la clasificación de severidad, SLA (Respuesta, SLA) y los tiempos normales de respuesta y resolución para diferentes niveles de severidad:
+
+| Severidad | Tiempo máximo establecido por el SLA |
+| --- | --- |
+| Crítica | £ 15 min, £ 4 h |
+| Alta | £ 30 min, £ 8 h |
+
+Es importante mencionar que no hay información específica sobre los horarios de trabajo o las responsabilidades del técnico de guardia.",1.0,1.0,1.0,0.0166,1.4174,1.434
+ollama-llama3.2,ollama,llama3.2:3b,Que tiempo maximo tiene el tecnico oncall para responder una alerta?,10 minutos,"No esta disponible información específica sobre el tiempo máximo que tiene el técnico oncall para responder una alerta, no se proporciona en el contexto dado.",0.0,1.0,1.0,0.0346,0.5007,0.5353
+ollama-llama3.2,ollama,llama3.2:3b,Que hacer ante una alerta de servicio degradado?,latencia|reiniciar|estado,"Ante una alerta de servicio degradado, se deben seguir los siguientes pasos:
+
+1. Registrar la alerta en el sistema de incidencias.
+2. Clasificar la alerta como ""crítica"" y determinar la urgencia de actuación según los SLA aplicables.
+3. Escalar al equipo especializado para que realice una evaluación más detallada de la incidencia.
+4. Activar protocolo de emergencia si el servicio cae completamente.
+5. Realizar un seguimiento constante de la resolución de la alerta y actualizar el estado del incidente en el sistema de incidencias.
+
+Es importante mencionar que no se proporcionaron indicaciones específicas sobre qué hacer ante una alerta de servicio degradado, por lo que estos pasos generales son una guía basada en la información proporcionada.",0.3333333333333333,0.3333333333333333,1.0,0.0235,1.432,1.4555
+ollama-deepseek,ollama,deepseek-r1:8b,Cual es el SLA cumplido en Q4 y cuantos tickets abiertos hubo?,93.1|1500,El SLA cumplido en Q4 es **93.1%** y hubo **1500** tickets abiertos.,1.0,1.0,1.0,0.0383,19.585,19.6232
+ollama-deepseek,ollama,deepseek-r1:8b,Cual es el CSAT promedio en Q3?,4.4,4.4,1.0,1.0,1.0,0.0418,3.0078,3.0496
+ollama-deepseek,ollama,deepseek-r1:8b,Cual es el SLA cumplido en Q2 y cuantos tickets cerrados hubo?,92.7|1290,"En Q2, el porcentaje de SLA cumplido fue **92.7%** y se cerraron **1290** tickets.",1.0,1.0,1.0,0.0275,2.6758,2.7033
+ollama-deepseek,ollama,deepseek-r1:8b,Que trimestre tuvo el SLA mas bajo?,q3|89.9,El SLA más bajo fue en el trimestre Q3 con 89.9%.,1.0,1.0,1.0,0.0336,2.475,2.5086
+ollama-deepseek,ollama,deepseek-r1:8b,Ordena los trimestres por tickets abiertos de mayor a menor,q4|q3|q2|q1,"Q4 (1500), Q3 (1400), Q2 (1320), Q1 (1200)",1.0,1.0,1.0,0.0248,3.97,3.9948
+ollama-deepseek,ollama,deepseek-r1:8b,Cual es el servicio principal configurado?,core_api,No está disponible,0.0,1.0,1.0,0.0317,2.8324,2.8641
+ollama-deepseek,ollama,deepseek-r1:8b,Cual es la version del servicio principal?,2.3.1,2.3.1,1.0,1.0,1.0,0.0222,1.6894,1.7116
+ollama-deepseek,ollama,deepseek-r1:8b,Que features principales incluye el servicio core_api?,autenticacion_segura|monitorizacion_activa|autoscaling,"autenticacion_segura
+monitorizacion_activa
+autoscaling
+registro_extendido_de_logs",1.0,1.0,1.0,0.0329,2.5646,2.5975
+ollama-deepseek,ollama,deepseek-r1:8b,"Cuales son los umbrales de alerting cpu, memoria y latencia?",85|80|250,"alerting.cpu: 85  
+alerting.memoria: 80  
+alerting.latencia_ms: 250",1.0,1.0,1.0,0.0329,2.4855,2.5185
+ollama-deepseek,ollama,deepseek-r1:8b,Quien es la responsable de soporte y su email?,laura|gomez|@technova.com,Laura Gómez es la responsable de soporte. Su email es laura.gomez@technova.com,1.0,1.0,1.0,0.0301,2.7658,2.7959
+ollama-deepseek,ollama,deepseek-r1:8b,Como restablecer la contrasena?,restablecer|portal|ticket,"Según el contexto:
+
+Puede restablecer su contraseña desde el portal interno seleccionando “Restablecer contraseña”. Si no funciona, abra un ticket.",1.0,1.0,1.0,0.0178,3.3046,3.3224
+ollama-deepseek,ollama,deepseek-r1:8b,Que hacer si no puedo acceder a la vpn?,vpn|ticket,"Para acceder a la VPN, verifique su token/2FA y su conexión a internet. Si persiste, solicite la validación de su perfil VPN mediante un ticket.",1.0,1.0,1.0,0.0261,3.8123,3.8384
+ollama-deepseek,ollama,deepseek-r1:8b,Que datos debo incluir al reportar una incidencia?,capturas|descripcion|pasos,"Capturas de pantalla, descripción del error, pasos previos y cualquier mensaje del sistema.",0.6666666666666666,0.6666666666666666,1.0,0.0228,5.0618,5.0847
+ollama-deepseek,ollama,deepseek-r1:8b,Cuales son los tiempos normales de respuesta?,15|2 horas,"Según el contexto:
+
+*   Los tiempos normales de respuesta dependen de la severidad.
+*   En general, oscilan entre 15 minutos y 2 horas.
+*   Específicamente:
+    *   Incidencias Críticas: 15 minutos.
+    *   Incidencias Alta: 30 minutos.",1.0,1.0,1.0,0.0175,3.1567,3.1742
+ollama-deepseek,ollama,deepseek-r1:8b,Resume el flujo de escalado del sistema.,escalado|sla|nivel 1,"El flujo de escalado consta de tres niveles:
+1. Diagnóstico básico y recopilación de información.
+2. Análisis técnico avanzado y soluciones complejas.
+3. Intervención de expertos internos o proveedores externos.",0.3333333333333333,1.0,1.0,0.0175,3.6143,3.6318
+ollama-deepseek,ollama,deepseek-r1:8b,Que modulos componen el sistema de soporte?,tickets|monitorizacion|diagnóstico|kpi,"Según el contexto, el sistema de soporte está compuesto por los siguientes módulos:
+
+*   Plataforma central de tickets
+*   Módulos de monitorización
+*   Herramientas de diagnóstico automático
+*   Paneles de KPIs",0.75,0.75,1.0,0.017,3.1025,3.1196
+ollama-deepseek,ollama,deepseek-r1:8b,Que pasos de troubleshooting se realizan antes de escalar?,verificar|credenciales|logs,"1. Validar con herramientas de monitoreo (tn-monitor).  
+2. Aislar el nodo defectuoso.  
+3. Escalar inmediatamente al Nivel 3.  
+4. Activar redundancia si está disponible.",0.0,1.0,1.0,0.0191,3.1472,3.1663
+ollama-deepseek,ollama,deepseek-r1:8b,Cual es el horario de guardia entre semana y fin de semana?,18:00|08:00|24h,"Lunes a viernes: 18:00 – 08:00  
+Fines de semana y festivos: 24h",1.0,1.0,1.0,0.017,3.3119,3.329
+ollama-deepseek,ollama,deepseek-r1:8b,Que tiempo maximo tiene el tecnico oncall para responder una alerta?,10 minutos,No está disponible,0.0,1.0,1.0,0.0189,2.4387,2.4576
+ollama-deepseek,ollama,deepseek-r1:8b,Que hacer ante una alerta de servicio degradado?,latencia|reiniciar|estado,"Según el contexto, ante una alerta de servicio degradado:
+
+*   Responder en menos de 10 minutos.
+*   Escalar al equipo especializado si la causa excede sus atribuciones.
+*   Activar protocolo de emergencia si el servicio cae completamente.
+
+No está disponible en el contexto un protocolo específico para servicio degradado, solo para incidencias críticas y SLA.",0.0,0.3333333333333333,1.0,0.0173,3.3434,3.3607
+gemini-flash,gemini,gemini-2.5-flash-lite,Cual es el SLA cumplido en Q4 y cuantos tickets abiertos hubo?,93.1|1500,El SLA cumplido en Q4 fue del 93.1% y hubo 1500 tickets abiertos.,1.0,1.0,1.0,0.0185,0.7361,0.7546
+gemini-flash,gemini,gemini-2.5-flash-lite,Cual es el CSAT promedio en Q3?,4.4,4.4,1.0,1.0,1.0,0.0365,6.6108,6.6474
+gemini-flash,gemini,gemini-2.5-flash-lite,Cual es el SLA cumplido en Q2 y cuantos tickets cerrados hubo?,92.7|1290,El SLA cumplido en Q2 fue del 92.7% y hubo 1290 tickets cerrados.,1.0,1.0,1.0,0.0365,6.4426,6.4791
+gemini-flash,gemini,gemini-2.5-flash-lite,Que trimestre tuvo el SLA mas bajo?,q3|89.9,Q3,0.5,1.0,1.0,0.017,6.491,6.508
+gemini-flash,gemini,gemini-2.5-flash-lite,Ordena los trimestres por tickets abiertos de mayor a menor,q4|q3|q2|q1,"Q4 (1500), Q3 (1400), Q2 (1320), Q1 (1200)",1.0,1.0,1.0,0.0368,6.8025,6.8393
+gemini-flash,gemini,gemini-2.5-flash-lite,Cual es el servicio principal configurado?,core_api,core_api,1.0,1.0,1.0,0.0206,6.6886,6.7093
+gemini-flash,gemini,gemini-2.5-flash-lite,Cual es la version del servicio principal?,2.3.1,2.3.1,1.0,1.0,1.0,0.036,7.0539,7.09
+gemini-flash,gemini,gemini-2.5-flash-lite,Que features principales incluye el servicio core_api?,autenticacion_segura|monitorizacion_activa|autoscaling,"El servicio core_api incluye las siguientes features principales: autenticacion_segura, monitorizacion_activa, autoscaling y registro_extendido_de_logs.",1.0,1.0,1.0,0.0373,6.7718,6.8091
+gemini-flash,gemini,gemini-2.5-flash-lite,"Cuales son los umbrales de alerting cpu, memoria y latencia?",85|80|250,"Los umbrales de alerting son: CPU: 85, memoria: 80, latencia_ms: 250.",1.0,1.0,1.0,0.0339,6.6525,6.6864
+gemini-flash,gemini,gemini-2.5-flash-lite,Quien es la responsable de soporte y su email?,laura|gomez|@technova.com,Laura Gómez es la Responsable de Soporte y su email es laura.gomez@technova.com.,1.0,1.0,1.0,0.0365,6.5551,6.5916
+gemini-flash,gemini,gemini-2.5-flash-lite,Como restablecer la contrasena?,restablecer|portal|ticket,"Puede hacerlo desde el portal interno seleccionando “Restablecer contraseña”. Si no funciona, abra un ticket.",1.0,1.0,1.0,0.0367,6.5678,6.6045
+gemini-flash,gemini,gemini-2.5-flash-lite,Que hacer si no puedo acceder a la vpn?,vpn|ticket,"Verifique su token/2FA y la conexión a internet. Si persiste, solicite la validación de su perfil VPN mediante un ticket.",1.0,1.0,1.0,0.0374,6.5596,6.597
+gemini-flash,gemini,gemini-2.5-flash-lite,Que datos debo incluir al reportar una incidencia?,capturas|descripcion|pasos,"Al reportar una incidencia, debes incluir: capturas de pantalla, descripción del error, pasos previos y cualquier mensaje del sistema. En el caso de una incidencia crítica, se debe incluir: descripción clara del problema, impacto detectado, urgencia estimada, evidencias disponibles (logs, capturas) y hora de detección y acciones iniciales.",0.6666666666666666,0.6666666666666666,1.0,0.0165,6.8882,6.9047
+gemini-flash,gemini,gemini-2.5-flash-lite,Cuales son los tiempos normales de respuesta?,15|2 horas,"Los tiempos normales de respuesta dependen de la severidad del ticket, pero generalmente son entre 15 minutos y 2 horas.",1.0,1.0,1.0,0.0356,6.4899,6.5255
+gemini-flash,gemini,gemini-2.5-flash-lite,Resume el flujo de escalado del sistema.,escalado|sla|nivel 1,"El escalado de incidencias es obligatorio cuando un ticket supera el tiempo máximo establecido por el SLA o cuando requiere intervención de un equipo especializado. Los niveles de escalado son: Nivel 1 (atención inicial, diagnóstico básico y recopilación de información), Nivel 2 (análisis técnico avanzado y aplicación de soluciones complejas) y Nivel 3 (intervención de expertos internos o proveedores externos).",1.0,1.0,1.0,0.0196,6.6642,6.6838
+gemini-flash,gemini,gemini-2.5-flash-lite,Que modulos componen el sistema de soporte?,tickets|monitorizacion|diagnóstico|kpi,"Los módulos que componen el sistema de soporte son: una plataforma central de tickets, módulos de monitorización, herramientas de diagnóstico automático y paneles de KPIs.",0.75,0.75,1.0,0.0372,6.7633,6.8005
+gemini-flash,gemini,gemini-2.5-flash-lite,Que pasos de troubleshooting se realizan antes de escalar?,verificar|credenciales|logs,"Los pasos de troubleshooting que se realizan antes de escalar son:
+
+*   Atención inicial, diagnóstico básico y recopilación de información (Nivel 1).
+*   Validar con herramientas de monitoreo (tn-monitor).
+*   Aislar el nodo defectuoso.
+*   Activar redundancia si está disponible.",0.0,1.0,1.0,0.0222,6.7282,6.7504
+gemini-flash,gemini,gemini-2.5-flash-lite,Cual es el horario de guardia entre semana y fin de semana?,18:00|08:00|24h,Entre semana el horario de guardia es de 18:00 a 08:00. Los fines de semana y festivos es de 24h.,1.0,1.0,1.0,0.0463,6.4847,6.531
+gemini-flash,gemini,gemini-2.5-flash-lite,Que tiempo maximo tiene el tecnico oncall para responder una alerta?,10 minutos,El tiempo máximo para responder una alerta no está disponible en el contexto proporcionado.,0.0,1.0,1.0,0.0432,6.6028,6.646
+gemini-flash,gemini,gemini-2.5-flash-lite,Que hacer ante una alerta de servicio degradado?,latencia|reiniciar|estado,No se menciona qué hacer ante una alerta de servicio degradado.,0.0,0.3333333333333333,1.0,0.0428,6.6961,6.7389
