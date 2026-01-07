@@ -1,0 +1,6 @@
+servicio,criticidad,owner,descripcion
+core_api,alta,backend_team,Servicio central que gestiona autenticación y flujos principales.
+notificaciones,media,infra_team,Sistema encargado del envío de correos y alertas push.
+db_principal,alta,database_team,Base de datos de usuarios y operaciones principales.
+balanceador_lb,baja,infra_team,Encargado de distribuir carga entre microservicios.
+vpn_gateway,alta,security_team,Punto de acceso seguro para empleados remotos.
