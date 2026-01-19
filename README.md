@@ -27,8 +27,9 @@ data/ -> loaders -> limpieza -> chunking -> embeddings -> FAISS -> retrieval -> 
 - `results/`: métricas de benchmarks
 
 Motivo de la estructura:
-- Separar **lógica reusable** (`src/`) de **ejecuciones reproducibles** (`scripts/`).
+- Separar **lógica reutilizable** (`src/`) de **ejecuciones reproducibles** (`scripts/`).
 - Facilitar benchmarking y trazabilidad de resultados (`results/`).
+- Permite reutilizar el pipeline RAG cambiando únicamente loaders y dataset.
 
 Detalle por carpeta:
 - `src/`: módulos de ingesta, preprocesado, chunking, embeddings, vectorstore y retrieval.
@@ -45,11 +46,13 @@ Este proyecto sigue un flujo clásico de RAG con decisiones explícitas en cada 
 2) **Preprocesado**
 - `src/pipeline/preprocessing.clean_text`: normaliza espacios y saltos sin perder caracteres críticos.
 - Se evita eliminar acentos para no romper tokens exactos (emails, INC‑xxxx, versiones).
+- Se probaron variantes más agresivas (lowercasing global y limpieza de símbolos), pero redujeron la recuperación de identificadores exactos y bajaron el recall en preguntas factuales; por eso se mantuvo una limpieza conservadora.
 
 3) **Chunking**
 - `src/pipeline/chunking.semantic_chunk`: separa por secciones (headings) y aplica ventana con solape.
 - `src/pipeline/chunking.fixed_chunk`: fijo para CSV/JSON para no mezclar filas ni claves.
 - Se añade metadata de offsets y headings para rastreo.
+- Rangos orientativos: ~300–500 tokens por chunk, solape del 10–20% (o 1800–3500 caracteres cuando no hay tokenizador).
 
 4) **Embeddings**
 - `src/embeddings/embedder.Embedder`: embeddings por chunk (no por doc).
@@ -64,6 +67,7 @@ Este proyecto sigue un flujo clásico de RAG con decisiones explícitas en cada 
 - `src/rag/retriever.HybridRetriever`: combina embeddings + keyword (TF‑IDF).
 - Motivación: tokens exactos (INC, versiones, emails) se benefician de keyword.
 - `retriever_k` y `retriever_alpha` controlan tamaño y mezcla.
+- `retriever_alpha` se ajustó empíricamente para maximizar nDCG sin perder recall; valores más altos favorecían keyword pero penalizaban preguntas semánticas.
 
 7) **LLM**
 - Benchmark con Ollama (local) y Gemini (API).
@@ -106,9 +110,10 @@ Detalle técnico del chunking:
 - **Secciones (headings)**: secciones agregadas con `headings_path` para mantener contexto de tema.
 - **Ventana con solape**: evita cortes que rompan frases/pasos.
 - **CSV/JSON**: bloques pequeños para consultas numéricas exactas.
+- Chunks más grandes mezclaban temas y degradaban precisión en tablas; chunks muy pequeños fragmentaban procedimientos y reducían completitud.
 
 ## Dataset de evaluación (TEST_SET)
-- 33 preguntas alineadas a los documentos reales en `data/`.
+- 20 preguntas alineadas a los documentos reales en `data/`.
 - Categorías: tablas, configuración, identificadores y procedimientos.
 - Cada pregunta incluye tokens esperados para evaluar retrieval y LLM.
 
@@ -197,7 +202,7 @@ Breakdown por tipo (tablas, configuración, identificadores, procedimientos) en:
 ## Dificultades y cómo se resolvieron
 - **Tokens exactos** (INC-xxxx, emails, versiones): se mantuvieron intactos en limpieza y se evaluaron explícitamente.
 - **PDFs con estructura irregular**: se optó por chunking por secciones y ventana para reducir ruido.
-- **Rate limits en LLM**: se añadió throttling configurable para Gemini.
+- **Rate limits en LLM**: se añadió throttling (limitación del ritmo de peticiones) configurable para Gemini.
 
 ## Por qué se probaron estos modelos y no otros
 - **Embeddings**: se comparó un modelo local rápido (nomic), uno fuerte en inglés (all‑mpnet) y uno multilingüe (paraphrase‑multilingual) por mezcla ES/EN en el corpus.
@@ -216,13 +221,31 @@ Breakdown por tipo (tablas, configuración, identificadores, procedimientos) en:
 - No se calcula coste por tokens (pendiente).
 - La calidad depende del corpus sintético de `data/`.
 
-## Ejemplos de ejecución
-- Construcción de índice: `python scripts/build_index.py`
-- Benchmark LLM: `python scripts/benchmark_llm.py`
+## Ejemplo real (end-to-end)
+Ejemplo tomado del TEST_SET para mostrar el flujo completo:
+
+**Pregunta**  
+“Cuál es el SLA cumplido en Q4 y cuántos tickets abiertos hubo?”
+
+**Contexto esperado**  
+El dato está en `data/kpis_trimestrales.csv` y debe contener los tokens `93.1` y `1500`.
+
+**Qué debe recuperar el retrieval**  
+Chunks que incluyan la fila de Q4 del CSV (SLA y tickets abiertos).
+
+**Qué debe responder el LLM**  
+Una respuesta breve que mencione ambos valores, sin inventar otros números.
+
+**Cómo se puntúa**  
+- contains‑match = 1.0 si incluye `93.1` y `1500`  
+- completeness = 1.0 si aparecen ambos tokens  
+- groundedness = 1.0 si esos valores están en el contexto recuperado
 
 ## Evaluación y por qué estas métricas bastan
 Estas métricas son suficientes para un corpus cerrado y respuestas factuales: miden recuperación correcta (retrieval) y respuesta fiel (LLM).  
 Métricas más complejas (ROUGE, BERTScore, LLM‑as‑judge) añaden coste/variabilidad y no aportan mucho en respuestas cortas con datos exactos.
+
+En este dominio, la exactitud literal es más relevante que la similitud semántica amplia, por eso se priorizaron métricas basadas en tokens esperados y groundedness.
 
 ## Reproducibilidad
 - Configuración central en `config.json`.
