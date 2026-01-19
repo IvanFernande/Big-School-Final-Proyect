@@ -1,0 +1,86 @@
+{
+  "id": "20260118_195241_255859",
+  "timestamp": "20260118_195241_255859",
+  "experiment_timestamp": "20260118_144730",
+  "seed": 42,
+  "n_train": 11200,
+  "n_val": 3200,
+  "n_test": 1600,
+  "fast_mode": false,
+  "fast_train_max": null,
+  "fast_val_max": null,
+  "config": {
+    "base_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "num_iterations": 10,
+    "num_epochs": 2,
+    "batch_size": 32,
+    "learning_rate": 2e-05,
+    "fast_mode": false
+  },
+  "val_metrics": {
+    "accuracy": 0.6065625,
+    "macro_f1": 0.5654072395904913,
+    "balanced_accuracy": 0.5576296742219266,
+    "high_recall": 0.677938808373591,
+    "high_precision": 0.7040133779264214,
+    "high_f1": 0.6907301066447908,
+    "classification_report": {
+      "high": {
+        "precision": 0.7040133779264214,
+        "recall": 0.677938808373591,
+        "f1-score": 0.6907301066447908,
+        "support": 1242.0
+      },
+      "medium": {
+        "precision": 0.5465045592705167,
+        "recall": 0.6867838044308633,
+        "f1-score": 0.6086662153012864,
+        "support": 1309.0
+      },
+      "low": {
+        "precision": 0.5571030640668524,
+        "recall": 0.3081664098613251,
+        "f1-score": 0.3968253968253968,
+        "support": 649.0
+      },
+      "accuracy": 0.6065625,
+      "macro avg": {
+        "precision": 0.6025403337545968,
+        "recall": 0.5576296742219264,
+        "f1-score": 0.5654072395904913,
+        "support": 3200.0
+      },
+      "weighted avg": {
+        "precision": 0.6097871787653465,
+        "recall": 0.6065625,
+        "f1-score": 0.5975532971318427,
+        "support": 3200.0
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "matrix": [
+        [
+          842,
+          379,
+          21
+        ],
+        [
+          272,
+          899,
+          138
+        ],
+        [
+          82,
+          367,
+          200
+        ]
+      ]
+    },
+    "selection_score": 0.5991667102254212
+  }
+}

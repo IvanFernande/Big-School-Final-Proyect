@@ -7,7 +7,9 @@
   "mode": "FULL",
   "cv": {
     "f1_macro_mean": 0.49867751835980717,
-    "f1_macro_std": 0.0028191021851860384
+    "f1_macro_std": 0.0028191021851860384,
+    "balanced_accuracy_mean": 0.5177822085821361,
+    "balanced_accuracy_std": 0.0026356815843457783
   },
   "test": {
     "classification_report": {
@@ -42,6 +44,23 @@
         "f1-score": 0.5108205729880189,
         "support": 5930.0
       }
-    }
+    },
+    "confusion_matrix": [
+      [
+        1448,
+        506,
+        348
+      ],
+      [
+        702,
+        923,
+        800
+      ],
+      [
+        228,
+        311,
+        664
+      ]
+    ]
   }
 }

@@ -1,0 +1,66 @@
+{
+  "id": "linear_svm_body_tags_ohe_num_0.5_sentence-transformers_all-distilroberta-v1",
+  "embedding_model": "sentence-transformers/all-distilroberta-v1",
+  "feature_strategy": "body_tags_ohe_num",
+  "classifier": "linear_svm",
+  "C": 0.5,
+  "mode": "FULL",
+  "cv": {
+    "f1_macro_mean": 0.5176461442639505,
+    "f1_macro_std": 0.00238569185678597,
+    "balanced_accuracy_mean": 0.520436233247446,
+    "balanced_accuracy_std": 0.0021279403623888486
+  },
+  "test": {
+    "classification_report": {
+      "high": {
+        "precision": 0.6016,
+        "recall": 0.6533449174630755,
+        "f1-score": 0.626405664306539,
+        "support": 2302.0
+      },
+      "low": {
+        "precision": 0.4308811641067098,
+        "recall": 0.44305901911886947,
+        "f1-score": 0.43688524590163935,
+        "support": 1203.0
+      },
+      "medium": {
+        "precision": 0.5471956224350205,
+        "recall": 0.4948453608247423,
+        "f1-score": 0.5197055002165439,
+        "support": 2425.0
+      },
+      "accuracy": 0.5458684654300169,
+      "macro avg": {
+        "precision": 0.5265589288472434,
+        "recall": 0.5304164324688957,
+        "f1-score": 0.5276654701415741,
+        "support": 5930.0
+      },
+      "weighted avg": {
+        "precision": 0.5447188237479421,
+        "recall": 0.5458684654300169,
+        "f1-score": 0.5443245578547122,
+        "support": 5930.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        1504,
+        578,
+        220
+      ],
+      [
+        741,
+        1200,
+        484
+      ],
+      [
+        255,
+        415,
+        533
+      ]
+    ]
+  }
+}

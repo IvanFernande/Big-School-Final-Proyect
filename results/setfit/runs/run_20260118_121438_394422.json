@@ -1,0 +1,86 @@
+{
+  "id": "20260118_121438_394422",
+  "timestamp": "20260118_121438_394422",
+  "experiment_timestamp": "20260118_121436",
+  "seed": 42,
+  "n_train": 4000,
+  "n_val": 1000,
+  "n_test": 2965,
+  "fast_mode": true,
+  "fast_train_max": 4000,
+  "fast_val_max": 1000,
+  "config": {
+    "base_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "num_iterations": 5,
+    "num_epochs": 1,
+    "batch_size": 16,
+    "learning_rate": 2e-05,
+    "fast_mode": true
+  },
+  "val_metrics": {
+    "accuracy": 0.476,
+    "macro_f1": 0.43144616796330304,
+    "balanced_accuracy": 0.43162675301743,
+    "high_recall": 0.5555555555555556,
+    "high_precision": 0.524390243902439,
+    "high_f1": 0.5395232120451694,
+    "classification_report": {
+      "high": {
+        "precision": 0.524390243902439,
+        "recall": 0.5555555555555556,
+        "f1-score": 0.5395232120451694,
+        "support": 387.0
+      },
+      "medium": {
+        "precision": 0.44466800804828976,
+        "recall": 0.5497512437810945,
+        "f1-score": 0.4916573971078977,
+        "support": 402.0
+      },
+      "low": {
+        "precision": 0.43010752688172044,
+        "recall": 0.1895734597156398,
+        "f1-score": 0.2631578947368421,
+        "support": 211.0
+      },
+      "accuracy": 0.476,
+      "macro avg": {
+        "precision": 0.46638859294414975,
+        "recall": 0.43162675301743,
+        "f1-score": 0.43144616796330304,
+        "support": 1000.0
+      },
+      "weighted avg": {
+        "precision": 0.4724482517976994,
+        "recall": 0.476,
+        "f1-score": 0.46196807248832916,
+        "support": 1000.0
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "matrix": [
+        [
+          215,
+          155,
+          17
+        ],
+        [
+          145,
+          221,
+          36
+        ],
+        [
+          50,
+          121,
+          40
+        ]
+      ]
+    },
+    "selection_score": 0.46867898424097876
+  }
+}

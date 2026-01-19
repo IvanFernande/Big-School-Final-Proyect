@@ -6,8 +6,10 @@
   "C": 1.0,
   "mode": "FULL",
   "cv": {
-    "f1_macro_mean": 0.5078944556860391,
-    "f1_macro_std": 0.0031856573501378603
+    "f1_macro_mean": 0.5079466682542916,
+    "f1_macro_std": 0.0031433952642621883,
+    "balanced_accuracy_mean": 0.5248832774763578,
+    "balanced_accuracy_std": 0.002729738590046048
   },
   "test": {
     "classification_report": {
@@ -42,6 +44,23 @@
         "f1-score": 0.5219586539108828,
         "support": 5930.0
       }
-    }
+    },
+    "confusion_matrix": [
+      [
+        1431,
+        509,
+        362
+      ],
+      [
+        686,
+        999,
+        740
+      ],
+      [
+        217,
+        325,
+        661
+      ]
+    ]
   }
 }

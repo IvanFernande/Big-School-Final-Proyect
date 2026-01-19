@@ -1,0 +1,8 @@
+{
+  "base_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "num_iterations": 10,
+  "num_epochs": 2,
+  "batch_size": 32,
+  "learning_rate": 5e-05,
+  "fast_mode": false
+}

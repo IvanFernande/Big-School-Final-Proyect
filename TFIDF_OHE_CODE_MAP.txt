@@ -1,0 +1,42 @@
+TF-IDF + OHE code map (line references)
+
+0. Estado base (baseline minimo correcto)
+- Input Body: src/train/tfidf_experiments.py:70-84
+- TF-IDF params (min_df, ngram_range, sublinear_tf, smooth_idf): src/train/tfidf_experiments.py:70-82
+- Department OHE/hash: src/train/tfidf_experiments.py:52-66
+- Numericas n_tags/len_words: src/train/tfidf_experiments.py:72-86
+- Modelos (SVM/LogReg/NB): src/train/tfidf_experiments.py:91-112
+- CV estratificada: src/train/tfidf_experiments.py:115-123
+- Metrica principal (macro-F1): src/train/tfidf_experiments.py:119-121
+
+1.1 Metricas en CV
+- cross_val_score scoring=f1_macro: src/train/tfidf_experiments.py:115-121
+
+1.2 Metricas en test (mejor TF-IDF)
+- classification_report y guardado metrics_test.json: src/evaluate.py:16-21
+- Recall High via report['high']['recall']: src/evaluate.py:17-21
+
+2. Confusion Matrix (test)
+- confusion_matrix + heatmap + figura: src/evaluate.py:23-26
+
+3. Comparativa OHE (full vs grouped vs hash)
+- Estrategias dept: src/train/tfidf_experiments.py:52-66
+- Evaluacion comparativa: src/train/tfidf_experiments.py:126-145
+- Guardado metrics_dept_strategies.json: src/train/tfidf_experiments.py:333-335
+- Grid experimentos opcional: src/train/tfidf_experiments.py:181-188, 358-360
+
+4. Control de combinatoria (no hacer)
+- Vectorizador fijo sin tokenizers/stopwords/char-ngrams/chi2: src/train/tfidf_experiments.py:70-82
+
+5. Estructura minima
+- Vectorizador: src/train/tfidf_experiments.py:70-82
+- Preprocesado texto+metadatos: src/train/tfidf_experiments.py:70-88
+- Modelos: src/train/tfidf_experiments.py:91-112
+- Evaluacion CV: src/train/tfidf_experiments.py:115-123
+- Evaluacion test: src/evaluate.py:12-26
+
+6. Outputs finales
+- metrics_baselines.json: src/train/tfidf_experiments.py:339-342
+- metrics_dept_strategies.json: src/train/tfidf_experiments.py:333-335
+- metrics_test.json: src/evaluate.py:19-21
+- confusion_matrix.png: src/evaluate.py:23-26

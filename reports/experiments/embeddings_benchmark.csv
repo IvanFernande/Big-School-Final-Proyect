@@ -1,0 +1,5 @@
+embedding_model,embedding_dim,time_body_train_s,time_body_test_s,time_dept_train_s,time_dept_test_s,time_tags_train_s,time_tags_test_s,time_body_tags_train_s,time_body_tags_test_s,time_total_s,cache_body_train,cache_body_test,cache_dept_train,cache_dept_test,cache_tags_train,cache_tags_test,cache_body_tags_train,cache_body_tags_test
+sentence-transformers/all-MiniLM-L6-v2,384,0.2949,0.073,0.2644,0.0733,4.9866,0.63,7.0955,1.8701,15.2877,True,True,True,True,False,False,False,False
+sentence-transformers/all-mpnet-base-v2,768,0.5649,0.137,0.5244,0.1525,3.5145,0.7286,17.2629,4.3808,27.2657,True,True,True,True,False,False,False,False
+sentence-transformers/all-distilroberta-v1,768,8.4535,2.0962,1.5819,0.3784,1.7674,0.6112,8.7471,2.2572,25.8929,False,False,False,False,False,False,False,False
+sentence-transformers/multi-qa-MiniLM-L6-cos-v1,384,6.3209,1.4975,1.4149,0.4364,1.9167,0.5516,6.072,1.7138,19.9237,False,False,False,False,False,False,False,False

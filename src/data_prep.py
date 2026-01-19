@@ -1,9 +1,12 @@
 import ast
+import logging
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from .config import SEED, DATA_RAW, DATA_PROCESSED
 
 EXPECTED_PRIORITIES = {"low", "medium", "high"}
+
+logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
 
 
 def load() -> pd.DataFrame:
@@ -29,10 +32,17 @@ def add_features(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def split(df: pd.DataFrame):
+def split(df: pd.DataFrame, random_state=None):
     X = df[["Body", "Department", "n_tags", "len_words"]]
     y = df["Priority"]
-    return train_test_split(X, y, test_size=0.2, stratify=y, random_state=SEED)
+    if random_state is None:
+        random_state = SEED
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, stratify=y, random_state=random_state
+    )
+    logging.info("Distribución train: %s", y_train.value_counts().to_dict())
+    logging.info("Distribución test: %s", y_test.value_counts().to_dict())
+    return X_train, X_test, y_train, y_test
 
 
 def main():

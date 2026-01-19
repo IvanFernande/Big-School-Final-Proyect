@@ -1,0 +1,84 @@
+{
+  "config": {
+    "base_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "num_iterations": 10,
+    "num_epochs": 2,
+    "batch_size": 32,
+    "learning_rate": 5e-05,
+    "fast_mode": false
+  },
+  "val_metrics": {
+    "accuracy": 0.6665625,
+    "macro_f1": 0.6443819666130132,
+    "balanced_accuracy": 0.639581270131648,
+    "high_recall": 0.7334943639291466,
+    "high_precision": 0.7288,
+    "high_f1": 0.7311396468699839,
+    "classification_report": {
+      "high": {
+        "precision": 0.7288,
+        "recall": 0.7334943639291466,
+        "f1-score": 0.7311396468699839,
+        "support": 1242.0
+      },
+      "medium": {
+        "precision": 0.6446518305814788,
+        "recall": 0.6860198624904508,
+        "f1-score": 0.6646928201332346,
+        "support": 1309.0
+      },
+      "low": {
+        "precision": 0.5816876122082585,
+        "recall": 0.49922958397534667,
+        "f1-score": 0.5373134328358209,
+        "support": 649.0
+      },
+      "accuracy": 0.6665625,
+      "macro avg": {
+        "precision": 0.6517131475965791,
+        "recall": 0.639581270131648,
+        "f1-score": 0.6443819666130132,
+        "support": 3200.0
+      },
+      "weighted avg": {
+        "precision": 0.6645419082982236,
+        "recall": 0.6665625,
+        "f1-score": 0.6646483627741787,
+        "support": 3200.0
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "matrix": [
+        [
+          911,
+          263,
+          68
+        ],
+        [
+          246,
+          898,
+          165
+        ],
+        [
+          93,
+          232,
+          324
+        ]
+      ]
+    },
+    "selection_score": 0.6711156858078531
+  },
+  "seed": 42,
+  "n_train": 11200,
+  "n_val": 3200,
+  "n_test": 1600,
+  "fast_mode": false,
+  "fast_train_max": null,
+  "fast_val_max": null,
+  "experiment_timestamp": "20260118_144730"
+}

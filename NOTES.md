@@ -85,3 +85,7 @@
 - EDA y reportes generados; artefactos disponibles en `reports/` y `reports/figures/`.
 - API lista para servir predicciones con el modelo entrenado.
 - Metricas de negocio simuladas disponibles; falta visualizacion y sensibilidad.
+
+---
+
+Si quieres, lo siguiente es: generar las gráficas de negocio y/o consolidar un diagrama de pipeline, pero por contenido del enunciado ya está completo.

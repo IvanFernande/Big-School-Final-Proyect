@@ -1,0 +1,66 @@
+{
+  "id": "logreg_body_ohe_num_2.0_sentence-transformers_multi-qa-MiniLM-L6-cos-v1",
+  "embedding_model": "sentence-transformers/multi-qa-MiniLM-L6-cos-v1",
+  "feature_strategy": "body_ohe_num",
+  "classifier": "logreg",
+  "C": 2.0,
+  "mode": "FULL",
+  "cv": {
+    "f1_macro_mean": 0.4999680318719431,
+    "f1_macro_std": 0.0028825904480276475,
+    "balanced_accuracy_mean": 0.5188083230897811,
+    "balanced_accuracy_std": 0.003655730556687978
+  },
+  "test": {
+    "classification_report": {
+      "high": {
+        "precision": 0.6060862214708369,
+        "recall": 0.6229365768896612,
+        "f1-score": 0.6143958868894601,
+        "support": 2302.0
+      },
+      "low": {
+        "precision": 0.36632039365773644,
+        "recall": 0.5569409808811305,
+        "f1-score": 0.4419525065963061,
+        "support": 1203.0
+      },
+      "medium": {
+        "precision": 0.5348703170028818,
+        "recall": 0.38268041237113404,
+        "f1-score": 0.4461538461538462,
+        "support": 2425.0
+      },
+      "accuracy": 0.5112984822934232,
+      "macro avg": {
+        "precision": 0.5024256440438184,
+        "recall": 0.5208526567139752,
+        "f1-score": 0.5008340798798708,
+        "support": 5930.0
+      },
+      "weighted avg": {
+        "precision": 0.5283228388074387,
+        "recall": 0.5112984822934232,
+        "f1-score": 0.5106123564886966,
+        "support": 5930.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        1434,
+        498,
+        370
+      ],
+      [
+        708,
+        928,
+        789
+      ],
+      [
+        224,
+        309,
+        670
+      ]
+    ]
+  }
+}

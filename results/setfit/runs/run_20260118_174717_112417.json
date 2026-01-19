@@ -1,0 +1,86 @@
+{
+  "id": "20260118_174717_112417",
+  "timestamp": "20260118_174717_112417",
+  "experiment_timestamp": "20260118_144730",
+  "seed": 42,
+  "n_train": 11200,
+  "n_val": 3200,
+  "n_test": 1600,
+  "fast_mode": false,
+  "fast_train_max": null,
+  "fast_val_max": null,
+  "config": {
+    "base_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "num_iterations": 10,
+    "num_epochs": 1,
+    "batch_size": 32,
+    "learning_rate": 2e-05,
+    "fast_mode": false
+  },
+  "val_metrics": {
+    "accuracy": 0.568125,
+    "macro_f1": 0.5406592749205121,
+    "balanced_accuracy": 0.5322855665667809,
+    "high_recall": 0.6336553945249598,
+    "high_precision": 0.6280925778132482,
+    "high_f1": 0.6308617234468938,
+    "classification_report": {
+      "high": {
+        "precision": 0.6280925778132482,
+        "recall": 0.6336553945249598,
+        "f1-score": 0.6308617234468938,
+        "support": 1242.0
+      },
+      "medium": {
+        "precision": 0.5261437908496732,
+        "recall": 0.6149732620320856,
+        "f1-score": 0.5671010919337796,
+        "support": 1309.0
+      },
+      "low": {
+        "precision": 0.5419664268585132,
+        "recall": 0.34822804314329736,
+        "f1-score": 0.42401500938086306,
+        "support": 649.0
+      },
+      "accuracy": 0.568125,
+      "macro avg": {
+        "precision": 0.5654009318404782,
+        "recall": 0.5322855665667808,
+        "f1-score": 0.5406592749205121,
+        "support": 3200.0
+      },
+      "weighted avg": {
+        "precision": 0.5689216921554536,
+        "recall": 0.568125,
+        "f1-score": 0.5628285409220437,
+        "support": 3200.0
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "matrix": [
+        [
+          787,
+          407,
+          48
+        ],
+        [
+          361,
+          805,
+          143
+        ],
+        [
+          105,
+          318,
+          226
+        ]
+      ]
+    },
+    "selection_score": 0.5685581108018464
+  }
+}

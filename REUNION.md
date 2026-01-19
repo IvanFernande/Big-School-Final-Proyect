@@ -14,3 +14,18 @@ Metricas
 
 Departamentos
 1. Embedding a partir de resumen de dep y tags
+
+---
+
+3 datas sets:
+- train 70
+- validation 20 seleccion del modelo en base a este data
+- test 10 saco metrica del modelo final (simulacion en produccion)
+
+CV o 3 sets, comparar y elegir uno con justificacion
+
+porque LIME 
+
+Metricas negocio: por cada prediccion mala, una penalizacion (dinero/tiempo)
+
+En el repo para reproducirlo y como configurar

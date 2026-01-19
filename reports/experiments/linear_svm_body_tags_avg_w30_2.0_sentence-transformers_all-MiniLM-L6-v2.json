@@ -1,0 +1,66 @@
+{
+  "id": "linear_svm_body_tags_avg_w30_2.0_sentence-transformers_all-MiniLM-L6-v2",
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "feature_strategy": "body_tags_avg_w30",
+  "classifier": "linear_svm",
+  "C": 2.0,
+  "mode": "FULL",
+  "cv": {
+    "f1_macro_mean": 0.43158696541420394,
+    "f1_macro_std": 0.004310330752881694,
+    "balanced_accuracy_mean": 0.43070176578801705,
+    "balanced_accuracy_std": 0.004837053761146349
+  },
+  "test": {
+    "classification_report": {
+      "high": {
+        "precision": 0.5169712793733682,
+        "recall": 0.5160729800173762,
+        "f1-score": 0.5165217391304348,
+        "support": 2302.0
+      },
+      "low": {
+        "precision": 0.31446540880503143,
+        "recall": 0.29093931837073983,
+        "f1-score": 0.3022452504317789,
+        "support": 1203.0
+      },
+      "medium": {
+        "precision": 0.462882096069869,
+        "recall": 0.4808247422680412,
+        "f1-score": 0.4716828478964401,
+        "support": 2425.0
+      },
+      "accuracy": 0.4559865092748735,
+      "macro avg": {
+        "precision": 0.4314395947494229,
+        "recall": 0.4292790135520524,
+        "f1-score": 0.43014994581955124,
+        "support": 5930.0
+      },
+      "weighted avg": {
+        "precision": 0.45377046456650566,
+        "recall": 0.4559865092748735,
+        "f1-score": 0.4547158492237029,
+        "support": 5930.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        1188,
+        822,
+        292
+      ],
+      [
+        788,
+        1166,
+        471
+      ],
+      [
+        322,
+        531,
+        350
+      ]
+    ]
+  }
+}

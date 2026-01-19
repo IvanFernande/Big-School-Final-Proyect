@@ -11,27 +11,27 @@ from datetime import datetime
 from typing import Any, Dict, List
 
 import joblib
+import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.compose import ColumnTransformer
 from sklearn.feature_extraction import FeatureHasher
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import FunctionTransformer, OneHotEncoder, StandardScaler
 from sklearn.svm import LinearSVC
 
-from src.config import MODEL_PATH, REPORTS_DIR, SEED
+from src.config import FIG_DIR, MODEL_PATH, REPORTS_DIR, SEED
 from src.data_prep import add_features, load, split
 
-FAST_MODE = os.getenv("FAST_MODE", "0") == "1"
-N_FOLDS = 2 if FAST_MODE else 3
-NGRAM_RANGE = (1, 1) if FAST_MODE else (1, 2)
-MAX_FEATURES = 8000 if FAST_MODE else None
-MAX_ITER_LOGREG = 2000 if FAST_MODE else 5000
-MAX_ITER_SVM = 4000 if FAST_MODE else 8000
+N_FOLDS = 3
+NGRAM_RANGE = (1, 2)
+MAX_FEATURES = None
+MAX_ITER_LOGREG = 5000
+MAX_ITER_SVM = 8000
 EXPERIMENTS_DIR = REPORTS_DIR / "experiments"
 
 
@@ -94,7 +94,7 @@ def candidate_models(dept_strategy="ohe_full", min_freq=20, n_hash=2**11):
         "logreg": Pipeline(
             [
                 ("pre", pre),
-                ("clf", LogisticRegression(max_iter=MAX_ITER_LOGREG, class_weight="balanced", solver="saga", penalty="l2", C=1.0, n_jobs=-1)),
+                ("clf", LogisticRegression(max_iter=MAX_ITER_LOGREG, class_weight="balanced", solver="saga", C=1.0)),
             ]
         ),
         "linear_svm": Pipeline(
@@ -165,7 +165,7 @@ def _model_from_name(name: str, preprocessor: ColumnTransformer, C: float = 1.0)
         return Pipeline(
             [
                 ("pre", preprocessor),
-                ("clf", LogisticRegression(max_iter=MAX_ITER_LOGREG, class_weight="balanced", solver="saga", penalty="l2", C=C, n_jobs=-1)),
+                ("clf", LogisticRegression(max_iter=MAX_ITER_LOGREG, class_weight="balanced", solver="saga", C=C)),
             ]
         )
     if name == "multinomial_nb":
@@ -222,7 +222,7 @@ def run_experiment_suite(
         exp_result = {
             "id": name,
             "timestamp_utc": datetime.utcnow().isoformat() + "Z",
-            "mode": "FAST" if FAST_MODE else "FULL",
+            "mode": "FULL",
             "params": {
                 "model": model_name,
                 "C": C,
@@ -322,8 +322,7 @@ def run_pycaret_benchmark(df):
 
 
 def main():
-    mode = "FAST" if FAST_MODE else "FULL"
-    print(f"[train] Inicio entrenamiento (modo {mode}). N_FOLDS={N_FOLDS}, NGRAM_RANGE={NGRAM_RANGE}, MAX_FEATURES={MAX_FEATURES}")
+    print(f"[train] Inicio entrenamiento (modo FULL). N_FOLDS={N_FOLDS}, NGRAM_RANGE={NGRAM_RANGE}, MAX_FEATURES={MAX_FEATURES}")
     df = add_features(load())
     X_train, X_test, y_train, y_test = split(df)
     print(f"[train] Datos preparados. Train={len(X_train)}, Test={len(X_test)}")
@@ -350,6 +349,22 @@ def main():
     MODEL_PATH.parent.mkdir(parents=True, exist_ok=True)
     joblib.dump(best_model, MODEL_PATH)
     print(f"[train] Modelo guardado en {MODEL_PATH}")
+    # Evaluación final en test (mismo script)
+    y_pred = best_model.predict(X_test)
+    report = classification_report(y_test, y_pred, output_dict=True, zero_division=0)
+    with open(REPORTS_DIR / "metrics_test.json", "w", encoding="utf-8") as f:
+        json.dump(report, f, indent=2)
+
+    cm = confusion_matrix(y_test, y_pred, labels=best_model.classes_)
+    FIG_DIR.mkdir(parents=True, exist_ok=True)
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=best_model.classes_)
+    fig, ax = plt.subplots(figsize=(5, 4))
+    disp.plot(ax=ax, cmap="Blues", values_format="d", colorbar=False)
+    fig.tight_layout()
+    fig.savefig(FIG_DIR / "confusion_matrix.png", dpi=200, bbox_inches="tight")
+    plt.close(fig)
+    print("[train] Métricas guardadas en reports/metrics_test.json y matriz en reports/figures/confusion_matrix.png")
+
 
     if os.getenv("RUN_PYCARET", "0") == "1":
         print("Ejecutando benchmark PyCaret...")

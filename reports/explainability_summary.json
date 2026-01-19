@@ -1,0 +1,683 @@
+{
+  "model_dir": "models/setfit_model",
+  "device": "cuda",
+  "n_eval": 200,
+  "n_local_per_class": 2,
+  "labels": [
+    "high",
+    "low",
+    "medium"
+  ],
+  "global_top_tokens": {
+    "high": [
+      {
+        "token": "Technical",
+        "weight": 17.626691844012534
+      },
+      {
+        "token": "Support",
+        "weight": 11.300214168393383
+      },
+      {
+        "token": "IT",
+        "weight": 4.420155587739237
+      },
+      {
+        "token": "SEP",
+        "weight": 4.183855589510451
+      },
+      {
+        "token": "and",
+        "weight": 3.511583052063012
+      },
+      {
+        "token": "Maintenance",
+        "weight": 2.6229783419802857
+      },
+      {
+        "token": "data",
+        "weight": 2.6173066852155737
+      },
+      {
+        "token": "system",
+        "weight": 2.608312826937443
+      },
+      {
+        "token": "Outages",
+        "weight": 2.352985297139603
+      },
+      {
+        "token": "the",
+        "weight": 2.293061482849476
+      },
+      {
+        "token": "to",
+        "weight": 2.148631379256068
+      },
+      {
+        "token": "investment",
+        "weight": 2.024657127389665
+      },
+      {
+        "token": "integration",
+        "weight": 1.318806573732504
+      },
+      {
+        "token": "team",
+        "weight": 1.28839743282021
+      },
+      {
+        "token": "software",
+        "weight": 1.2728392231736105
+      }
+    ],
+    "low": [
+      {
+        "token": "Support",
+        "weight": 7.855916173855202
+      },
+      {
+        "token": "SEP",
+        "weight": 4.088182578729376
+      },
+      {
+        "token": "the",
+        "weight": 2.823443008924893
+      },
+      {
+        "token": "and",
+        "weight": 2.38133422964863
+      },
+      {
+        "token": "Customer",
+        "weight": 2.228484976917355
+      },
+      {
+        "token": "Technical",
+        "weight": 2.1922603463075907
+      },
+      {
+        "token": "to",
+        "weight": 2.146723011301281
+      },
+      {
+        "token": "social",
+        "weight": 1.9314287301342306
+      },
+      {
+        "token": "cache",
+        "weight": 1.520678080645019
+      },
+      {
+        "token": "IT",
+        "weight": 1.4375596193508748
+      },
+      {
+        "token": "investment",
+        "weight": 1.311509508204591
+      },
+      {
+        "token": "integration",
+        "weight": 1.254754638666111
+      },
+      {
+        "token": "data",
+        "weight": 1.159863910078967
+      },
+      {
+        "token": "Exchanges",
+        "weight": 1.105880360121241
+      },
+      {
+        "token": "Service",
+        "weight": 1.073087391169258
+      }
+    ],
+    "medium": [
+      {
+        "token": "Technical",
+        "weight": 15.697401509218832
+      },
+      {
+        "token": "Support",
+        "weight": 11.07951709418302
+      },
+      {
+        "token": "SEP",
+        "weight": 6.677042621229698
+      },
+      {
+        "token": "IT",
+        "weight": 4.186192427400754
+      },
+      {
+        "token": "the",
+        "weight": 3.851229741205909
+      },
+      {
+        "token": "and",
+        "weight": 3.3506432775997426
+      },
+      {
+        "token": "to",
+        "weight": 2.7994819370605786
+      },
+      {
+        "token": "Maintenance",
+        "weight": 2.3979372292278764
+      },
+      {
+        "token": "data",
+        "weight": 2.2499616410882632
+      },
+      {
+        "token": "system",
+        "weight": 2.2114071519701253
+      },
+      {
+        "token": "integration",
+        "weight": 2.0892354362131598
+      },
+      {
+        "token": "social",
+        "weight": 1.9461730334568201
+      },
+      {
+        "token": "Customer",
+        "weight": 1.681550291807457
+      },
+      {
+        "token": "investment",
+        "weight": 1.6641953950946002
+      },
+      {
+        "token": "Outages",
+        "weight": 1.5503166045849608
+      }
+    ]
+  },
+  "grouped_explainability": [
+    {
+      "cluster": 0,
+      "count": 17,
+      "top_tokens": [
+        {
+          "token": "Support",
+          "weight": 0.23798800909460613
+        },
+        {
+          "token": "SEP",
+          "weight": 0.09467073581044459
+        },
+        {
+          "token": "IT",
+          "weight": 0.08971621837941696
+        },
+        {
+          "token": "timelines",
+          "weight": 0.035990760945691605
+        },
+        {
+          "token": "platform",
+          "weight": 0.03267872896157334
+        },
+        {
+          "token": "crash",
+          "weight": 0.02808772525385119
+        },
+        {
+          "token": "Product",
+          "weight": 0.027109331722620738
+        },
+        {
+          "token": "because",
+          "weight": 0.02445383730648072
+        },
+        {
+          "token": "the",
+          "weight": 0.023518915192862064
+        },
+        {
+          "token": "integration",
+          "weight": 0.023124833476158405
+        },
+        {
+          "token": "not",
+          "weight": 0.02148604113356414
+        },
+        {
+          "token": "and",
+          "weight": 0.01955495691831437
+        },
+        {
+          "token": "logs",
+          "weight": 0.018615248318175768
+        },
+        {
+          "token": "insights",
+          "weight": 0.018416028647145123
+        },
+        {
+          "token": "digital",
+          "weight": 0.017490060191874178
+        }
+      ]
+    },
+    {
+      "cluster": 1,
+      "count": 157,
+      "top_tokens": [
+        {
+          "token": "Support",
+          "weight": 0.037066111365952344
+        },
+        {
+          "token": "Technical",
+          "weight": 0.0334853271315403
+        },
+        {
+          "token": "SEP",
+          "weight": 0.0278932276227209
+        },
+        {
+          "token": "the",
+          "weight": 0.020490455403973526
+        },
+        {
+          "token": "IT",
+          "weight": 0.019512960246298946
+        },
+        {
+          "token": "and",
+          "weight": 0.01812070703915061
+        },
+        {
+          "token": "to",
+          "weight": 0.016344430721809015
+        },
+        {
+          "token": "data",
+          "weight": 0.01348754158916843
+        },
+        {
+          "token": "Maintenance",
+          "weight": 0.013444554526929896
+        },
+        {
+          "token": "social",
+          "weight": 0.012877145094610881
+        },
+        {
+          "token": "Outages",
+          "weight": 0.012409102108967547
+        },
+        {
+          "token": "Customer",
+          "weight": 0.011352888413207687
+        },
+        {
+          "token": "investment",
+          "weight": 0.011315474461414945
+        },
+        {
+          "token": "system",
+          "weight": 0.011280753261917537
+        },
+        {
+          "token": "integration",
+          "weight": 0.010212646796761144
+        }
+      ]
+    },
+    {
+      "cluster": 2,
+      "count": 26,
+      "top_tokens": [
+        {
+          "token": "Technical",
+          "weight": 0.44786235349009645
+        },
+        {
+          "token": "Support",
+          "weight": 0.11955637668423671
+        },
+        {
+          "token": "system",
+          "weight": 0.02779441474916715
+        },
+        {
+          "token": "SEP",
+          "weight": 0.027079006162827456
+        },
+        {
+          "token": "and",
+          "weight": 0.02525690534861872
+        },
+        {
+          "token": "technical",
+          "weight": 0.015409947340720525
+        },
+        {
+          "token": "on",
+          "weight": 0.014563671696882606
+        },
+        {
+          "token": "keyboard",
+          "weight": 0.013844464647090422
+        },
+        {
+          "token": "crashes",
+          "weight": 0.013544068023100288
+        },
+        {
+          "token": "outdated",
+          "weight": 0.013524653809082778
+        },
+        {
+          "token": "investment",
+          "weight": 0.013462395981005027
+        },
+        {
+          "token": "hospital",
+          "weight": 0.012823065437347026
+        },
+        {
+          "token": "to",
+          "weight": 0.012819899817076968
+        },
+        {
+          "token": "resolutions",
+          "weight": 0.012658613570040896
+        },
+        {
+          "token": "protect",
+          "weight": 0.012457206296837125
+        }
+      ]
+    }
+  ],
+  "local_examples": [
+    {
+      "idx": 1860,
+      "true": "high",
+      "pred": "medium",
+      "top_tokens": [
+        {
+          "token": "failures",
+          "weight": 0.27398643581475984
+        },
+        {
+          "token": "users",
+          "weight": 0.21614040004856422
+        },
+        {
+          "token": "IFTTT",
+          "weight": -0.11796129371286142
+        },
+        {
+          "token": "is",
+          "weight": -0.08935256259983287
+        },
+        {
+          "token": "have",
+          "weight": 0.0785081859069024
+        },
+        {
+          "token": "required",
+          "weight": -0.06764603492134155
+        },
+        {
+          "token": "The",
+          "weight": -0.06685822580747948
+        },
+        {
+          "token": "in",
+          "weight": -0.06092177053896833
+        },
+        {
+          "token": "Windows",
+          "weight": 0.060206438168431346
+        },
+        {
+          "token": "system",
+          "weight": 0.04771476129088036
+        }
+      ]
+    },
+    {
+      "idx": 5912,
+      "true": "high",
+      "pred": "medium",
+      "top_tokens": [
+        {
+          "token": "comprehensive",
+          "weight": 0.28706310850934064
+        },
+        {
+          "token": "Exchanges",
+          "weight": -0.18120436678192153
+        },
+        {
+          "token": "limit",
+          "weight": 0.1737164061332031
+        },
+        {
+          "token": "which",
+          "weight": -0.13954588422352632
+        },
+        {
+          "token": "fulfill",
+          "weight": 0.12746714665628509
+        },
+        {
+          "token": "is",
+          "weight": 0.12611181559578447
+        },
+        {
+          "token": "ensure",
+          "weight": -0.11562794460400629
+        },
+        {
+          "token": "the",
+          "weight": -0.10932288497062631
+        },
+        {
+          "token": "processed",
+          "weight": 0.10888610097759267
+        },
+        {
+          "token": "for",
+          "weight": -0.05541994204208529
+        }
+      ]
+    },
+    {
+      "idx": 5800,
+      "true": "low",
+      "pred": "low",
+      "top_tokens": [
+        {
+          "token": "QuickBooks",
+          "weight": 0.681758211904958
+        },
+        {
+          "token": "for",
+          "weight": 0.15728578231912443
+        },
+        {
+          "token": "SaaS",
+          "weight": 0.1504520656979072
+        },
+        {
+          "token": "available",
+          "weight": 0.10890733608625779
+        },
+        {
+          "token": "including",
+          "weight": 0.09652011102550662
+        },
+        {
+          "token": "Customer",
+          "weight": 0.06385711899235758
+        },
+        {
+          "token": "tool",
+          "weight": 0.060742853984935
+        },
+        {
+          "token": "detailed",
+          "weight": -0.05888301818391318
+        },
+        {
+          "token": "greatly",
+          "weight": -0.05635548764768962
+        },
+        {
+          "token": "connectors",
+          "weight": 0.048708944503601935
+        }
+      ]
+    },
+    {
+      "idx": 1887,
+      "true": "low",
+      "pred": "low",
+      "top_tokens": [
+        {
+          "token": "reboot",
+          "weight": 0.44278612155871316
+        },
+        {
+          "token": "check",
+          "weight": 0.3070962544576985
+        },
+        {
+          "token": "parts",
+          "weight": 0.2380728726349411
+        },
+        {
+          "token": "Outages",
+          "weight": -0.1387562204405269
+        },
+        {
+          "token": "was",
+          "weight": 0.13413051832799808
+        },
+        {
+          "token": "issue",
+          "weight": 0.09586776584832314
+        },
+        {
+          "token": "the",
+          "weight": 0.09071960699697515
+        },
+        {
+          "token": "and",
+          "weight": -0.08751601641115975
+        },
+        {
+          "token": "unexpected",
+          "weight": -0.0817013466048581
+        },
+        {
+          "token": "an",
+          "weight": -0.06497593955186708
+        }
+      ]
+    },
+    {
+      "idx": 2590,
+      "true": "medium",
+      "pred": "medium",
+      "top_tokens": [
+        {
+          "token": "heightened",
+          "weight": 0.2682110043716353
+        },
+        {
+          "token": "project",
+          "weight": 0.12886415890894792
+        },
+        {
+          "token": "Customer",
+          "weight": 0.1042050843886401
+        },
+        {
+          "token": "user",
+          "weight": 0.09834054887513433
+        },
+        {
+          "token": "limited",
+          "weight": 0.08174671486040715
+        },
+        {
+          "token": "amid",
+          "weight": -0.06871384829721572
+        },
+        {
+          "token": "SaaS",
+          "weight": -0.059151978920746646
+        },
+        {
+          "token": "Service",
+          "weight": -0.05712412068196016
+        },
+        {
+          "token": "resources",
+          "weight": 0.042484759524125025
+        },
+        {
+          "token": "the",
+          "weight": 0.03776387075508014
+        }
+      ]
+    },
+    {
+      "idx": 2990,
+      "true": "medium",
+      "pred": "medium",
+      "top_tokens": [
+        {
+          "token": "issues",
+          "weight": 0.1531214020051314
+        },
+        {
+          "token": "SEP",
+          "weight": 0.13969222078711457
+        },
+        {
+          "token": "abnormal",
+          "weight": 0.11310275151116296
+        },
+        {
+          "token": "Exchanges",
+          "weight": -0.10886947065373437
+        },
+        {
+          "token": "Epson",
+          "weight": 0.08837758548951971
+        },
+        {
+          "token": "consumption",
+          "weight": 0.06748677950705857
+        },
+        {
+          "token": "concerns",
+          "weight": 0.06576762511282089
+        },
+        {
+          "token": "or",
+          "weight": 0.06089476345408569
+        },
+        {
+          "token": "Returns",
+          "weight": -0.04775412371428565
+        },
+        {
+          "token": "encountered",
+          "weight": -0.038875326987826565
+        }
+      ]
+    }
+  ]
+}

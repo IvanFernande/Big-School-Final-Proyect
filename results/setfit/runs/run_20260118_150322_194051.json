@@ -1,0 +1,86 @@
+{
+  "id": "20260118_150322_194051",
+  "timestamp": "20260118_150322_194051",
+  "experiment_timestamp": "20260118_144730",
+  "seed": 42,
+  "n_train": 11200,
+  "n_val": 3200,
+  "n_test": 1600,
+  "fast_mode": false,
+  "fast_train_max": null,
+  "fast_val_max": null,
+  "config": {
+    "base_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "num_iterations": 5,
+    "num_epochs": 1,
+    "batch_size": 16,
+    "learning_rate": 5e-05,
+    "fast_mode": false
+  },
+  "val_metrics": {
+    "accuracy": 0.5453125,
+    "macro_f1": 0.5027928673075619,
+    "balanced_accuracy": 0.49885501841228863,
+    "high_recall": 0.644122383252818,
+    "high_precision": 0.6074411541381929,
+    "high_f1": 0.6252442360296991,
+    "classification_report": {
+      "high": {
+        "precision": 0.6074411541381929,
+        "recall": 0.644122383252818,
+        "f1-score": 0.6252442360296991,
+        "support": 1242.0
+      },
+      "medium": {
+        "precision": 0.5068493150684932,
+        "recall": 0.5935828877005348,
+        "f1-score": 0.5467980295566502,
+        "support": 1309.0
+      },
+      "low": {
+        "precision": 0.48,
+        "recall": 0.2588597842835131,
+        "f1-score": 0.33633633633633636,
+        "support": 649.0
+      },
+      "accuracy": 0.5453125,
+      "macro avg": {
+        "precision": 0.5314301564022287,
+        "recall": 0.4988550184122886,
+        "f1-score": 0.5027928673075619,
+        "support": 3200.0
+      },
+      "weighted avg": {
+        "precision": 0.5404461458950915,
+        "recall": 0.5453125,
+        "f1-score": 0.5345607012877575,
+        "support": 3200.0
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "matrix": [
+        [
+          800,
+          409,
+          33
+        ],
+        [
+          383,
+          777,
+          149
+        ],
+        [
+          134,
+          347,
+          168
+        ]
+      ]
+    },
+    "selection_score": 0.5451917220911388
+  }
+}
