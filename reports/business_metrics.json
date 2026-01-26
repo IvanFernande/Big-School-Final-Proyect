@@ -1,0 +1,14 @@
+{
+  "mode": "queue",
+  "seed": 42,
+  "agents": 8,
+  "horizon_h": 24.0,
+  "model_path": "models/ticket_priority.joblib",
+  "metrics": {
+    "viol_rate_true": 0.9979763912310287,
+    "viol_rate_model": 0.9952782462057336,
+    "cost_true_eur": 1692100.0,
+    "cost_model_eur": 1692200.0,
+    "savings_eur": -100.0
+  }
+}

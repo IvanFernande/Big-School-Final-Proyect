@@ -1,0 +1,301 @@
+idx,true,pred,provider,model,api_key_idx,prompt_style,n_examples,latency_ms,parse_ok,parse_error,answer_raw
+4250,high,low,ollama,deepseek-r1:8b,,base,6,5620.85,1,,low
+4859,high,low,ollama,deepseek-r1:8b,,base,6,4108.41,1,,Priority: low
+1630,high,low,ollama,deepseek-r1:8b,,base,6,2169.32,1,,low
+2294,high,medium,ollama,deepseek-r1:8b,,base,6,12672.26,1,,medium
+5872,high,medium,ollama,deepseek-r1:8b,,base,6,5389.8,1,,medium
+1445,high,medium,ollama,deepseek-r1:8b,,base,6,2732.85,1,,medium
+2577,high,low,ollama,deepseek-r1:8b,,base,6,3645.67,1,,low
+4323,high,medium,ollama,deepseek-r1:8b,,base,6,4090.54,1,,**Priority: medium**
+2377,high,medium,ollama,deepseek-r1:8b,,base,6,4120.33,1,,medium
+4744,high,medium,ollama,deepseek-r1:8b,,base,6,2754.95,1,,medium
+973,high,medium,ollama,deepseek-r1:8b,,base,6,3880.52,1,,medium
+586,high,high,ollama,deepseek-r1:8b,,base,6,4231.07,1,,Priority: high
+5558,high,high,ollama,deepseek-r1:8b,,base,6,5105.98,1,,high
+2988,high,high,ollama,deepseek-r1:8b,,base,6,3602.02,1,,high
+4602,high,low,ollama,deepseek-r1:8b,,base,6,6485.7,1,,low
+2530,high,medium,ollama,deepseek-r1:8b,,base,6,4405.15,1,,medium
+4304,high,medium,ollama,deepseek-r1:8b,,base,6,3417.58,1,,Priority: medium
+2838,high,high,ollama,deepseek-r1:8b,,base,6,2184.68,1,,high
+2066,high,low,ollama,deepseek-r1:8b,,base,6,4308.33,1,,low
+1729,high,low,ollama,deepseek-r1:8b,,base,6,3080.75,1,,low
+4907,high,high,ollama,deepseek-r1:8b,,base,6,2863.4,1,,high
+737,high,low,ollama,deepseek-r1:8b,,base,6,2225.67,1,,low
+2572,high,low,ollama,deepseek-r1:8b,,base,6,3586.11,1,,low
+3707,high,low,ollama,deepseek-r1:8b,,base,6,4387.48,1,,Priority: low
+4883,high,low,ollama,deepseek-r1:8b,,base,6,3426.63,1,,low
+2279,high,medium,ollama,deepseek-r1:8b,,base,6,4322.01,1,,**Priority: medium**
+5882,high,medium,ollama,deepseek-r1:8b,,base,6,3417.11,1,,medium
+5096,high,low,ollama,deepseek-r1:8b,,base,6,1492.07,1,,low
+3271,high,medium,ollama,deepseek-r1:8b,,base,6,2741.61,1,,medium
+4002,high,low,ollama,deepseek-r1:8b,,base,6,2683.44,1,,low
+3901,high,high,ollama,deepseek-r1:8b,,base,6,2854.34,1,,high
+4049,high,high,ollama,deepseek-r1:8b,,base,6,2669.16,1,,high
+2702,high,medium,ollama,deepseek-r1:8b,,base,6,8379.86,1,,medium
+4400,high,low,ollama,deepseek-r1:8b,,base,6,7269.02,1,,low
+2782,high,low,ollama,deepseek-r1:8b,,base,6,4443.72,1,,low
+3969,high,medium,ollama,deepseek-r1:8b,,base,6,3895.74,1,,medium
+5321,high,medium,ollama,deepseek-r1:8b,,base,6,3652.6,1,,medium
+4845,high,high,ollama,deepseek-r1:8b,,base,6,11312.5,1,,high
+4265,high,low,ollama,deepseek-r1:8b,,base,6,4199.44,1,,low
+557,high,low,ollama,deepseek-r1:8b,,base,6,3485.85,1,,low
+3650,high,low,ollama,deepseek-r1:8b,,base,6,2509.01,1,,low
+2910,high,medium,ollama,deepseek-r1:8b,,base,6,2190.44,1,,medium
+1096,high,medium,ollama,deepseek-r1:8b,,base,6,2069.09,1,,medium
+4711,high,medium,ollama,deepseek-r1:8b,,base,6,3191.08,1,,medium
+2871,high,low,ollama,deepseek-r1:8b,,base,6,2792.03,1,,low
+2770,high,medium,ollama,deepseek-r1:8b,,base,6,2170.11,1,,medium
+3107,high,high,ollama,deepseek-r1:8b,,base,6,4303.87,1,,high
+988,high,high,ollama,deepseek-r1:8b,,base,6,1761.57,1,,high
+42,high,medium,ollama,deepseek-r1:8b,,base,6,2632.21,1,,Priority: medium
+3998,high,medium,ollama,deepseek-r1:8b,,base,6,4448.05,1,,medium
+5029,high,low,ollama,deepseek-r1:8b,,base,6,2299.43,1,,low
+4704,high,low,ollama,deepseek-r1:8b,,base,6,2921.19,1,,low
+4588,high,low,ollama,deepseek-r1:8b,,base,6,3018.97,1,,low
+416,high,medium,ollama,deepseek-r1:8b,,base,6,3519.71,1,,medium
+553,high,medium,ollama,deepseek-r1:8b,,base,6,11457.26,1,,medium
+5208,high,medium,ollama,deepseek-r1:8b,,base,6,1709.09,1,,medium
+5784,high,medium,ollama,deepseek-r1:8b,,base,6,3321.42,1,,medium
+3634,high,medium,ollama,deepseek-r1:8b,,base,6,4991.7,1,,medium
+2729,high,low,ollama,deepseek-r1:8b,,base,6,2243.69,1,,low
+1250,high,medium,ollama,deepseek-r1:8b,,base,6,2813.76,1,,medium
+4455,high,low,ollama,deepseek-r1:8b,,base,6,2262.54,1,,Priority: low
+1382,high,medium,ollama,deepseek-r1:8b,,base,6,2452.09,1,,medium
+5470,high,low,ollama,deepseek-r1:8b,,base,6,2120.84,1,,low
+5579,high,high,ollama,deepseek-r1:8b,,base,6,3656.4,1,,Priority: high
+763,high,low,ollama,deepseek-r1:8b,,base,6,2676.21,1,,Priority: low
+385,high,medium,ollama,deepseek-r1:8b,,base,6,4980.1,1,,medium
+4660,high,low,ollama,deepseek-r1:8b,,base,6,1338.56,1,,low
+5235,high,medium,ollama,deepseek-r1:8b,,base,6,4015.67,1,,medium
+1965,high,high,ollama,deepseek-r1:8b,,base,6,1743.83,1,,high
+3592,high,medium,ollama,deepseek-r1:8b,,base,6,12845.32,1,,medium
+3161,high,high,ollama,deepseek-r1:8b,,base,6,2982.3,1,,high
+5503,high,low,ollama,deepseek-r1:8b,,base,6,3903.19,1,,low
+1856,high,high,ollama,deepseek-r1:8b,,base,6,3708.44,1,,**Priority: high**
+830,high,medium,ollama,deepseek-r1:8b,,base,6,4350.95,1,,medium
+472,high,medium,ollama,deepseek-r1:8b,,base,6,1968.36,1,,medium
+1197,high,high,ollama,deepseek-r1:8b,,base,6,8142.48,1,,Priority: high
+4676,high,medium,ollama,deepseek-r1:8b,,base,6,3307.53,1,,medium
+2119,high,high,ollama,deepseek-r1:8b,,base,6,1722.61,1,,high
+4666,high,low,ollama,deepseek-r1:8b,,base,6,4709.4,1,,low
+3927,high,low,ollama,deepseek-r1:8b,,base,6,3513.48,1,,low
+289,high,high,ollama,deepseek-r1:8b,,base,6,2665.35,1,,Priority: high
+1184,high,high,ollama,deepseek-r1:8b,,base,6,2077.76,1,,high
+4407,high,low,ollama,deepseek-r1:8b,,base,6,2216.99,1,,low
+3146,high,medium,ollama,deepseek-r1:8b,,base,6,11208.3,1,,medium
+2556,high,low,ollama,deepseek-r1:8b,,base,6,2254.65,1,,low
+4431,high,medium,ollama,deepseek-r1:8b,,base,6,2388.5,1,,Priority: medium
+1930,high,low,ollama,deepseek-r1:8b,,base,6,2136.76,1,,low
+2170,high,medium,ollama,deepseek-r1:8b,,base,6,3583.59,1,,medium
+3879,high,low,ollama,deepseek-r1:8b,,base,6,3441.63,1,,low
+2564,high,high,ollama,deepseek-r1:8b,,base,6,3908.53,1,,**Priority: high**
+1365,high,medium,ollama,deepseek-r1:8b,,base,6,2739.39,1,,medium
+2127,high,medium,ollama,deepseek-r1:8b,,base,6,2705.96,1,,medium
+4138,high,medium,ollama,deepseek-r1:8b,,base,6,2248.32,1,,medium
+4620,high,low,ollama,deepseek-r1:8b,,base,6,2659.91,1,,low
+914,high,medium,ollama,deepseek-r1:8b,,base,6,3197.43,1,,medium
+2701,high,medium,ollama,deepseek-r1:8b,,base,6,2577.59,1,,medium
+2137,high,high,ollama,deepseek-r1:8b,,base,6,8045.67,1,,high
+4080,high,low,ollama,deepseek-r1:8b,,base,6,2316.01,1,,Priority: low
+4890,high,low,ollama,deepseek-r1:8b,,base,6,3832.67,1,,low
+3884,high,medium,ollama,deepseek-r1:8b,,base,6,9696.01,1,,medium
+3701,low,medium,ollama,deepseek-r1:8b,,base,6,2401.75,1,,medium
+457,low,low,ollama,deepseek-r1:8b,,base,6,2523.85,1,,low
+5369,low,low,ollama,deepseek-r1:8b,,base,6,2270.74,1,,low
+35,low,medium,ollama,deepseek-r1:8b,,base,6,2411.14,1,,medium
+564,low,medium,ollama,deepseek-r1:8b,,base,6,1761.83,1,,medium
+917,low,medium,ollama,deepseek-r1:8b,,base,6,2499.24,1,,medium
+1056,low,low,ollama,deepseek-r1:8b,,base,6,3795.09,1,,Priority: low
+2555,low,medium,ollama,deepseek-r1:8b,,base,6,9396.36,1,,medium
+2550,low,low,ollama,deepseek-r1:8b,,base,6,3276.76,1,,low
+3799,low,medium,ollama,deepseek-r1:8b,,base,6,2528.88,1,,medium
+4544,low,low,ollama,deepseek-r1:8b,,base,6,2228.76,1,,low
+818,low,low,ollama,deepseek-r1:8b,,base,6,3993.8,1,,low
+2439,low,low,ollama,deepseek-r1:8b,,base,6,6995.85,1,,low
+962,low,low,ollama,deepseek-r1:8b,,base,6,2373.92,1,,low
+438,low,medium,ollama,deepseek-r1:8b,,base,6,2659.85,1,,medium
+89,low,medium,ollama,deepseek-r1:8b,,base,6,3839.8,1,,medium
+740,low,low,ollama,deepseek-r1:8b,,base,6,6818.74,1,,low
+2807,low,high,ollama,deepseek-r1:8b,,base,6,5567.4,1,,Priority: high
+2569,low,low,ollama,deepseek-r1:8b,,base,6,2276.16,1,,low
+2987,low,low,ollama,deepseek-r1:8b,,base,6,11922.5,1,,low
+1620,low,low,ollama,deepseek-r1:8b,,base,6,9029.41,1,,low
+4291,low,low,ollama,deepseek-r1:8b,,base,6,7333.75,1,,low
+5679,low,low,ollama,deepseek-r1:8b,,base,6,3361.52,1,,Priority: low
+4019,low,medium,ollama,deepseek-r1:8b,,base,6,3245.01,1,,medium
+4041,low,medium,ollama,deepseek-r1:8b,,base,6,3399.49,1,,**Priority:** medium
+3861,low,low,ollama,deepseek-r1:8b,,base,6,2712.09,1,,low
+4275,low,low,ollama,deepseek-r1:8b,,base,6,8020.56,1,,low
+2386,low,low,ollama,deepseek-r1:8b,,base,6,2291.66,1,,low
+3364,low,low,ollama,deepseek-r1:8b,,base,6,5918.42,1,,low
+3349,low,low,ollama,deepseek-r1:8b,,base,6,3223.88,1,,low
+3247,low,low,ollama,deepseek-r1:8b,,base,6,2094.04,1,,Priority: low
+1648,low,medium,ollama,deepseek-r1:8b,,base,6,4596.48,1,,medium
+3124,low,medium,ollama,deepseek-r1:8b,,base,6,2925.5,1,,medium
+4325,low,medium,ollama,deepseek-r1:8b,,base,6,1863.57,1,,medium
+2503,low,low,ollama,deepseek-r1:8b,,base,6,2916.63,1,,low
+459,low,medium,ollama,deepseek-r1:8b,,base,6,14674.93,1,,medium
+85,low,low,ollama,deepseek-r1:8b,,base,6,2876.48,1,,low
+1017,low,low,ollama,deepseek-r1:8b,,base,6,3400.01,1,,low
+3540,low,low,ollama,deepseek-r1:8b,,base,6,4860.66,1,,low
+1347,low,low,ollama,deepseek-r1:8b,,base,6,2446.13,1,,low
+657,low,low,ollama,deepseek-r1:8b,,base,6,2172.63,1,,low
+1607,low,low,ollama,deepseek-r1:8b,,base,6,3946.17,1,,low
+365,low,low,ollama,deepseek-r1:8b,,base,6,4555.04,1,,low
+2466,low,medium,ollama,deepseek-r1:8b,,base,6,5435.42,1,,medium
+786,low,low,ollama,deepseek-r1:8b,,base,6,2894.63,1,,low
+1519,low,low,ollama,deepseek-r1:8b,,base,6,2267.84,1,,low
+5078,low,low,ollama,deepseek-r1:8b,,base,6,6637.0,1,,low
+4508,low,low,ollama,deepseek-r1:8b,,base,6,2603.95,1,,low
+3568,low,low,ollama,deepseek-r1:8b,,base,6,2069.39,1,,low
+4345,low,medium,ollama,deepseek-r1:8b,,base,6,2502.9,1,,medium
+1855,low,medium,ollama,deepseek-r1:8b,,base,6,2748.55,1,,medium
+1417,low,low,ollama,deepseek-r1:8b,,base,6,6207.07,1,,low
+916,low,medium,ollama,deepseek-r1:8b,,base,6,3770.39,1,,medium
+1917,low,high,ollama,deepseek-r1:8b,,base,6,19694.32,1,,high
+2833,low,low,ollama,deepseek-r1:8b,,base,6,1830.39,1,,low
+3913,low,low,ollama,deepseek-r1:8b,,base,6,2222.66,1,,low
+1327,low,medium,ollama,deepseek-r1:8b,,base,6,2640.26,1,,medium
+1668,low,low,ollama,deepseek-r1:8b,,base,6,2333.04,1,,low
+3155,low,medium,ollama,deepseek-r1:8b,,base,6,2472.07,1,,medium
+1765,low,medium,ollama,deepseek-r1:8b,,base,6,2624.56,1,,medium
+91,low,low,ollama,deepseek-r1:8b,,base,6,3267.27,1,,low
+2164,low,medium,ollama,deepseek-r1:8b,,base,6,3744.24,1,,medium
+3991,low,low,ollama,deepseek-r1:8b,,base,6,6053.28,1,,low
+3344,low,low,ollama,deepseek-r1:8b,,base,6,4746.36,1,,low
+3234,low,low,ollama,deepseek-r1:8b,,base,6,9907.41,1,,low
+208,low,medium,ollama,deepseek-r1:8b,,base,6,2274.13,1,,medium
+1468,low,low,ollama,deepseek-r1:8b,,base,6,4262.2,1,,low
+886,low,medium,ollama,deepseek-r1:8b,,base,6,9888.5,1,,medium
+3172,low,low,ollama,deepseek-r1:8b,,base,6,2313.07,1,,low
+3888,low,medium,ollama,deepseek-r1:8b,,base,6,4080.84,1,,medium
+4968,low,low,ollama,deepseek-r1:8b,,base,6,2731.46,1,,low
+4608,low,low,ollama,deepseek-r1:8b,,base,6,2451.84,1,,low
+1947,low,low,ollama,deepseek-r1:8b,,base,6,8748.64,1,,low
+5637,low,medium,ollama,deepseek-r1:8b,,base,6,3064.33,1,,medium
+1628,low,high,ollama,deepseek-r1:8b,,base,6,4171.12,1,,high
+4860,low,high,ollama,deepseek-r1:8b,,base,6,1801.55,1,,high
+3021,low,medium,ollama,deepseek-r1:8b,,base,6,1945.08,1,,medium
+971,low,medium,ollama,deepseek-r1:8b,,base,6,3869.71,1,,Medium
+2767,low,low,ollama,deepseek-r1:8b,,base,6,6061.72,1,,low
+5371,low,low,ollama,deepseek-r1:8b,,base,6,2129.07,1,,low
+3930,low,low,ollama,deepseek-r1:8b,,base,6,4623.07,1,,low
+4812,low,medium,ollama,deepseek-r1:8b,,base,6,2301.64,1,,medium
+3168,low,low,ollama,deepseek-r1:8b,,base,6,1680.93,1,,low
+2740,low,low,ollama,deepseek-r1:8b,,base,6,3760.19,1,,low
+5536,low,medium,ollama,deepseek-r1:8b,,base,6,5909.43,1,,medium
+4606,low,medium,ollama,deepseek-r1:8b,,base,6,2332.73,1,,medium
+515,low,low,ollama,deepseek-r1:8b,,base,6,3821.15,1,,low
+3765,low,low,ollama,deepseek-r1:8b,,base,6,2719.62,1,,Priority: low
+2676,low,low,ollama,deepseek-r1:8b,,base,6,4658.46,1,,low
+5623,low,low,ollama,deepseek-r1:8b,,base,6,7452.99,1,,low
+5800,low,low,ollama,deepseek-r1:8b,,base,6,2564.51,1,,low
+2762,low,low,ollama,deepseek-r1:8b,,base,6,3770.47,1,,low
+3425,low,medium,ollama,deepseek-r1:8b,,base,6,7557.43,1,,medium
+2563,low,medium,ollama,deepseek-r1:8b,,base,6,4365.6,1,,medium
+2724,low,low,ollama,deepseek-r1:8b,,base,6,2147.89,1,,low
+5053,low,low,ollama,deepseek-r1:8b,,base,6,2685.03,1,,Priority: low
+790,low,low,ollama,deepseek-r1:8b,,base,6,1839.54,1,,low
+5582,low,high,ollama,deepseek-r1:8b,,base,6,4226.85,1,,high
+2464,low,medium,ollama,deepseek-r1:8b,,base,6,2700.96,1,,medium
+3536,low,low,ollama,deepseek-r1:8b,,base,6,3934.25,1,,low
+3585,medium,low,ollama,deepseek-r1:8b,,base,6,2860.22,1,,low
+4977,medium,low,ollama,deepseek-r1:8b,,base,6,2039.69,1,,low
+3187,medium,low,ollama,deepseek-r1:8b,,base,6,7503.07,1,,low
+105,medium,low,ollama,deepseek-r1:8b,,base,6,2939.85,1,,low
+4232,medium,high,ollama,deepseek-r1:8b,,base,6,2804.56,1,,high
+707,medium,low,ollama,deepseek-r1:8b,,base,6,3106.91,1,,Priority: low
+4706,medium,low,ollama,deepseek-r1:8b,,base,6,3503.65,1,,low
+5496,medium,high,ollama,deepseek-r1:8b,,base,6,2491.76,1,,high
+2531,medium,medium,ollama,deepseek-r1:8b,,base,6,5899.57,1,,medium
+877,medium,high,ollama,deepseek-r1:8b,,base,6,3157.66,1,,high
+766,medium,low,ollama,deepseek-r1:8b,,base,6,3012.41,1,,low
+5347,medium,low,ollama,deepseek-r1:8b,,base,6,9351.48,1,,low
+1289,medium,medium,ollama,deepseek-r1:8b,,base,6,4915.84,1,,medium
+5119,medium,low,ollama,deepseek-r1:8b,,base,6,4956.44,1,,low
+1049,medium,medium,ollama,deepseek-r1:8b,,base,6,2780.18,1,,medium
+5655,medium,low,ollama,deepseek-r1:8b,,base,6,1919.45,1,,low
+5287,medium,low,ollama,deepseek-r1:8b,,base,6,2729.68,1,,low
+1127,medium,low,ollama,deepseek-r1:8b,,base,6,2076.61,1,,low
+3299,medium,medium,ollama,deepseek-r1:8b,,base,6,2937.64,1,,**Priority: medium**
+1617,medium,medium,ollama,deepseek-r1:8b,,base,6,3572.47,1,,**Priority: medium**
+2844,medium,low,ollama,deepseek-r1:8b,,base,6,2509.02,1,,low
+4614,medium,medium,ollama,deepseek-r1:8b,,base,6,1553.12,1,,medium
+1721,medium,low,ollama,deepseek-r1:8b,,base,6,5868.27,1,,low
+5632,medium,medium,ollama,deepseek-r1:8b,,base,6,1956.82,1,,medium
+4872,medium,low,ollama,deepseek-r1:8b,,base,6,10438.52,1,,low
+3703,medium,medium,ollama,deepseek-r1:8b,,base,6,2704.68,1,,medium
+2512,medium,medium,ollama,deepseek-r1:8b,,base,6,5097.96,1,,medium
+82,medium,high,ollama,deepseek-r1:8b,,base,6,3468.27,1,,high
+1348,medium,medium,ollama,deepseek-r1:8b,,base,6,2488.67,1,,medium
+4429,medium,medium,ollama,deepseek-r1:8b,,base,6,2001.32,1,,medium
+721,medium,low,ollama,deepseek-r1:8b,,base,6,2467.75,1,,low
+4358,medium,low,ollama,deepseek-r1:8b,,base,6,2328.27,1,,low
+842,medium,medium,ollama,deepseek-r1:8b,,base,6,4988.17,1,,medium
+5822,medium,low,ollama,deepseek-r1:8b,,base,6,3474.57,1,,low
+45,medium,medium,ollama,deepseek-r1:8b,,base,6,2731.64,1,,medium
+3999,medium,low,ollama,deepseek-r1:8b,,base,6,2607.83,1,,low
+956,medium,medium,ollama,deepseek-r1:8b,,base,6,2943.97,1,,medium
+1687,medium,low,ollama,deepseek-r1:8b,,base,6,4523.39,1,,low
+695,medium,medium,ollama,deepseek-r1:8b,,base,6,3242.0,1,,medium
+2752,medium,medium,ollama,deepseek-r1:8b,,base,6,3226.83,1,,medium
+3037,medium,high,ollama,deepseek-r1:8b,,base,6,2823.07,1,,high
+5478,medium,low,ollama,deepseek-r1:8b,,base,6,2723.99,1,,low
+3257,medium,low,ollama,deepseek-r1:8b,,base,6,2854.66,1,,low
+103,medium,medium,ollama,deepseek-r1:8b,,base,6,2193.13,1,,medium
+4397,medium,medium,ollama,deepseek-r1:8b,,base,6,2507.28,1,,medium
+3729,medium,low,ollama,deepseek-r1:8b,,base,6,5652.43,1,,low
+4517,medium,high,ollama,deepseek-r1:8b,,base,6,4891.29,1,,Priority: high
+5539,medium,medium,ollama,deepseek-r1:8b,,base,6,13356.04,1,,medium
+3856,medium,low,ollama,deepseek-r1:8b,,base,6,12727.83,1,,low
+5572,medium,low,ollama,deepseek-r1:8b,,base,6,3914.89,1,,low
+4587,medium,low,ollama,deepseek-r1:8b,,base,6,3450.3,1,,Priority: low
+3503,medium,medium,ollama,deepseek-r1:8b,,base,6,3918.08,1,,medium
+5439,medium,medium,ollama,deepseek-r1:8b,,base,6,2701.41,1,,medium
+2382,medium,low,ollama,deepseek-r1:8b,,base,6,2648.06,1,,Priority: low
+2440,medium,high,ollama,deepseek-r1:8b,,base,6,18030.12,1,,high
+4139,medium,medium,ollama,deepseek-r1:8b,,base,6,3210.33,1,,medium
+5797,medium,low,ollama,deepseek-r1:8b,,base,6,2956.99,1,,low
+1801,medium,medium,ollama,deepseek-r1:8b,,base,6,2471.1,1,,medium
+5327,medium,low,ollama,deepseek-r1:8b,,base,6,2580.34,1,,low
+780,medium,low,ollama,deepseek-r1:8b,,base,6,3165.71,1,,low
+3597,medium,high,ollama,deepseek-r1:8b,,base,6,3087.24,1,,high
+2538,medium,medium,ollama,deepseek-r1:8b,,base,6,3905.65,1,,medium
+1701,medium,medium,ollama,deepseek-r1:8b,,base,6,1745.04,1,,medium
+2746,medium,low,ollama,deepseek-r1:8b,,base,6,7214.58,1,,low
+1478,medium,medium,ollama,deepseek-r1:8b,,base,6,3291.26,1,,medium
+980,medium,low,ollama,deepseek-r1:8b,,base,6,21886.03,1,,low
+3490,medium,medium,ollama,deepseek-r1:8b,,base,6,7782.17,1,,medium
+5296,medium,high,ollama,deepseek-r1:8b,,base,6,2815.27,1,,high
+2957,medium,medium,ollama,deepseek-r1:8b,,base,6,2585.02,1,,Priority: medium
+3896,medium,low,ollama,deepseek-r1:8b,,base,6,3746.93,1,,**Priority:** low
+2274,medium,medium,ollama,deepseek-r1:8b,,base,6,2421.15,1,,medium
+2190,medium,medium,ollama,deepseek-r1:8b,,base,6,3373.5,1,,medium
+2431,medium,low,ollama,deepseek-r1:8b,,base,6,13243.6,1,,low
+149,medium,medium,ollama,deepseek-r1:8b,,base,6,2943.84,1,,medium
+3886,medium,low,ollama,deepseek-r1:8b,,base,6,2159.11,1,,low
+4472,medium,low,ollama,deepseek-r1:8b,,base,6,3107.96,1,,**Priority: low**
+5804,medium,low,ollama,deepseek-r1:8b,,base,6,2748.1,1,,low
+5722,medium,low,ollama,deepseek-r1:8b,,base,6,3374.28,1,,low
+665,medium,medium,ollama,deepseek-r1:8b,,base,6,1489.65,1,,medium
+1691,medium,low,ollama,deepseek-r1:8b,,base,6,5614.42,1,,low
+4849,medium,medium,ollama,deepseek-r1:8b,,base,6,3099.29,1,,medium
+4741,medium,medium,ollama,deepseek-r1:8b,,base,6,3411.8,1,,medium
+2697,medium,high,ollama,deepseek-r1:8b,,base,6,3810.2,1,,high
+4981,medium,low,ollama,deepseek-r1:8b,,base,6,3390.6,1,,Priority: low
+3351,medium,low,ollama,deepseek-r1:8b,,base,6,3052.64,1,,low
+2909,medium,high,ollama,deepseek-r1:8b,,base,6,3520.33,1,,high
+439,medium,medium,ollama,deepseek-r1:8b,,base,6,14862.2,1,,medium
+616,medium,low,ollama,deepseek-r1:8b,,base,6,2983.03,1,,low
+1661,medium,high,ollama,deepseek-r1:8b,,base,6,3269.92,1,,high
+1591,medium,low,ollama,deepseek-r1:8b,,base,6,3020.32,1,,low
+3164,medium,low,ollama,deepseek-r1:8b,,base,6,10893.01,1,,low
+5542,medium,low,ollama,deepseek-r1:8b,,base,6,2133.59,1,,low
+712,medium,medium,ollama,deepseek-r1:8b,,base,6,2144.24,1,,medium
+4686,medium,low,ollama,deepseek-r1:8b,,base,6,8524.32,1,,low
+1950,medium,low,ollama,deepseek-r1:8b,,base,6,5129.24,1,,low
+3912,medium,medium,ollama,deepseek-r1:8b,,base,6,2097.93,1,,medium
+5136,medium,medium,ollama,deepseek-r1:8b,,base,6,2899.79,1,,medium
+463,medium,medium,ollama,deepseek-r1:8b,,base,6,3873.16,1,,medium
+767,medium,medium,ollama,deepseek-r1:8b,,base,6,2710.16,1,,medium
+4274,medium,low,ollama,deepseek-r1:8b,,base,6,2960.69,1,,low

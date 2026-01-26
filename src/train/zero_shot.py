@@ -24,10 +24,11 @@ Env vars:
   ZERO_SHOT_PROVIDER=ollama|gemini
   GEMINI_API_KEY=...                  # single key
   GEMINI_API_KEYS=key1,key2,...       # multiple keys (rotation)
-  GEMINI_RPM=10                       # requests per minute per key (soft)
+  GEMINI_RPM=5                        # requests per minute per key (soft, capped at 5)
   GEMINI_RPD=20                       # requests per day per key (soft, local counter)
   GEMINI_COOLDOWN_SEC=60              # cooldown after errors per key
   GEMINI_MAX_RETRIES=2                # retries per request (on transient errors)
+  GEMINI_MIN_INTERVAL_SEC=10          # minimum seconds between requests (not counted as latency)
   GEMINI_MODEL=gemini-2.5-flash-lite  # optional
 
   OLLAMA_MODEL=deepseek-r1:8b
@@ -89,10 +90,11 @@ ZERO_SHOT_STRATIFIED = os.getenv("ZERO_SHOT_STRATIFIED", "1") == "1"
 BOOTSTRAP_N = int(os.getenv("ZERO_SHOT_BOOTSTRAP_N", "500"))
 EXCLUDE_INVALID = os.getenv("ZERO_SHOT_EXCLUDE_INVALID", "1") == "1"
 
-GEMINI_RPM = int(os.getenv("GEMINI_RPM", "10"))
-GEMINI_RPD = int(os.getenv("GEMINI_RPD", "20"))
+GEMINI_RPM = min(int(os.getenv("GEMINI_RPM", "5")), 5)
+GEMINI_RPD = min(int(os.getenv("GEMINI_RPD", "20")), 20)
 GEMINI_COOLDOWN_SEC = int(os.getenv("GEMINI_COOLDOWN_SEC", "60"))
 GEMINI_MAX_RETRIES = int(os.getenv("GEMINI_MAX_RETRIES", "2"))
+GEMINI_MIN_INTERVAL_SEC = max(int(os.getenv("GEMINI_MIN_INTERVAL_SEC", "10")), 0)
 
 LABELS = ["high", "medium", "low"]
 LABEL_SET = set(LABELS)
@@ -563,6 +565,9 @@ def main():
                 "answer_raw": (answer_raw or "")[:500],
             }
         )
+
+        if provider == "gemini" and GEMINI_MIN_INTERVAL_SEC > 0 and i < total:
+            time.sleep(GEMINI_MIN_INTERVAL_SEC)
 
         if i % 10 == 0 or i == total:
             print(f"[zero_shot] Progreso: {i}/{total}")

@@ -1,0 +1,474 @@
+{
+  "global_top": {
+    "high": [
+      {
+        "token": "with multiple",
+        "weight": 1.603621891870425
+      },
+      {
+        "token": "severe",
+        "weight": 1.6242386864842893
+      },
+      {
+        "token": "update have",
+        "weight": 1.656567405888512
+      },
+      {
+        "token": "data breach",
+        "weight": 1.672435276443233
+      },
+      {
+        "token": "security solutions",
+        "weight": 1.6823457767522085
+      },
+      {
+        "token": "ad",
+        "weight": 1.684324566374203
+      },
+      {
+        "token": "data loss",
+        "weight": 1.7207841334590812
+      },
+      {
+        "token": "with digital",
+        "weight": 1.8008858520832827
+      },
+      {
+        "token": "analytics results",
+        "weight": 1.8106379545487985
+      },
+      {
+        "token": "have implemented",
+        "weight": 1.9176657993196744
+      },
+      {
+        "token": "optimization thank",
+        "weight": 1.9523765330481648
+      },
+      {
+        "token": "high priority",
+        "weight": 1.9612150590010624
+      },
+      {
+        "token": "critical",
+        "weight": 2.008311486980994
+      },
+      {
+        "token": "loss",
+        "weight": 2.053395366479656
+      },
+      {
+        "token": "exists assistance",
+        "weight": 2.2063227213899133
+      }
+    ],
+    "low": [
+      {
+        "token": "media engagement",
+        "weight": 1.6742403059888766
+      },
+      {
+        "token": "minor",
+        "weight": 1.6760848065688634
+      },
+      {
+        "token": "analytics and",
+        "weight": 1.6843457728008384
+      },
+      {
+        "token": "data connections",
+        "weight": 1.705409893416028
+      },
+      {
+        "token": "during investment",
+        "weight": 1.7266248492931158
+      },
+      {
+        "token": "about predictive",
+        "weight": 1.7447653960661413
+      },
+      {
+        "token": "sporadic",
+        "weight": 1.749650546383925
+      },
+      {
+        "token": "for security",
+        "weight": 1.757373241425501
+      },
+      {
+        "token": "options available",
+        "weight": 1.783448720836885
+      },
+      {
+        "token": "recommendations thank",
+        "weight": 1.790367709063066
+      },
+      {
+        "token": "experienced slowdown",
+        "weight": 1.8831936928417696
+      },
+      {
+        "token": "performance with",
+        "weight": 1.8836576186674352
+      },
+      {
+        "token": "securing patient",
+        "weight": 2.009416211056693
+      },
+      {
+        "token": "configuration errors",
+        "weight": 2.083700715237837
+      },
+      {
+        "token": "growth due",
+        "weight": 2.1050812703872976
+      }
+    ],
+    "medium": [
+      {
+        "token": "collaboration",
+        "weight": 1.4935593777778353
+      },
+      {
+        "token": "the exposure",
+        "weight": 1.4958531056759956
+      },
+      {
+        "token": "user engagement",
+        "weight": 1.4982549350192413
+      },
+      {
+        "token": "integrating jenkins",
+        "weight": 1.5094750970719888
+      },
+      {
+        "token": "this breach",
+        "weight": 1.536768326659666
+      },
+      {
+        "token": "credentials but",
+        "weight": 1.5902643966551544
+      },
+      {
+        "token": "sporadic",
+        "weight": 1.6067202250047032
+      },
+      {
+        "token": "permissions",
+        "weight": 1.6405549421219068
+      },
+      {
+        "token": "tracking",
+        "weight": 1.6522274593853246
+      },
+      {
+        "token": "services would",
+        "weight": 1.6797891949102814
+      },
+      {
+        "token": "connections and",
+        "weight": 1.6805080659114882
+      },
+      {
+        "token": "growth and",
+        "weight": 1.6842117989008472
+      },
+      {
+        "token": "on solutions",
+        "weight": 1.745871778275893
+      },
+      {
+        "token": "integrations are",
+        "weight": 1.7839619427512428
+      },
+      {
+        "token": "features available",
+        "weight": 1.9576686687281437
+      }
+    ]
+  },
+  "local": [
+    {
+      "idx": 5693,
+      "true": "high",
+      "pred": "medium",
+      "items": [
+        {
+          "token": "optimizations might",
+          "value": 0.10424360682575073
+        },
+        {
+          "token": "for handling",
+          "value": 0.11490436649059227
+        },
+        {
+          "token": "for guidance",
+          "value": -0.12631591138718332
+        },
+        {
+          "token": "recommendation to",
+          "value": -0.13323493261106395
+        },
+        {
+          "token": "hardware installation",
+          "value": 0.14888026297677445
+        },
+        {
+          "token": "overcome these",
+          "value": 0.14986197975066412
+        },
+        {
+          "token": "Department_IT Support",
+          "value": 0.1520714401517947
+        },
+        {
+          "token": "Department_Human Resources",
+          "value": -0.17901309000008858
+        },
+        {
+          "token": "zoom 11",
+          "value": 0.18250977600705157
+        },
+        {
+          "token": "zoom",
+          "value": -0.18756131481451682
+        }
+      ]
+    },
+    {
+      "idx": 2127,
+      "true": "high",
+      "pred": "low",
+      "items": [
+        {
+          "token": "Department_Product Support",
+          "value": 0.07711849500706448
+        },
+        {
+          "token": "conversions there",
+          "value": 0.07741697828106181
+        },
+        {
+          "token": "the external",
+          "value": 0.07880811713591485
+        },
+        {
+          "token": "overflow",
+          "value": -0.09034366053378964
+        },
+        {
+          "token": "advanced security",
+          "value": 0.09677057630461776
+        },
+        {
+          "token": "accurate tracking",
+          "value": -0.11145412937783919
+        },
+        {
+          "token": "zoom video",
+          "value": 0.15185804224499605
+        },
+        {
+          "token": "Department_IT Support",
+          "value": 0.1520714401517947
+        },
+        {
+          "token": "Department_Human Resources",
+          "value": -0.17901309000008858
+        },
+        {
+          "token": "zoom version",
+          "value": -0.1837484141938848
+        }
+      ]
+    },
+    {
+      "idx": 5461,
+      "true": "low",
+      "pred": "low",
+      "items": [
+        {
+          "token": "clickup subscriptions",
+          "value": 0.09693045310272938
+        },
+        {
+          "token": "night because",
+          "value": 0.09797407824494032
+        },
+        {
+          "token": "discussion with",
+          "value": -0.10133153929640341
+        },
+        {
+          "token": "discussions and",
+          "value": 0.10449737822092262
+        },
+        {
+          "token": "team framework",
+          "value": -0.12336143071770257
+        },
+        {
+          "token": "Department_IT Support",
+          "value": 0.1520714401517947
+        },
+        {
+          "token": "Department_Human Resources",
+          "value": -0.17901309000008858
+        },
+        {
+          "token": "Department_Customer Service",
+          "value": -0.30246468323949255
+        },
+        {
+          "token": "Department_General Inquiry",
+          "value": -0.3702420319462566
+        },
+        {
+          "token": "Department_Billing and Payments",
+          "value": 0.5650387737043594
+        }
+      ]
+    },
+    {
+      "idx": 2929,
+      "true": "low",
+      "pred": "high",
+      "items": [
+        {
+          "token": "timeline this",
+          "value": -0.09614349558306316
+        },
+        {
+          "token": "engagement furthermore",
+          "value": -0.11362870257932738
+        },
+        {
+          "token": "php our",
+          "value": 0.12946628361623735
+        },
+        {
+          "token": "engagement from",
+          "value": -0.13378137275476146
+        },
+        {
+          "token": "timelines that",
+          "value": -0.1428676210883365
+        },
+        {
+          "token": "Department_Product Support",
+          "value": -0.1497006079548898
+        },
+        {
+          "token": "timelines thank",
+          "value": 0.15624382860299044
+        },
+        {
+          "token": "engagement growth",
+          "value": 0.1986739061469319
+        },
+        {
+          "token": "Department_IT Support",
+          "value": -0.2951975014711307
+        },
+        {
+          "token": "Department_Human Resources",
+          "value": 0.3474959982354659
+        }
+      ]
+    },
+    {
+      "idx": 2733,
+      "true": "medium",
+      "pred": "medium",
+      "items": [
+        {
+          "token": "functioning smoothly",
+          "value": 0.12800988198184188
+        },
+        {
+          "token": "adapter might",
+          "value": 0.1353794410452926
+        },
+        {
+          "token": "functionality would",
+          "value": 0.150430602663505
+        },
+        {
+          "token": "Department_IT Support",
+          "value": 0.1520714401517947
+        },
+        {
+          "token": "innovative approaches",
+          "value": -0.15954611600779542
+        },
+        {
+          "token": "Department_Human Resources",
+          "value": -0.17901309000008858
+        },
+        {
+          "token": "functionality within",
+          "value": -0.20085220705799475
+        },
+        {
+          "token": "zoom for",
+          "value": -0.2547967430506882
+        },
+        {
+          "token": "zoom call",
+          "value": -0.4007288536075468
+        },
+        {
+          "token": "zoom calls",
+          "value": 0.546285575610666
+        }
+      ]
+    },
+    {
+      "idx": 1576,
+      "true": "medium",
+      "pred": "high",
+      "items": [
+        {
+          "token": "information your",
+          "value": 0.09687176471721515
+        },
+        {
+          "token": "running investment",
+          "value": 0.10620150808087916
+        },
+        {
+          "token": "or webhooks",
+          "value": 0.12096068004164412
+        },
+        {
+          "token": "or teams",
+          "value": 0.1258024490883899
+        },
+        {
+          "token": "Department_Product Support",
+          "value": -0.1497006079548898
+        },
+        {
+          "token": "request at",
+          "value": 0.16310885406666312
+        },
+        {
+          "token": "request as",
+          "value": -0.18630688485108624
+        },
+        {
+          "token": "running into",
+          "value": -0.19384520634281024
+        },
+        {
+          "token": "Department_IT Support",
+          "value": -0.2951975014711307
+        },
+        {
+          "token": "Department_Human Resources",
+          "value": 0.3474959982354659
+        }
+      ]
+    }
+  ]
+}

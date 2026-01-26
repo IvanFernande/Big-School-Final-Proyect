@@ -1,11 +1,12 @@
 import heapq
+import json
 import numpy as np
 import os
 from pathlib import Path
 import joblib
 from setfit import SetFitModel
 from sklearn.preprocessing import LabelEncoder
-from .config import MODEL_PATH
+from .config import MODEL_PATH, REPORTS_DIR
 from .data_prep import load, add_features, split
 
 SETFIT_MODEL_DIR = Path("models/setfit_model")
@@ -98,7 +99,7 @@ def main():
     horizon_env = os.getenv("BUSINESS_HORIZON_H")
     horizon_h = float(horizon_env) if horizon_env else 24.0
 
-    mode = os.getenv("BUSINESS_MODE", "simple").lower()
+    mode = "simple"
 
     print(f"[business] Split seed: {seed_label}")
     print(f"[business] Agents: {agents}")
@@ -146,39 +147,57 @@ def main():
     ideal_lead = df_test["ideal_complete_h"] - df_test["arrival_h"]
     model_lead = df_test["model_complete_h"] - df_test["arrival_h"]
 
-    if mode == "simple":
-        simple_sla = {"high": 4, "medium": 8, "low": 12}
-        probs = df_test["true_priority"].value_counts(normalize=True)
-        labels = ["high", "medium", "low"]
-        p = [probs.get(lbl, 0.0) for lbl in labels]
-        df_test["rand_priority"] = rng.choice(labels, size=len(df_test), p=p)
+    simple_sla = {"high": 4, "medium": 8, "low": 12}
+    probs = df_test["true_priority"].value_counts(normalize=True)
+    labels = ["high", "medium", "low"]
+    p = [probs.get(lbl, 0.0) for lbl in labels]
+    df_test["rand_priority"] = rng.choice(labels, size=len(df_test), p=p)
 
-        true_h = df_test["true_priority"].map(simple_sla)
-        pred_h = df_test["pred_priority"].map(simple_sla)
-        rand_h = df_test["rand_priority"].map(simple_sla)
+    true_h = df_test["true_priority"].map(simple_sla)
+    pred_h = df_test["pred_priority"].map(simple_sla)
+    rand_h = df_test["rand_priority"].map(simple_sla)
 
-        err_model = (pred_h - true_h).abs()
-        err_rand = (rand_h - true_h).abs()
-        acc_model = (df_test["pred_priority"] == df_test["true_priority"]).mean()
-        acc_rand = (df_test["rand_priority"] == df_test["true_priority"]).mean()
+    err_model = (pred_h - true_h).abs()
+    err_rand = (rand_h - true_h).abs()
+    acc_model = (df_test["pred_priority"] == df_test["true_priority"]).mean()
+    acc_rand = (df_test["rand_priority"] == df_test["true_priority"]).mean()
 
-        print("[business] Simple mode (hour gap vs SLA targets)")
-        print(f"Modelo: mean_gap={err_model.mean():.2f}h | median_gap={err_model.median():.2f}h | acc={acc_model:.2%}")
-        print(f"Aleatorio: mean_gap={err_rand.mean():.2f}h | median_gap={err_rand.median():.2f}h | acc={acc_rand:.2%}")
-        return
+    gap_levels = [0.0, 4.0, 8.0]
+    gap_model = {f"{int(g)}h": float((err_model == g).mean()) for g in gap_levels}
+    gap_rand = {f"{int(g)}h": float((err_rand == g).mean()) for g in gap_levels}
 
-    viol_true = ideal_lead > df_test["sla_true"]
-    viol_pred = model_lead > df_test["sla_true"]
-
-    rate_true = viol_true.mean()
-    rate_pred = viol_pred.mean()
-    cost_true = (viol_true * df_test["penalty_eur"]).sum()
-    cost_pred = (viol_pred * df_test["penalty_eur"]).sum()
-
-    print(f"Violaciones (prioridad real): {rate_true:.2%}")
-    print(f"Violaciones (usando modelo): {rate_pred:.2%}")
-    ahorro = cost_true - cost_pred
-    print(f"Ahorro estimado: {ahorro:,.0f} EUR en el set evaluado")
+    print("[business] Hour gap vs SLA targets (simple)")
+    print(
+        "Modelo: mean_gap=%.2fh | median_gap=%.2fh | acc=%.2f%%"
+        % (err_model.mean(), err_model.median(), acc_model * 100.0)
+    )
+    print(
+        "Aleatorio: mean_gap=%.2fh | median_gap=%.2fh | acc=%.2f%%"
+        % (err_rand.mean(), err_rand.median(), acc_rand * 100.0)
+    )
+    print(f"Modelo: gap_0h={gap_model['0h']:.2%} | gap_4h={gap_model['4h']:.2%} | gap_8h={gap_model['8h']:.2%}")
+    print(f"Aleatorio: gap_0h={gap_rand['0h']:.2%} | gap_4h={gap_rand['4h']:.2%} | gap_8h={gap_rand['8h']:.2%}")
+    report = {
+        "mode": mode,
+        "seed": seed,
+        "agents": agents,
+        "horizon_h": horizon_h,
+        "model_path": str(MODEL_PATH),
+        "metrics": {
+            "mean_gap_h": float(err_model.mean()),
+            "median_gap_h": float(err_model.median()),
+            "acc": float(acc_model),
+            "gap_rate": gap_model,
+            "baseline_mean_gap_h": float(err_rand.mean()),
+            "baseline_median_gap_h": float(err_rand.median()),
+            "baseline_acc": float(acc_rand),
+            "baseline_gap_rate": gap_rand,
+        },
+    }
+    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
+    out_path = REPORTS_DIR / "business_metrics_simple.json"
+    out_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(f"[business] Report saved: {out_path}")
 
 
 if __name__ == "__main__":

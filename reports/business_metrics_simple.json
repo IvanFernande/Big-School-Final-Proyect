@@ -1,0 +1,25 @@
+{
+  "mode": "simple",
+  "seed": 42,
+  "agents": 8,
+  "horizon_h": 24.0,
+  "model_path": "models/ticket_priority.joblib",
+  "metrics": {
+    "mean_gap_h": 1.081956155143339,
+    "median_gap_h": 0.0,
+    "acc": 0.7711635750421585,
+    "gap_rate": {
+      "0h": 0.7711635750421585,
+      "4h": 0.18718381112984822,
+      "8h": 0.041652613827993255
+    },
+    "baseline_mean_gap_h": 3.212141652613828,
+    "baseline_median_gap_h": 4.0,
+    "baseline_acc": 0.35716694772344015,
+    "baseline_gap_rate": {
+      "0h": 0.35716694772344015,
+      "4h": 0.48263069139966275,
+      "8h": 0.16020236087689713
+    }
+  }
+}
