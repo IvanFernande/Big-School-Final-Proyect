@@ -7,27 +7,27 @@
       "st_model": null,
       "metrics_by_k": {
         "4": {
-          "avg_score": 0.7878787878787878,
+          "avg_score": 0.6439393939393939,
           "min_score": 0.0,
           "max_score": 1.0
         },
         "8": {
-          "avg_score": 0.9267676767676768,
+          "avg_score": 0.7727272727272728,
           "min_score": 0.0,
           "max_score": 1.0
         },
         "12": {
-          "avg_score": 0.9343434343434344,
+          "avg_score": 0.8636363636363635,
           "min_score": 0.0,
           "max_score": 1.0
         },
         "16": {
-          "avg_score": 0.941919191919192,
+          "avg_score": 0.8787878787878787,
           "min_score": 0.0,
           "max_score": 1.0
         }
       },
-      "elapsed_seconds": 6.23
+      "elapsed_seconds": 7.9
     },
     {
       "name": "sentence-transformers-all-mpnet-base-v2",
@@ -36,27 +36,27 @@
       "st_model": "all-mpnet-base-v2",
       "metrics_by_k": {
         "4": {
-          "avg_score": 0.8585858585858586,
+          "avg_score": 0.7070707070707071,
           "min_score": 0.0,
           "max_score": 1.0
         },
         "8": {
-          "avg_score": 0.9065656565656566,
+          "avg_score": 0.7878787878787878,
           "min_score": 0.0,
           "max_score": 1.0
         },
         "12": {
-          "avg_score": 0.9444444444444445,
+          "avg_score": 0.8813131313131313,
           "min_score": 0.0,
           "max_score": 1.0
         },
         "16": {
-          "avg_score": 0.9520202020202021,
+          "avg_score": 0.9217171717171717,
           "min_score": 0.0,
           "max_score": 1.0
         }
       },
-      "elapsed_seconds": 19.15
+      "elapsed_seconds": 16.46
     },
     {
       "name": "sentence-transformers-paraphrase-multilingual-mpnet-base-v2",
@@ -65,7 +65,7 @@
       "st_model": "paraphrase-multilingual-mpnet-base-v2",
       "metrics_by_k": {
         "4": {
-          "avg_score": 0.8282828282828283,
+          "avg_score": 0.7777777777777777,
           "min_score": 0.0,
           "max_score": 1.0
         },
@@ -75,18 +75,18 @@
           "max_score": 1.0
         },
         "12": {
-          "avg_score": 0.9570707070707072,
-          "min_score": 0.3333333333333333,
+          "avg_score": 0.9393939393939394,
+          "min_score": 0.0,
           "max_score": 1.0
         },
         "16": {
-          "avg_score": 0.9848484848484849,
-          "min_score": 0.5,
+          "avg_score": 0.9494949494949495,
+          "min_score": 0.0,
           "max_score": 1.0
         }
       },
-      "elapsed_seconds": 13.18
+      "elapsed_seconds": 7.94
     }
   ],
-  "timestamp": "2026-01-04 13:05:06"
+  "timestamp": "2026-01-24 16:52:09"
 }

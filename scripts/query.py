@@ -8,7 +8,8 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from src.embeddings import Embedder
 from src.rag.vectorstore import VectorStore
-from src.rag.retriever import Retriever, HybridRetriever, KeywordRetriever
+from src.rag.retriever import Retriever, HybridRetriever, KeywordRetriever, BM25Retriever, HybridBM25Retriever
+from src.rag.reranker import CrossEncoderReranker
 from src.rag.generator import SimpleGenerator
 import requests
 from src.config import load_config, get_secret
@@ -48,14 +49,31 @@ def main():
     )
     retriever_k = int(cfg.get("retriever_k", 8))
     retriever_type = cfg.get("retriever_type", "vector")
+    bm25_k1 = float(cfg.get("bm25_k1", 1.5))
+    bm25_b = float(cfg.get("bm25_b", 0.75))
     if retriever_type == "hybrid":
         alpha = float(cfg.get("retriever_alpha", 0.6))
         retriever = HybridRetriever(embedder, store, k=retriever_k, alpha=alpha)
+    elif retriever_type == "hybrid_bm25":
+        alpha = float(cfg.get("retriever_alpha", 0.6))
+        retriever = HybridBM25Retriever(embedder, store, k=retriever_k, alpha=alpha, k1=bm25_k1, b=bm25_b)
     elif retriever_type == "keyword":
         retriever = KeywordRetriever(store, k=retriever_k)
+    elif retriever_type == "bm25":
+        retriever = BM25Retriever(store, k=retriever_k, k1=bm25_k1, b=bm25_b)
     else:
         retriever = Retriever(embedder, store, k=retriever_k)
+    reranker = None
+    if cfg.get("rerank_enabled"):
+        reranker = CrossEncoderReranker(
+            model_name=cfg.get("rerank_model_name", "cross-encoder/ms-marco-MiniLM-L-6-v2"),
+            device=cfg.get("rerank_device") or cfg.get("embed_device"),
+            batch_size=int(cfg.get("rerank_batch_size", 16)),
+        )
+    rerank_top_k = int(cfg.get("rerank_top_k", retriever_k))
     results = retriever.retrieve(question)
+    if reranker:
+        results = reranker.rerank(question, results, top_k=rerank_top_k)
     results = boost_by_type(question, results)
     if not results:
         print("Sin resultados.")

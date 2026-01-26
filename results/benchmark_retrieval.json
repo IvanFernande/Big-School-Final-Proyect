@@ -4,36 +4,48 @@
       "mode": "vector",
       "metrics_by_k": {
         "4": {
-          "avg_score": 0.7525252525252526,
+          "avg_score": 0.7777777777777777,
           "min_score": 0.0,
           "max_score": 1.0,
+          "context_precision_avg": 0.020066625997186286,
+          "context_precision_min": 0.0,
+          "context_precision_max": 0.08333333333333333,
           "recall_at_k": 0.8181818181818182,
           "mrr_at_k": 0.6944444444444445,
-          "ndcg_at_k": 0.7021588960370746
+          "ndcg_at_k": 0.7006356104985161
         },
         "8": {
-          "avg_score": 0.8838383838383838,
+          "avg_score": 0.9090909090909091,
           "min_score": 0.0,
           "max_score": 1.0,
+          "context_precision_avg": 0.008576821646817648,
+          "context_precision_min": 0.0,
+          "context_precision_max": 0.020942408376963352,
           "recall_at_k": 0.9090909090909091,
           "mrr_at_k": 0.7086219336219336,
-          "ndcg_at_k": 0.7120227670630767
+          "ndcg_at_k": 0.7112199680159766
         },
         "12": {
-          "avg_score": 0.914141414141414,
+          "avg_score": 0.9393939393939394,
           "min_score": 0.0,
           "max_score": 1.0,
+          "context_precision_avg": 0.005567120093120848,
+          "context_precision_min": 0.0,
+          "context_precision_max": 0.011235955056179775,
           "recall_at_k": 0.9393939393939394,
           "mrr_at_k": 0.7111471861471862,
-          "ndcg_at_k": 0.714250078663539
+          "ndcg_at_k": 0.7141553953667223
         },
         "16": {
-          "avg_score": 0.9242424242424241,
+          "avg_score": 0.9494949494949495,
           "min_score": 0.0,
           "max_score": 1.0,
+          "context_precision_avg": 0.004067073363336319,
+          "context_precision_min": 0.0,
+          "context_precision_max": 0.007518796992481203,
           "recall_at_k": 0.9696969696969697,
           "mrr_at_k": 0.7131673881673881,
-          "ndcg_at_k": 0.7171398834963226
+          "ndcg_at_k": 0.7175943599427886
         }
       }
     },
@@ -41,36 +53,97 @@
       "mode": "keyword",
       "metrics_by_k": {
         "4": {
-          "avg_score": 0.7979797979797979,
+          "avg_score": 0.8156565656565656,
           "min_score": 0.0,
           "max_score": 1.0,
-          "recall_at_k": 0.8181818181818182,
-          "mrr_at_k": 0.6767676767676768,
-          "ndcg_at_k": 0.6925217055719766
+          "context_precision_avg": 0.01277603265932047,
+          "context_precision_min": 0.0,
+          "context_precision_max": 0.05263157894736842,
+          "recall_at_k": 0.8484848484848485,
+          "mrr_at_k": 0.691919191919192,
+          "ndcg_at_k": 0.7099252850175413
         },
         "8": {
-          "avg_score": 0.8737373737373737,
+          "avg_score": 0.8813131313131313,
           "min_score": 0.0,
           "max_score": 1.0,
+          "context_precision_avg": 0.006065975756775346,
+          "context_precision_min": 0.0,
+          "context_precision_max": 0.017543859649122806,
           "recall_at_k": 0.9090909090909091,
-          "mrr_at_k": 0.6904040404040405,
-          "ndcg_at_k": 0.721638984448934
+          "mrr_at_k": 0.6994949494949496,
+          "ndcg_at_k": 0.7250738364830873
         },
         "12": {
-          "avg_score": 0.8838383838383839,
-          "min_score": 0.0,
-          "max_score": 1.0,
-          "recall_at_k": 0.9393939393939394,
-          "mrr_at_k": 0.6937710437710437,
-          "ndcg_at_k": 0.7267374611429906
-        },
-        "16": {
           "avg_score": 0.8914141414141414,
           "min_score": 0.0,
           "max_score": 1.0,
+          "context_precision_avg": 0.003947670626479146,
+          "context_precision_min": 0.0,
+          "context_precision_max": 0.00784313725490196,
           "recall_at_k": 0.9393939393939394,
-          "mrr_at_k": 0.6937710437710437,
-          "ndcg_at_k": 0.7217119722001413
+          "mrr_at_k": 0.7028619528619529,
+          "ndcg_at_k": 0.7285915128078428
+        },
+        "16": {
+          "avg_score": 0.898989898989899,
+          "min_score": 0.0,
+          "max_score": 1.0,
+          "context_precision_avg": 0.0030072364431358756,
+          "context_precision_min": 0.0,
+          "context_precision_max": 0.005873715124816446,
+          "recall_at_k": 0.9393939393939394,
+          "mrr_at_k": 0.7028619528619529,
+          "ndcg_at_k": 0.7213106848039729
+        }
+      }
+    },
+    {
+      "mode": "bm25",
+      "metrics_by_k": {
+        "4": {
+          "avg_score": 0.5227272727272727,
+          "min_score": 0.0,
+          "max_score": 1.0,
+          "context_precision_avg": 0.007820349045771445,
+          "context_precision_min": 0.0,
+          "context_precision_max": 0.05084745762711865,
+          "recall_at_k": 0.5757575757575758,
+          "mrr_at_k": 0.5353535353535352,
+          "ndcg_at_k": 0.5205087492195875
+        },
+        "8": {
+          "avg_score": 0.648989898989899,
+          "min_score": 0.0,
+          "max_score": 1.0,
+          "context_precision_avg": 0.003546769547282691,
+          "context_precision_min": 0.0,
+          "context_precision_max": 0.010526315789473684,
+          "recall_at_k": 0.696969696969697,
+          "mrr_at_k": 0.5515873015873016,
+          "ndcg_at_k": 0.5537842027922235
+        },
+        "12": {
+          "avg_score": 0.7803030303030303,
+          "min_score": 0.0,
+          "max_score": 1.0,
+          "context_precision_avg": 0.002992102389516758,
+          "context_precision_min": 0.0,
+          "context_precision_max": 0.006711409395973154,
+          "recall_at_k": 0.8484848484848485,
+          "mrr_at_k": 0.5669071669071668,
+          "ndcg_at_k": 0.5931654943509521
+        },
+        "16": {
+          "avg_score": 0.8383838383838385,
+          "min_score": 0.0,
+          "max_score": 1.0,
+          "context_precision_avg": 0.002613658290797509,
+          "context_precision_min": 0.0,
+          "context_precision_max": 0.005988023952095809,
+          "recall_at_k": 0.8787878787878788,
+          "mrr_at_k": 0.569071669071669,
+          "ndcg_at_k": 0.5814836385438384
         }
       }
     },
@@ -78,40 +151,101 @@
       "mode": "hybrid",
       "metrics_by_k": {
         "4": {
-          "avg_score": 0.8358585858585859,
+          "avg_score": 0.861111111111111,
           "min_score": 0.0,
           "max_score": 1.0,
+          "context_precision_avg": 0.019608189135415743,
+          "context_precision_min": 0.0,
+          "context_precision_max": 0.08333333333333333,
           "recall_at_k": 0.9090909090909091,
           "mrr_at_k": 0.7954545454545454,
           "ndcg_at_k": 0.8129401218199047
         },
         "8": {
-          "avg_score": 0.8939393939393938,
+          "avg_score": 0.9191919191919191,
           "min_score": 0.0,
           "max_score": 1.0,
+          "context_precision_avg": 0.007555847165072177,
+          "context_precision_min": 0.0,
+          "context_precision_max": 0.021739130434782608,
           "recall_at_k": 0.9393939393939394,
           "mrr_at_k": 0.8232323232323232,
-          "ndcg_at_k": 0.8150555915588118
+          "ndcg_at_k": 0.8155399118912133
         },
         "12": {
-          "avg_score": 0.9242424242424241,
+          "avg_score": 0.9494949494949495,
           "min_score": 0.0,
           "max_score": 1.0,
+          "context_precision_avg": 0.00490168064418062,
+          "context_precision_min": 0.0,
+          "context_precision_max": 0.009146341463414634,
           "recall_at_k": 0.9696969696969697,
-          "mrr_at_k": 0.7954545454545454,
-          "ndcg_at_k": 0.8156371730853137
+          "mrr_at_k": 0.8106060606060606,
+          "ndcg_at_k": 0.8156835430444825
         },
         "16": {
-          "avg_score": 0.9242424242424241,
+          "avg_score": 0.9494949494949495,
           "min_score": 0.0,
           "max_score": 1.0,
+          "context_precision_avg": 0.0034957630219414485,
+          "context_precision_min": 0.0,
+          "context_precision_max": 0.006072874493927126,
           "recall_at_k": 0.9696969696969697,
-          "mrr_at_k": 0.7803030303030303,
-          "ndcg_at_k": 0.8023617721389301
+          "mrr_at_k": 0.7954545454545454,
+          "ndcg_at_k": 0.8013945571488531
+        }
+      }
+    },
+    {
+      "mode": "hybrid_bm25",
+      "metrics_by_k": {
+        "4": {
+          "avg_score": 0.7777777777777777,
+          "min_score": 0.0,
+          "max_score": 1.0,
+          "context_precision_avg": 0.020066625997186286,
+          "context_precision_min": 0.0,
+          "context_precision_max": 0.08333333333333333,
+          "recall_at_k": 0.8181818181818182,
+          "mrr_at_k": 0.6944444444444445,
+          "ndcg_at_k": 0.7006356104985161
+        },
+        "8": {
+          "avg_score": 0.9090909090909091,
+          "min_score": 0.0,
+          "max_score": 1.0,
+          "context_precision_avg": 0.008576821646817648,
+          "context_precision_min": 0.0,
+          "context_precision_max": 0.020942408376963352,
+          "recall_at_k": 0.9090909090909091,
+          "mrr_at_k": 0.7086219336219336,
+          "ndcg_at_k": 0.7112199680159766
+        },
+        "12": {
+          "avg_score": 0.9393939393939394,
+          "min_score": 0.0,
+          "max_score": 1.0,
+          "context_precision_avg": 0.005567120093120848,
+          "context_precision_min": 0.0,
+          "context_precision_max": 0.011235955056179775,
+          "recall_at_k": 0.9393939393939394,
+          "mrr_at_k": 0.7111471861471862,
+          "ndcg_at_k": 0.7141553953667223
+        },
+        "16": {
+          "avg_score": 0.9494949494949495,
+          "min_score": 0.0,
+          "max_score": 1.0,
+          "context_precision_avg": 0.004067073363336319,
+          "context_precision_min": 0.0,
+          "context_precision_max": 0.007518796992481203,
+          "recall_at_k": 0.9696969696969697,
+          "mrr_at_k": 0.7131673881673881,
+          "ndcg_at_k": 0.7175943599427886
         }
       }
     }
   ],
-  "timestamp": "2026-01-05 13:54:56",
-  "elapsed_seconds": 14.92
+  "timestamp": "2026-01-26 15:39:18",
+  "elapsed_seconds": 30.69
 }

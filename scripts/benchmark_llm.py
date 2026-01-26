@@ -5,9 +5,11 @@ import csv
 import re
 import sys
 import time
+import unicodedata
 from pathlib import Path
 from typing import Dict, List
 
+import numpy as np
 import requests
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -18,7 +20,8 @@ from src.config import load_config, get_secret
 from src.embeddings import Embedder
 from src.eval_data import TEST_SET
 from src.rag.vectorstore import VectorStore
-from src.rag.retriever import Retriever, HybridRetriever, KeywordRetriever
+from src.rag.retriever import Retriever, HybridRetriever, KeywordRetriever, BM25Retriever, HybridBM25Retriever
+from src.rag.reranker import CrossEncoderReranker
 
 RESULTS_DIR = Path("results")
 
@@ -71,19 +74,21 @@ def gemini_generate(model: str, prompt: str, temperature: float, api_key: str) -
     return (response.text or "").strip()
 
 
-def score_answer(answer: str, expected: List[str]) -> float:
+def score_answer(answer: str, expected: List[str], strip_punct: bool) -> float:
     if not expected:
         return 0.0
-    ans_low = (answer or "").lower()
-    hits = sum(1 for sub in expected if sub.lower() in ans_low)
+    ans_norm = normalize_text(answer or "", strip_punct=strip_punct)
+    expected_norm = [normalize_text(sub, strip_punct=strip_punct) for sub in expected]
+    hits = sum(1 for sub in expected_norm if sub and sub in ans_norm)
     return hits / len(expected)
 
 
-def context_coverage(contexts: List[Dict], expected: List[str]) -> float:
+def context_coverage(contexts: List[Dict], expected: List[str], strip_punct: bool) -> float:
     if not expected:
         return 0.0
-    text = " ".join(c["text"] for c in contexts).lower()
-    hits = sum(1 for sub in expected if sub.lower() in text)
+    text = normalize_text(" ".join(c["text"] for c in contexts), strip_punct=strip_punct)
+    expected_norm = [normalize_text(sub, strip_punct=strip_punct) for sub in expected]
+    hits = sum(1 for sub in expected_norm if sub and sub in text)
     return hits / len(expected)
 
 
@@ -110,6 +115,38 @@ def groundedness(answer: str, contexts: List[Dict]) -> float:
     return 1.0 - (missing / total)
 
 
+def normalize_text(text: str, strip_punct: bool = False) -> str:
+    if not text:
+        return ""
+    text = text.lower()
+    text = unicodedata.normalize("NFKD", text)
+    text = "".join(ch for ch in text if not unicodedata.combining(ch))
+    if strip_punct:
+        text = re.sub(r"[^\w\s]", " ", text, flags=re.UNICODE)
+    text = re.sub(r"\s+", " ", text).strip()
+    return text
+
+
+def load_similarity_model(model_name: str, device: str | None):
+    try:
+        from sentence_transformers import SentenceTransformer
+    except Exception as exc:
+        print(f"[WARN] sentence-transformers no disponible para similitud: {exc}")
+        return None
+    try:
+        return SentenceTransformer(model_name, device=device or "cpu")
+    except Exception as exc:
+        print(f"[WARN] No se pudo cargar el modelo de similitud '{model_name}': {exc}")
+        return None
+
+
+def semantic_similarity(answer: str, expected_text: str, model) -> float:
+    if not expected_text or not answer:
+        return 0.0
+    vectors = model.encode([answer, expected_text], normalize_embeddings=True)
+    return float(np.dot(vectors[0], vectors[1]))
+
+
 def main():
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     cfg = load_config()
@@ -124,13 +161,28 @@ def main():
     store = VectorStore.load(Path("index"))
     retriever_k = int(cfg.get("retriever_k", 12))
     retriever_type = cfg.get("retriever_type", "vector")
+    bm25_k1 = float(cfg.get("bm25_k1", 1.5))
+    bm25_b = float(cfg.get("bm25_b", 0.75))
     if retriever_type == "hybrid":
         alpha = float(cfg.get("retriever_alpha", 0.6))
         retriever = HybridRetriever(embedder, store, k=retriever_k, alpha=alpha)
+    elif retriever_type == "hybrid_bm25":
+        alpha = float(cfg.get("retriever_alpha", 0.6))
+        retriever = HybridBM25Retriever(embedder, store, k=retriever_k, alpha=alpha, k1=bm25_k1, b=bm25_b)
     elif retriever_type == "keyword":
         retriever = KeywordRetriever(store, k=retriever_k)
+    elif retriever_type == "bm25":
+        retriever = BM25Retriever(store, k=retriever_k, k1=bm25_k1, b=bm25_b)
     else:
         retriever = Retriever(embedder, store, k=retriever_k)
+    reranker = None
+    if cfg.get("rerank_enabled"):
+        reranker = CrossEncoderReranker(
+            model_name=cfg.get("rerank_model_name", "cross-encoder/ms-marco-MiniLM-L-6-v2"),
+            device=cfg.get("rerank_device") or cfg.get("embed_device"),
+            batch_size=int(cfg.get("rerank_batch_size", 16)),
+        )
+    rerank_top_k = int(cfg.get("rerank_top_k", retriever_k))
 
     models = cfg.get("llm_benchmark_models", [])
     temperature = float(cfg.get("llm_temperature", 0.2))
@@ -143,6 +195,7 @@ def main():
     summary = {"runs": [], "timestamp": time.strftime("%Y-%m-%d %H:%M:%S")}
     detail_rows = []
 
+    strip_punct = bool(cfg.get("llm_similarity_strip_punct", False))
     for model_cfg in models:
         name = model_cfg.get("name", "unnamed")
         provider = model_cfg.get("provider")
@@ -154,24 +207,38 @@ def main():
         scores = []
         coverages = []
         grounded = []
+        similarities = []
+        exact_matches = []
         retrieval_times = []
         generation_times = []
         total_times = []
         breakdown: Dict[str, Dict[str, float]] = {}
         breakdown_counts: Dict[str, int] = {}
+        breakdown_sim_counts: Dict[str, int] = {}
+        breakdown_exact_counts: Dict[str, int] = {}
         completeness = 0
         start = time.time()
 
         tests = TEST_SET[:limit] if limit and limit > 0 else TEST_SET
+        wants_similarity = any(t.get("expected_text") or t.get("expect_text") for t in tests)
+        similarity_model = None
+        if wants_similarity:
+            similarity_model = load_similarity_model(
+                cfg.get("llm_similarity_model", cfg.get("st_model_name", "all-mpnet-base-v2")),
+                cfg.get("embed_device"),
+            )
         last_gemini_call = 0.0
         min_interval = 60.0 / gemini_max_per_min if gemini_max_per_min > 0 else 0.0
 
         for test in tests:
             q = test["question"]
             expected = test["expected"]
+            expected_text = test.get("expected_text") or test.get("expect_text", "")
             category = test.get("category", "otros")
             t0 = time.perf_counter()
             contexts = retriever.retrieve(q)
+            if reranker:
+                contexts = reranker.rerank(q, contexts, top_k=rerank_top_k)
             t1 = time.perf_counter()
             prompt = build_prompt(q, contexts, max_contexts=max_contexts)
 
@@ -194,9 +261,17 @@ def main():
                 answer = ""
             t2 = time.perf_counter()
 
-            score = score_answer(answer, expected)
-            coverage = context_coverage(contexts, expected)
+            score = score_answer(answer, expected, strip_punct=strip_punct)
+            coverage = context_coverage(contexts, expected, strip_punct=strip_punct)
             g_score = groundedness(answer, contexts)
+            sim_score = None
+            if similarity_model is not None and expected_text:
+                norm_answer = normalize_text(answer, strip_punct=strip_punct)
+                norm_expected = normalize_text(expected_text, strip_punct=strip_punct)
+                sim_score = semantic_similarity(norm_answer, norm_expected, similarity_model)
+                similarities.append(sim_score)
+                exact_match = 1.0 if norm_answer == norm_expected else 0.0
+                exact_matches.append(exact_match)
             scores.append(score)
             coverages.append(coverage)
             grounded.append(g_score)
@@ -212,6 +287,8 @@ def main():
                     "score_sum": 0.0,
                     "coverage_sum": 0.0,
                     "grounded_sum": 0.0,
+                    "similarity_sum": 0.0,
+                    "exact_match_sum": 0.0,
                     "complete_hits": 0,
                     "retrieval_s_sum": 0.0,
                     "generation_s_sum": 0.0,
@@ -221,6 +298,11 @@ def main():
             cat["score_sum"] += score
             cat["coverage_sum"] += coverage
             cat["grounded_sum"] += g_score
+            if sim_score is not None:
+                cat["similarity_sum"] += sim_score
+                breakdown_sim_counts[category] = breakdown_sim_counts.get(category, 0) + 1
+                cat["exact_match_sum"] += exact_match
+                breakdown_exact_counts[category] = breakdown_exact_counts.get(category, 0) + 1
             if score == 1.0:
                 cat["complete_hits"] += 1
             cat["retrieval_s_sum"] += (t1 - t0)
@@ -233,10 +315,13 @@ def main():
                     "model": model,
                     "question": q,
                     "expected": "|".join(expected),
+                    "expected_text": expected_text,
                     "answer": answer,
                     "score": score,
                     "context_coverage": coverage,
                     "groundedness": g_score,
+                    "semantic_similarity": "" if sim_score is None else round(sim_score, 4),
+                    "exact_match_norm": "" if sim_score is None else int(exact_match),
                     "retrieval_s": round(t1 - t0, 4),
                     "generation_s": round(t2 - t1, 4),
                     "total_s": round(t2 - t0, 4),
@@ -248,6 +333,8 @@ def main():
         avg_score = sum(scores) / len(scores) if scores else 0.0
         avg_coverage = sum(coverages) / len(coverages) if coverages else 0.0
         avg_grounded = sum(grounded) / len(grounded) if grounded else 0.0
+        avg_similarity = sum(similarities) / len(similarities) if similarities else 0.0
+        avg_exact_match = sum(exact_matches) / len(exact_matches) if exact_matches else 0.0
         avg_retrieval_s = sum(retrieval_times) / len(retrieval_times) if retrieval_times else 0.0
         avg_generation_s = sum(generation_times) / len(generation_times) if generation_times else 0.0
         avg_total_s = sum(total_times) / len(total_times) if total_times else 0.0
@@ -258,6 +345,16 @@ def main():
                 "avg_score": stats["score_sum"] / count,
                 "avg_context_coverage": stats["coverage_sum"] / count,
                 "avg_groundedness": stats["grounded_sum"] / count,
+                "avg_semantic_similarity": (
+                    stats["similarity_sum"] / breakdown_sim_counts.get(cat_name, 1)
+                    if breakdown_sim_counts.get(cat_name, 0) > 0
+                    else 0.0
+                ),
+                "exact_match_rate": (
+                    stats["exact_match_sum"] / breakdown_exact_counts.get(cat_name, 1)
+                    if breakdown_exact_counts.get(cat_name, 0) > 0
+                    else 0.0
+                ),
                 "completeness_rate": stats["complete_hits"] / count,
                 "avg_retrieval_s": stats["retrieval_s_sum"] / count,
                 "avg_generation_s": stats["generation_s_sum"] / count,
@@ -272,6 +369,8 @@ def main():
                 "avg_score": avg_score,
                 "avg_context_coverage": avg_coverage,
                 "avg_groundedness": avg_grounded,
+                "avg_semantic_similarity": avg_similarity,
+                "exact_match_rate": avg_exact_match,
                 "completeness_rate": completeness / total_tests if total_tests else 0.0,
                 "avg_retrieval_s": round(avg_retrieval_s, 4),
                 "avg_generation_s": round(avg_generation_s, 4),
@@ -282,7 +381,7 @@ def main():
         )
         print(
             f"{name}: avg_score={avg_score:.3f} coverage={avg_coverage:.3f} grounded={avg_grounded:.3f} "
-            f"complete={completeness/total_tests:.3f}"
+            f"semantic={avg_similarity:.3f} exact={avg_exact_match:.3f} complete={completeness/total_tests:.3f}"
         )
 
     out_path = RESULTS_DIR / "benchmark_llm.json"
@@ -299,10 +398,13 @@ def main():
                 "model",
                 "question",
                 "expected",
+                "expected_text",
                 "answer",
                 "score",
                 "context_coverage",
                 "groundedness",
+                "semantic_similarity",
+                "exact_match_norm",
                 "retrieval_s",
                 "generation_s",
                 "total_s",

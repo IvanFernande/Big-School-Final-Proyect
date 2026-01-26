@@ -1,263 +1,528 @@
-﻿# RAG multiformato (TFM Proyecto 2)
+# Sistema RAG Multiformato para Documentación de Soporte
 
-Pipeline RAG local para 5 formatos (PDF/MD/TXT/CSV/JSON) con evaluación reproducible. Este README resume decisiones técnicas, comparativas y métricas conforme al enunciado del proyecto.
+El objetivo es diseñar, implementar y evaluar un sistema de **Retrieval-Augmented Generation (RAG)** aplicado a documentación interna de soporte técnico, poniendo el foco en el impacto de las estrategias de recuperación sobre la calidad de las respuestas generadas.
 
-## Objetivo
-Construir un asistente RAG que responda preguntas sobre documentos internos de soporte y evaluar, con métricas, qué combinación de embeddings, retrieval y LLM funciona mejor.
+El sistema permite responder preguntas factuales y procedimentales a partir de documentos heterogéneos, evaluando de forma **reproducible y cuantitativa** distintas configuraciones de retrieval y generación.
 
-## Alcance del proyecto
-- Asistente RAG multiformato (5 formatos mínimos).
-- Recuperación y generación evaluadas con benchmarks reproducibles.
-- Enfoque en respuestas factuales (KPIs, incidentes, emails, comandos, versiones).
+A lo largo del documento se distingue explícitamente entre **retrieval** (recuperación de contexto relevante) y **generation** (generación de la respuesta final por el modelo LLM), evaluándose ambos componentes de forma independiente.
 
-## Datos y formatos
-Los documentos están en `data/` y cubren:
-- PDF (manuales y políticas)
-- Markdown (procedimientos y organigramas)
-- TXT (FAQ e incidentes)
-- CSV (KPIs e inventarios)
-- JSON (configuración de servicios)
+---
 
-## Esquema del sistema (texto)
-data/ -> loaders -> limpieza -> chunking -> embeddings -> FAISS -> retrieval -> LLM -> respuesta
+## 1. Objetivo del proyecto
 
-## Estructura del repo
-- `src/`: loaders, pipeline, embeddings, retriever, generator
-- `scripts/`: build/query/eval/benchmarks
-- `results/`: métricas de benchmarks
+El objetivo principal de este proyecto es construir un sistema RAG que:
 
-Motivo de la estructura:
-- Separar **lógica reutilizable** (`src/`) de **ejecuciones reproducibles** (`scripts/`).
-- Facilitar benchmarking y trazabilidad de resultados (`results/`).
-- Permite reutilizar el pipeline RAG cambiando únicamente loaders y dataset.
+- Responda preguntas sobre documentación interna de soporte técnico.
+- Reduzca al mínimo las alucinaciones mediante recuperación explícita de contexto.
+- Permita comparar distintas estrategias de recuperación de información de forma controlada.
+- Justifique técnicamente las decisiones adoptadas mediante métricas objetivas.
 
-Detalle por carpeta:
-- `src/`: módulos de ingesta, preprocesado, chunking, embeddings, vectorstore y retrieval.
-- `scripts/`: scripts de orquestación (indexación, consulta, benchmarks).
-- `results/`: salidas de benchmarks para documentación y comparación.
+El foco del proyecto no es únicamente la generación de texto, sino el **análisis del papel del retrieval como componente crítico en sistemas RAG**, especialmente en dominios donde la precisión factual es prioritaria frente a la creatividad.
 
-## Arquitectura técnica (detalle)
-Este proyecto sigue un flujo clásico de RAG con decisiones explícitas en cada etapa:
+El proyecto pone el foco en la etapa de recuperación, al considerarse el principal factor determinante de la precisión factual en sistemas RAG aplicados a documentación técnica.
 
-1) **Ingesta por formato**
-- `src/loaders/*`: cada loader normaliza un formato distinto (PDF/MD/TXT/CSV/JSON).
-- Objetivo: convertir cada fuente a texto consistente y aportar metadatos de trazabilidad.
+---
 
-2) **Preprocesado**
-- `src/pipeline/preprocessing.clean_text`: normaliza espacios y saltos sin perder caracteres críticos.
-- Se evita eliminar acentos para no romper tokens exactos (emails, INC‑xxxx, versiones).
-- Se probaron variantes más agresivas (lowercasing global y limpieza de símbolos), pero redujeron la recuperación de identificadores exactos y bajaron el recall en preguntas factuales; por eso se mantuvo una limpieza conservadora.
+## 2. Dominio y descripción de los datos
 
-3) **Chunking**
-- `src/pipeline/chunking.semantic_chunk`: separa por secciones (headings) y aplica ventana con solape.
-- `src/pipeline/chunking.fixed_chunk`: fijo para CSV/JSON para no mezclar filas ni claves.
-- Se añade metadata de offsets y headings para rastreo.
-- Rangos orientativos: ~300–500 tokens por chunk, solape del 10–20% (o 1800–3500 caracteres cuando no hay tokenizador).
+El corpus simula un entorno realista de documentación interna de una organización tecnológica e incluye información de distinta naturaleza:
 
-4) **Embeddings**
-- `src/embeddings/embedder.Embedder`: embeddings por chunk (no por doc).
-- Normalización L2 para FAISS IP (similitud coseno).
-- Caché en `index/embeddings_cache.json` para no recomputar.
+- KPIs y métricas operativas
+- Configuración de servicios
+- Procedimientos operativos y FAQs
+- Políticas internas y on-call
+- Inventario de servicios y activos
+- Histórico de incidentes
+- Organigrama y roles técnicos
 
-5) **Vector store**
-- `src/rag/vectorstore.VectorStore`: FAISS + persistencia en `index/`.
-- `index/index.faiss` + `index/data.json` (texto + metadatos por chunk).
+Los documentos se presentan en múltiples formatos (CSV, JSON, Markdown y texto plano), reproduciendo la heterogeneidad habitual en entornos empresariales reales.
 
-6) **Retrieval**
-- `src/rag/retriever.HybridRetriever`: combina embeddings + keyword (TF‑IDF).
-- Motivación: tokens exactos (INC, versiones, emails) se benefician de keyword.
-- `retriever_k` y `retriever_alpha` controlan tamaño y mezcla.
-- `retriever_alpha` se ajustó empíricamente para maximizar nDCG sin perder recall; valores más altos favorecían keyword pero penalizaban preguntas semánticas.
+---
 
-7) **LLM**
-- Benchmark con Ollama (local) y Gemini (API).
-- Prompt restrictivo: responde solo con contexto.
+## 3. Planteamiento experimental y alcance
 
-## Uso rápido
-1) Crear entorno: `python -m venv .venv && source .venv/bin/activate`
-2) Instalar deps: `pip install -r requirements.txt`
-3) Construir índice: `python scripts/build_index.py`
-4) Consultar: `python scripts/query.py`
-5) Benchmark embeddings: `python scripts/benchmark_embeddings.py`
-6) Benchmark retrieval: `python scripts/benchmark_retrieval.py`
-7) Benchmark LLM: `python scripts/benchmark_llm.py`
+Se evalúan de forma controlada tres componentes clave del sistema:
+- embeddings
+- retrieval
+- generación
 
-## Configuración actual (resumen)
-- Embeddings: `sentence-transformers` con `paraphrase-multilingual-mpnet-base-v2`
-- GPU: `embed_device: cuda`
-- Retrieval: híbrido (dense + keyword) con `retriever_k: 12` y `retriever_alpha: 0.6`
-- LLM ganador: `llm_winner` (actualmente `gemini-flash`)
+Quedan fuera del alcance:
+- fine-tuning de modelos
+- aprendizaje online
+- entrenamiento supervisado con datos externos
 
-## Configuración detallada (config.json)
-Parámetros clave:
-- `embed_backend`, `st_model_name`, `embed_device`
-- `retriever_type`, `retriever_k`, `retriever_alpha`
-- `llm_winner`, `llm_temperature`, `llm_max_contexts`
-- `llm_benchmark_models`, `llm_benchmark_limit`, `llm_gemini_max_per_min`
+---
+## 4. Conjunto de evaluación
 
-## Decisiones técnicas clave
-- **Embeddings**: se priorizó un modelo multilingüe por mezcla de términos en ES/EN y entidades exactas.
-- **Chunking**: se eligió un split por secciones para no mezclar temas y preservar contexto en procedimientos.
-- **Retrieval**: híbrido porque mejora el orden de relevancia; el recall iguala al vectorial en K altos.
-- **LLM**: se priorizó calidad de respuesta; se mantiene alternativa local por coste/rate limit.
+La evaluación se realiza mediante un **test set manualmente definido**, compuesto por preguntas representativas del dominio.
 
-## Estrategia de split y metadatos
-- PDF/MD/TXT: chunking por secciones + ventana con solape.
-- CSV/JSON: chunking fijo por filas o bloques lógicos.
-- Metadatos por chunk: `doc_id`, `filename`, `ext`, `source_type`, offsets y headings cuando aplica.
+El conjunto está definido en `src/eval_data.py` como `TEST_SET` y se reutiliza en los benchmarks de embeddings, retrieval y LLM para evaluar de forma comparable cada etapa del pipeline.
 
-Detalle técnico del chunking:
-- **Secciones (headings)**: secciones agregadas con `headings_path` para mantener contexto de tema.
-- **Ventana con solape**: evita cortes que rompan frases/pasos.
-- **CSV/JSON**: bloques pequeños para consultas numéricas exactas.
-- Chunks más grandes mezclaban temas y degradaban precisión en tablas; chunks muy pequeños fragmentaban procedimientos y reducían completitud.
+Cada entrada del test set incluye:
+- **question**: la consulta a evaluar.
+- **expected**: lista de tokens/entidades que deben aparecer (números, IDs, versiones, emails).
+- **expect_text**: respuesta canónica en texto para comparar similitud semántica.
+- **category**: etiqueta semántica (tablas, configuración, identificadores, procedimientos, inventarios).
 
-## Dataset de evaluación (TEST_SET)
-- 20 preguntas alineadas a los documentos reales en `data/`.
-- Categorías: tablas, configuración, identificadores y procedimientos.
-- Cada pregunta incluye tokens esperados para evaluar retrieval y LLM.
+Diseño del test set:
+- **Tablas (CSV)**: busca extraer valores numéricos exactos (SLA, CSAT, tickets).
+- **Configuración (JSON)**: verifica claves y parámetros críticos (versiones, features, umbrales).
+- **Identificadores**: exige coincidencia exacta de IDs, emails y versiones.
+- **Procedimientos**: comprueba pasos y acciones clave en textos largos.
+- **Inventarios**: valida estados y owners asociados a servicios.
 
-## Razonamiento de los tests (por qué existen)
-El TEST_SET no busca cubrir "todas" las preguntas posibles, sino representar los tipos de consultas reales que el sistema debe resolver y los riesgos típicos en RAG.
+Este enfoque permite evaluar:
+- Coincidencia parcial por tokens (retrieval).
+- Calidad global por similitud semántica (LLM).
+- Robustez frente a diferentes tipos de pregunta.
 
-1) **Tablas (CSV)**
-- **Qué se prueba**: exactitud numérica y extracción de KPIs (SLA, CSAT, tickets).
-- **Por qué**: los números suelen fallar por chunking agresivo o por mezclas de filas.
-- **Decisión**: se mantienen filas como unidades y se evalúan tokens exactos (ej. 93.1, 1500).
+Ejemplos reales del TEST_SET:
+```
+{"question": "Cual es el SLA cumplido en Q4 y cuantos tickets abiertos hubo?",
+ "expected": ["93.1", "1500"],
+ "expect_text": "En Q4 el SLA cumplido es 93.1% y hubo 1500 tickets abiertos.",
+ "category": "tablas"}
 
-2) **Configuración (JSON)**
-- **Qué se prueba**: lectura de parámetros clave y listas (features, alerting).
-- **Por qué**: JSON suele perderse si se aplana sin estructura; se requieren claves específicas.
-- **Decisión**: chunk por bloque lógico y expected con claves/valores relevantes.
+{"question": "Cual es la version del servicio principal?",
+ "expected": ["2.3.1"],
+ "expect_text": "La versión del servicio principal (core_api) es 2.3.1.",
+ "category": "identificadores"}
 
-3) **Identificadores exactos**
-- **Qué se prueba**: recuperación de entidades con formato rígido (INC-2024-001, emails, versiones).
-- **Por qué**: embeddings tienden a diluir tokens exactos; se necesita garantizar precisión.
-- **Decisión**: tests con tokens exactos y groundedness para evitar invenciones.
+{"question": "Que pasos de troubleshooting se realizan antes de escalar?",
+ "expected": ["verificar", "credenciales", "logs"],
+ "expect_text": "Antes de escalar se realiza troubleshooting: verificar credenciales, revisar logs y comprobar estado del servicio.",
+ "category": "procedimientos"}
+```
 
-4) **Procedimientos**
-- **Qué se prueba**: pasos, tiempos y acciones correctas (on-call, escalado, políticas).
-- **Por qué**: son textos largos donde el LLM tiende a resumir o omitir pasos.
-- **Decisión**: expected con verbos clave y requisitos mínimos (ej. "10 minutos", "escalado").
+---
 
-## Cómo se evalúa cada test
-- **Retrieval**: se concatena top‑k y se comprueba si aparecen los tokens esperados.
-- **LLM**:
-  - contains‑match: proporción de tokens esperados presentes.
-  - completeness: exige todos los tokens esperados.
-  - groundedness: penaliza entidades que no están en el contexto.
-- **Latencias**: se miden tiempos de retrieval y generación por pregunta.
+## 5. Métricas de evaluación
 
-## Estrategia de retrieval (baseline + mejora)
-Baseline: retrieval vectorial con FAISS.  
-Mejora propuesta: retrieval híbrido (vector + keyword), manteniendo top‑k fijo.
+### 5.1 Métricas de recuperación
+- **avg_score (top‑k)**:  
+  `avg_score = (# tokens esperados presentes en top‑k) / (total tokens esperados)`
+  - Ejemplo: expected = `[\"93.1\", \"1500\"]`, contexto contiene ambos → `avg_score=1.0`. Si solo aparece uno → `0.5`.
+  - Rango: 0 a 1.
+- **Recall@k**:  
+  `Recall@k = 1` si existe algún chunk relevante, si no 0.
+  - Ejemplo: si algún chunk del top‑k contiene al menos un token esperado → `Recall@k=1`.
+  - Rango: 0 o 1.
+- **MRR@k**:  
+  `MRR@k = 1 / rank_del_primer_chunk_relevante` (0 si no hay relevante).
+  - Ejemplo: primer relevante en posición 2 → `MRR@k=0.5`.
+  - Rango: 0 a 1.
+- **nDCG@k**:  
+  `nDCG = DCG / IDCG`, con `rel_i` = proporción de tokens esperados en cada chunk.  
+  Intuición: mide la calidad del **orden**; vale 1.0 si los chunks más relevantes aparecen arriba.  
+  - Ejemplo: si el chunk con mayor `rel` está en posición 1 → nDCG alto; si aparece en posición 3 → nDCG baja.
+  - Rango: 0 a 1.
+- **context_precision@k**:  
+  `context_precision = (# tokens esperados presentes) / (# tokens totales en top‑k)`  
+  Se usa para comparar ruido relativo entre estrategias con cobertura similar.
+  - Ejemplo: 2 tokens esperados encontrados en 200 tokens de contexto → `0.01`.
+  - Rango: 0 a 1.
 
-Comparativa (mejor K por modo):
-- Vector (K=16): Recall 0.970, MRR 0.713, nDCG 0.717
-- Keyword (K=16): Recall 0.939, MRR 0.694, nDCG 0.722
-- Hybrid (K=12): Recall 0.970, MRR 0.795, nDCG 0.816
+Normalización común: `lower()`, sin tildes, espacios colapsados (puntuación opcional).
 
-Decisión: híbrido por mejor ordenamiento (MRR/nDCG) manteniendo el recall máximo.
+### 5.2 Métricas de respuesta
+- **score (contains‑match)**: proporción de tokens esperados presentes en la respuesta del LLM.  
+  - Definición:  
+    `score = (# tokens esperados presentes) / (total tokens esperados)`
+  - Normalización: misma normalización que en retrieval.
+  - Ejemplo: expected = `[\"2.3.1\"]` y la respuesta incluye `2.3.1` → `score=1.0`.
+  - Rango: 0 a 1.
+- **semantic_similarity**:  
+  `sim = cos(emb(respuesta), emb(expect_text))` con `sentence-transformers`.
+  - Rango: -1 a 1 (en práctica suele estar entre 0 y 1).
+- **groundedness**: penaliza entidades fuera del contexto (emails, IDs, versiones).
+  - Ejemplo: si la respuesta menciona `user@corp.com` pero no está en el contexto, groundedness baja.
+  - Rango: 0 a 1.
+- **latencias**: `retrieval_s`, `generation_s`, `total_s`.
+  - Rango: 0 a ∞ (segundos).
 
-## Benchmark de embeddings
-Resultados clave (avg_score con K=16):
-- `paraphrase-multilingual-mpnet-base-v2`: 0.985 (ganador)
-- `all-mpnet-base-v2`: 0.952
-- `nomic-embed-text`: 0.942
+### 5.3 Relación métrica → benchmark → objetivo
 
-Archivos: `results/benchmark_embeddings.json`, `results/benchmark_embeddings.csv`
+- **benchmark_embeddings**  
+  - Métrica principal: `avg_score` (top‑k) sobre retrieval vectorial.  
+  - Objetivo: seleccionar el mejor modelo de embeddings.
 
-## Benchmark de retrieval
-Se evalúa Recall@K, MRR@K y nDCG@K para vector/keyword/hybrid.
-Archivo: `results/benchmark_retrieval.json`
+- **benchmark_retrieval**  
+  - Métricas: `avg_score`, `Recall@k`, `MRR@k`, `nDCG@k`.  
+  - Objetivo: comparar estrategias de retrieval (vector, BM25, híbridos, rerank).
 
-Cómo se calcula:
-- **Recall@K**: existe al menos un chunk relevante en top‑K.
-- **MRR@K**: posición del primer chunk relevante.
-- **nDCG@K**: calidad del ranking completo.
-- Relevancia se define por proporción de tokens esperados presentes en el chunk.
+- **benchmark_llm**  
+  - Métricas: `score`, `semantic_similarity`, `groundedness`, latencias.  
+  - Objetivo: evaluar calidad final de respuesta y elegir el LLM ganador.
 
-## Benchmark de LLM
-Métricas:
-- contains-match: % tokens esperados en la respuesta
-- completeness: % de preguntas con respuesta completa
-- groundedness: no inventa entidades fuera del contexto
-- latencias: retrieval/generación/total
+---
 
-Resultados globales (avg_score / completeness):
-- Gemini: 0.796 / 0.70 (mejor calidad)
-- DeepSeek: 0.738 / 0.65 (local y sin rate limit)
-- Llama3.2: 0.571 / 0.45
+## 6. Arquitectura del sistema
 
-Decisión (llm_winner):
-- Ganador por calidad: Gemini (mejor avg_score y completitud).
-- Pros: mayor precisión y mejor desempeño en procedimientos.
-- Contras: rate limits y mayor latencia frente a local.
-- Motivo: priorizamos calidad de respuesta en la evaluación; se mantiene la alternativa local (DeepSeek) para escenarios sin API.
+### 6.1 Visión general del pipeline
 
-Breakdown por tipo (tablas, configuración, identificadores, procedimientos) en:
-- `results/benchmark_llm.json`
-- `results/benchmark_llm.csv`
+Arquitectura RAG modular y reproducible:
+- Ingestión + limpieza
+- Chunking
+- Embeddings + FAISS
+- Retrieval (vector/BM25/híbrido)
+- Generación
+- Evaluación
 
-## Dificultades y cómo se resolvieron
-- **Tokens exactos** (INC-xxxx, emails, versiones): se mantuvieron intactos en limpieza y se evaluaron explícitamente.
-- **PDFs con estructura irregular**: se optó por chunking por secciones y ventana para reducir ruido.
-- **Rate limits en LLM**: se añadió throttling (limitación del ritmo de peticiones) configurable para Gemini.
+Flujo: Ingesta → Limpieza → Chunking → Embeddings → Indexación → Retrieval → LLM → Métricas.
 
-## Por qué se probaron estos modelos y no otros
-- **Embeddings**: se comparó un modelo local rápido (nomic), uno fuerte en inglés (all‑mpnet) y uno multilingüe (paraphrase‑multilingual) por mezcla ES/EN en el corpus.
-- **Retrieval**: se comparó vector, keyword e híbrido por presencia de tokens exactos en el dominio.
-- **LLM**: se comparó local (ollama) vs API (Gemini) para balancear calidad vs coste/rate limits.
+Cada chunk conserva metadatos (`source`, `doc_id`, offsets, `section_title`) para trazabilidad. El diseño desacoplado permite sustituir modelos o variantes de chunking/retrieval sin reescribir el pipeline.
 
-## Scripts principales (qué hace cada uno)
-- `scripts/build_index.py`: ingesta, limpieza, chunking, embeddings y FAISS.
-- `scripts/query.py`: consulta interactiva con retrieval + LLM.
-- `scripts/benchmark_embeddings.py`: compara embeddings con retrieval fijo.
-- `scripts/benchmark_retrieval.py`: compara estrategias de retrieval.
-- `scripts/benchmark_llm.py`: compara LLMs con métricas y latencias.
+---
 
-## Limitaciones conocidas
-- El benchmark usa tokens esperados (no evaluación semántica completa).
-- No se calcula coste por tokens (pendiente).
-- La calidad depende del corpus sintético de `data/`.
 
-## Ejemplo real (end-to-end)
-Ejemplo tomado del TEST_SET para mostrar el flujo completo:
+### 6.2 Ingestión y chunking
 
-**Pregunta**  
-“Cuál es el SLA cumplido en Q4 y cuántos tickets abiertos hubo?”
+### 6.2.1 Ingestión multiformato
 
-**Contexto esperado**  
-El dato está en `data/kpis_trimestrales.csv` y debe contener los tokens `93.1` y `1500`.
+Los documentos se normalizan a texto y metadatos mínimos para asegurar trazabilidad.  
+La ingesta se ejecuta en `scripts/build_index.py` y en los benchmarks.
 
-**Qué debe recuperar el retrieval**  
-Chunks que incluyan la fila de Q4 del CSV (SLA y tickets abiertos).
+Loaders:
+- PDF: texto + tablas con marcador `[TABLAS]`.
+- CSV/JSON: filas/keys a texto plano.
+- TXT/MD: lectura directa preservando estructura.
 
-**Qué debe responder el LLM**  
-Una respuesta breve que mencione ambos valores, sin inventar otros números.
+Ejemplos:
 
-**Cómo se puntúa**  
-- contains‑match = 1.0 si incluye `93.1` y `1500`  
-- completeness = 1.0 si aparecen ambos tokens  
-- groundedness = 1.0 si esos valores están en el contexto recuperado
+- **PDF** (texto + tablas):
+```
+...contenido de la página...
 
-## Evaluación y por qué estas métricas bastan
-Estas métricas son suficientes para un corpus cerrado y respuestas factuales: miden recuperación correcta (retrieval) y respuesta fiel (LLM).  
-Métricas más complejas (ROUGE, BERTScore, LLM‑as‑judge) añaden coste/variabilidad y no aportan mucho en respuestas cortas con datos exactos.
+[TABLAS]
+columna1,columna2,columna3
+valor1,valor2,valor3
+```
+- **CSV** (una fila por chunk en texto legible):
+```
+trimestre: Q4; tickets_abiertos: 1500; tickets_cerrados: 1470; sla_cumplido_pct: 93.1; csat_promedio: 4.7
+```
+- **JSON** (keys y valores aplanados):
+```
+servicio: core_api
+version: 2.3.1
+features.0: autenticacion_segura
+alerting.cpu: 85
+```
+- **Markdown / TXT** (preserva estructura y headings):
+```
+# Proceso de escalado
+## Nivel 1
+Validar credenciales y revisar logs...
+```
 
-En este dominio, la exactitud literal es más relevante que la similitud semántica amplia, por eso se priorizaron métricas basadas en tokens esperados y groundedness.
+### 6.2.2 Estrategia de segmentación (chunking)
 
-## Reproducibilidad
-- Configuración central en `config.json`.
-- Benchmarks guardados en `results/`.
-- Scripts independientes para embeddings/retrieval/LLM.
+La segmentación se adapta al tipo de documento para preservar coherencia semántica y evitar contaminación entre registros:
 
-## Evidencias
-- Embeddings: `results/benchmark_embeddings.json`, `results/benchmark_embeddings.csv`
-- Retrieval: `results/benchmark_retrieval.json`
-- LLM: `results/benchmark_llm.json`, `results/benchmark_llm.csv`
-- TEST_SET: `src/eval_data.py`
+- **Documentos narrativos (PDF, Markdown, TXT)**  
+  Chunking semántico por secciones (headings) combinado con ventana deslizante con solape.  
+  - Parámetros: `max_size=500`, `overlap=60`.
 
-## Pendiente / no implementado
-- Cálculo de coste (tokens/€ por consulta).
-- Reranking del contexto antes del prompt (mejora futura del LLM).
+- **Documentos estructurados (CSV, JSON)**  
+  Chunking fijo sin solape.  
+  - Parámetros: `size=400`, `overlap=0`.
+
+---
+
+
+### 6.3 Almacenamiento vectorial (FAISS)
+
+Embeddings en FAISS (`index/index.faiss`) con metadatos en `index/data.json`.  
+Se elige por simplicidad local, buen rendimiento en CPU y compatibilidad con similitud coseno (inner product).
+
+Alternativas:
+- **Chroma**: ofrece API de alto nivel, colecciones y persistencia integrada; útil si se busca una capa tipo “vector DB” con más features, pero añade dependencias y overhead.
+- **Elasticsearch/OpenSearch**: potencia para filtrado, escalado y búsquedas híbridas, a costa de despliegue y mantenimiento (cluster, índices, recursos).
+- **Annoy/HNSWlib**: ligeros y rápidos en CPU para nearest‑neighbor, pero con menos herramientas de persistencia/metadata y menos flexibilidad en configuración.
+
+---
+
+
+---
+### 6.4 Embeddings (modelos y benchmark)
+
+Se evalúan varios modelos de embeddings para seleccionar el que mejor recupera contexto en el dominio.
+
+Modelos evaluados:
+- `paraphrase-multilingual-mpnet-base-v2` (multilingüe)
+- `all-mpnet-base-v2` (inglés generalista)
+- `nomic-embed-text` (local vía Ollama)
+
+Benchmark de embeddings:
+- Métrica principal: `avg_score` en top‑k usando retrieval vectorial.
+- Grid de `k`: `k ∈ {4, 8, 12, 16}`.
+- Objetivo: maximizar cobertura de tokens esperados sin depender de BM25.
+  - Interpretación: mayor `avg_score` implica que el embedding recupera chunks que contienen más evidencia exacta (IDs, números, versiones), por tanto es mejor para extraer contexto útil con el mismo pipeline.
+  - Limitación: favorece coincidencia literal; no mide orden fino del ranking (eso se analiza en benchmark de retrieval con MRR/nDCG).
+
+Selección:
+- Se elige el modelo con mayor `avg_score` medio.
+
+Resultados (best_k por modelo):
+
+| Modelo | best_k | avg_score | min_score | max_score |
+|------|--------|-----------|-----------|-----------|
+| paraphrase-multilingual-mpnet-base-v2 | 16 | 0.949 | 0.000 | 1.000 |
+| all-mpnet-base-v2 | 16 | 0.922 | 0.000 | 1.000 |
+| nomic-embed-text | 16 | 0.879 | 0.000 | 1.000 |
+
+![Embeddings avg_score](visualizations/embeddings_avg_score.png)
+
+---
+
+## 7. Estrategias de recuperación (Retrieval)
+
+Dado que el corpus contiene tanto información altamente estructurada como documentación narrativa, el sistema evalúa múltiples estrategias de recuperación.
+
+### 7.1 Recuperación léxica (BM25)
+
+BM25 es el baseline léxico clásico basado en coincidencia de términos ponderada por frecuencia y longitud del documento.  
+Es especialmente robusto cuando la consulta contiene tokens críticos que deben aparecer literalmente en el contexto.
+
+Fortalezas:
+- IDs, versiones, comandos, tickets, emails, nombres propios.
+- Consultas con valores numéricos exactos o claves de configuración.
+
+Limitaciones:
+- Pierde rendimiento con reformulación semántica o sinónimos.
+- No capta relaciones semánticas sin coincidencia literal.
+
+---
+
+### 7.2 Recuperación semántica (Vector Search)
+
+Embeddings densos para recuperar contexto aunque no haya coincidencia literal.  
+El ranking se basa en similitud coseno entre consulta y chunks.
+
+Fortalezas:
+- Procedimientos, FAQs y documentación narrativa.
+- Reformulaciones donde el significado se mantiene sin compartir términos.
+
+Limitaciones:
+- Puede diluir tokens críticos exactos (IDs o valores).
+- Depende de la calidad del embedding para capturar el dominio.
+
+En este proyecto los embeddings se usan como extractores de características (sin fine‑tuning).
+
+---
+
+### 7.3 Recuperación híbrida (Vector + BM25)
+
+Fusión de rankings (parámetro `retriever_alpha`) para combinar precisión léxica y generalización semántica.
+Permite sumar evidencias de ambos mundos sin clasificar la consulta a priori.
+
+Ventajas:
+- Mantiene robustez léxica en tokens críticos.
+- Mejora la cobertura semántica en texto descriptivo.
+- Reduce el riesgo de que un único método domine el ranking.
+
+---
+
+### 7.4 Re-ranking (opcional)
+
+Reordena el top‑k con un cross‑encoder que evalúa consulta‑chunk de forma conjunta.  
+Puede mejorar el orden final cuando el contexto es limitado, pero añade latencia.
+
+Se evalúa por separado y se mantiene desactivado en configuración final al no mejorar métricas globales en este corpus.
+
+---
+
+### 7.5 Benchmark específico de BM25
+
+Grid search de `k1` y `b` para fijar la mejor configuración antes de comparar retrievers.  
+Mejor combinación: `k1=0.9`, `b=0.25`, `best_k=16`, `avg_score=0.838` (min 0.000, max 1.000).  
+No se observan diferencias grandes entre combinaciones en este corpus; se fija esa configuración.
+
+Desglose por categoria (best_k=16):
+
+| Categoria | avg_score |
+| --- | --- |
+| tablas | 0.80 |
+| configuracion | 0.33 |
+| identificadores | 1.00 |
+| procedimientos | 0.85 |
+| inventarios | 1.00 |
+
+Grid de combinaciones probadas (BM25):
+- `k1`: [0.9, 1.2, 1.5, 1.8, 2.0]
+- `b`: [0.25, 0.5, 0.75, 0.9]
+
+![BM25 breakdown](visualizations/bm25_breakdown.png)
+
+---
+
+### 7.6 Resultados del benchmark de retrieval
+
+Métrica principal: `avg_score` (proporción de tokens esperados presentes en el top‑k concatenado).
+Grid de k evaluado (retrieval): `k ∈ {4, 8, 12, 16}` para cada modo.
+
+Resultados (mejor K por modo):
+
+| Modo | best_k | avg_score | context_precision@k | Recall@k | MRR@k | nDCG@k |
+|------|--------|-----------|--------------------|----------|-------|--------|
+| vector | 16 | 0.949 | 0.004 | 0.970 | 0.713 | 0.718 |
+| keyword (TF-IDF) | 16 | 0.899 | 0.003 | 0.939 | 0.703 | 0.721 |
+| bm25 (tuneado) | 16 | 0.838 | 0.003 | 0.879 | 0.569 | 0.581 |
+| hybrid | 12 | 0.949 | 0.005 | 0.970 | 0.811 | 0.816 |
+| hybrid_bm25 | 16 | 0.949 | 0.004 | 0.970 | 0.713 | 0.718 |
+| vector_rerank | 12 | 0.939 | 0.004 | 0.939 | 0.735 | 0.755 |
+| keyword_rerank | 12 | 0.891 | 0.003 | 0.939 | 0.718 | 0.736 |
+| bm25_rerank | 16 | 0.828 | 0.003 | 0.848 | 0.681 | 0.687 |
+| hybrid_rerank | 12 | 0.949 | 0.005 | 0.970 | 0.767 | 0.779 |
+| hybrid_bm25_rerank | 12 | 0.939 | 0.004 | 0.939 | 0.735 | 0.755 |
+
+![Retrieval metrics por modo](visualizations/retrieval_models.png)
+![k vs metrics](visualizations/retrieval_k_tradeoff.png)
+
+Conclusión: `vector`, `hybrid` y `hybrid_bm25` empatan en rendimiento; se selecciona `hybrid_bm25` por robustez. El reranking no mejora y se mantiene desactivado.
+
+---
+
+### 7.7 Propuesta de mejora e impacto
+
+Mejora propuesta: **retrieval híbrido** (vector + BM25) con BM25 tuneado.  
+Impacto observado:
+- Mantiene el mismo `avg_score` que el vector puro (misma cobertura).
+- Mejora el ranking (`MRR@k`, `nDCG@k`), lo que prioriza chunks más útiles en el top‑k.
+- Aporta robustez léxica sin sacrificar desempeño en consultas semánticas.
+
+Decisión: se adopta el híbrido como configuración final. El reranking se descarta por latencia y por no mejorar métricas globales en este corpus.
+
+---
+
+## 8. Generación de respuestas
+
+El LLM responde solo con el contexto recuperado.
+
+### 8.1 Configuración de generación
+
+La generación se realiza con modelos locales (Ollama) o Gemini, en función del benchmark configurado.  
+Parámetros relevantes en `config.json`:
+- `llm_winner`: modelo elegido tras benchmarking.
+- `llm_temperature`: controla variabilidad; se mantiene baja para respuestas factuales.
+- `llm_max_contexts`: número de chunks incluidos en el prompt final.
+
+### 8.2 Prompting y control de alucinaciones
+
+El prompt concatena los top‑k (en orden de ranking) y fuerza tres reglas: usar solo el contexto, mantener valores exactos y responder “no disponible” si falta el dato.  
+Esto reduce alucinaciones y hace verificable la respuesta final.
+
+Prompt utilizado (exacto):
+```
+Responde de forma concisa basandote solo en el contexto. Incluye numeros tal cual aparecen. Si no esta en el contexto, di que no esta disponible.
+Pregunta: <pregunta>
+Contexto:
+- <chunk 1>
+- <chunk 2>
+Respuesta:
+```
+
+### 8.3 Modelos evaluados
+
+Se evaluaron modelos Ollama locales (p. ej. `llama3.2:3b`, `deepseek-r1:8b`) y variantes Gemini.  
+El benchmark compara precisión, completitud y groundedness para seleccionar el ganador.
+
+Grid de modelos evaluados (LLM):
+- `ollama-llama3.2` → `llama3.2:3b`
+- `ollama-deepseek` → `deepseek-r1:8b`
+- `gemini-flash` → `gemini-2.5-flash-lite`
+
+---
+
+## 9. Resultados experimentales (LLM)
+
+Se evalúan varios modelos de LLM usando el mismo contexto recuperado para comparar **calidad**, **fidelidad al contexto** y **latencia**.
+
+Modelos evaluados:
+- `ollama-llama3.2` → `llama3.2:3b`
+- `ollama-deepseek` → `deepseek-r1:8b`
+- `gemini-flash` → `gemini-2.5-flash-lite`
+
+Métricas y significado:
+- **avg_score**: proporción de tokens esperados presentes en la respuesta (0–1).
+- **semantic_similarity**: similitud coseno entre la respuesta y `expect_text` (≈0–1).
+- **groundedness**: penaliza entidades fuera del contexto (0–1).
+- **completeness**: mide si la respuesta cubre todos los elementos esperados (0–1).
+- **context_coverage**: proporción de tokens esperados que aparecen en el contexto recuperado (0–1).
+- **latencias**: `retrieval_s`, `generation_s`, `total_s` (segundos).
+
+Resultados:
+
+| Modelo | avg_score | context_coverage | groundedness | semantic_similarity | completeness | retrieval_s | generation_s | total_s |
+|------|-----------|------------------|--------------|---------------------|--------------|-------------|--------------|---------|
+| gemini-flash | 0.808 | 0.950 | 1.000 | 0.741 | 0.750 | 0.025 | 6.351 | 6.376 |
+| ollama-deepseek | 0.683 | 0.950 | 1.000 | 0.664 | 0.650 | 0.021 | 5.239 | 5.260 |
+| ollama-llama3.2 | 0.450 | 0.950 | 1.000 | 0.611 | 0.250 | 0.207 | 1.184 | 1.391 |
+
+![LLM avg_score](visualizations/llm_avg_score.png)
+
+---
+
+## 10. Discusión de resultados
+
+Resultados clave:
+- El retrieval domina la calidad final; el ranking es crítico para el LLM.
+- BM25 destaca en tokens exactos; vector en procedimientos; el híbrido equilibra ambos.
+- El reranking no compensa la latencia en este corpus.
+- `gemini-flash` ofrece la mejor calidad; `ollama-deepseek` es la mejor alternativa local.
+- Mayor `context_precision@k` + buen ranking reduce ruido en generación.
+
+Síntesis de benchmarks y decisiones:
+- **Embeddings**: el modelo multilingüe gana en cobertura de tokens esperados, coherente con un corpus mixto ES/EN y entidades técnicas.  
+  - Pros: mejor recuperación de evidencia exacta con el mismo pipeline.  
+  - Contras: no garantiza el mejor orden del top‑k (eso se analiza en retrieval).
+- **Retrieval**: `vector`, `hybrid` y `hybrid_bm25` empatan en `avg_score`, pero el híbrido mejora el ranking (MRR/nDCG).  
+  - Pros del híbrido: equilibrio entre precisión léxica y semántica; robusto ante tipos de consulta distintos.  
+  - Contras: añade complejidad y parámetros (alpha), aunque el coste es bajo.
+- **BM25 tuning**: las combinaciones probadas no cambian drásticamente el rendimiento; se fija una configuración estable.  
+  - Pros: evita subestimar BM25; mejora trazabilidad experimental.  
+  - Contras: beneficio marginal en este corpus.
+- **Reranking**: mejora local del orden en algunos casos, pero no en métricas globales.  
+  - Pros: potencial mejora en top‑k muy limitado.  
+  - Contras: mayor latencia y coste por consulta; descartado.
+- **LLM**: `gemini-flash` lidera en calidad global y similitud; `ollama-deepseek` es la opción local con mejor equilibrio.  
+  - Pros de `gemini-flash`: mejor calidad y completitud.  
+  - Contras: mayor latencia y dependencia de API externa.
+
+Selección final:
+- **Embeddings**: `paraphrase-multilingual-mpnet-base-v2`
+- **Retrieval**: `hybrid_bm25` (BM25 tuneado, reranking desactivado)
+- **LLM**: `gemini-flash` como ganador; `ollama-deepseek` como alternativa local
+
+En conjunto, los benchmarks confirman que **la recuperación** es el principal factor de precisión factual y que el enfoque híbrido es la opción más estable para un corpus heterogéneo. La elección del LLM refina la calidad final, pero no compensa un retrieval débil.
+
+---
+
+## 11. Dificultades y resoluciones
+
+- **BM25 devolvia scores nulos**: se detecto un problema en el patrón de tokenizacion; se corrigio y se re‑ejecutaron benchmarks.
+- **Reranking sin mejora**: las metricas no subieron y la latencia aumentaba, por lo que se desactivo en configuracion final.
+- **Similitud semantica sin valores**: se normalizo el campo `expect_text` y se ajusto el pipeline de evaluacion.
+
+---
+
+## 12. Conclusiones
+
+Conclusión principal: el retrieval domina la calidad final; el enfoque híbrido equilibra precisión léxica y semántica, y el tuning de BM25 evita subestimar su valor. El reranking no compensa la latencia en este corpus, y el LLM ganador se selecciona por métricas objetivas.
+
+Arquitectura final: modular, reproducible y trazable.
+
+Lecciones aprendidas:
+- Sin retrieval sólido, un LLM fuerte no compensa la falta de contexto.
+- Ranking y cobertura son igual de importantes.
+- El chunking por tipo de documento reduce errores numéricos.
+
+---
+
+## 13. Limitaciones y trabajo futuro
+
+- El test set es limitado y su distribución puede sesgar resultados.
+- La evaluación depende de tokens esperados y texto canónico (favorece respuestas extractivas).
+- No se exploró fine‑tuning ni reranking especializado por dominio.
+- El chunking es fijo por tipo de documento; falta adaptar por consulta.
+- Futuro: datasets reales más grandes, benchmarking de prompts y evaluación humana.

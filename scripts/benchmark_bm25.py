@@ -4,8 +4,6 @@ from pathlib import Path
 import json
 import sys
 import time
-import re
-import unicodedata
 from typing import Dict, Iterable, List, Tuple
 
 import numpy as np
@@ -23,25 +21,13 @@ from src.loaders.txt_loader import load_txt
 from src.loaders.markdown_loader import load_markdown
 from src.pipeline import clean_text, fixed_chunk, semantic_chunk, make_chunk_id
 from src.rag.vectorstore import VectorStore
-from src.rag.retriever import Retriever, HybridRetriever, KeywordRetriever, BM25Retriever, HybridBM25Retriever
-from src.rag.reranker import CrossEncoderReranker
+from src.rag.retriever import BM25Retriever
 from src.config import load_config
 
 ROOT = Path("data")
 RESULTS_DIR = Path("results")
 INDEX_DIR = Path("index_benchmark")
 K_VALUES = [4, 8, 12, 16]
-
-
-class RerankWrapper:
-    def __init__(self, retriever, reranker: CrossEncoderReranker, top_k: int):
-        self.retriever = retriever
-        self.reranker = reranker
-        self.top_k = top_k
-
-    def retrieve(self, question: str):
-        results = self.retriever.retrieve(question)
-        return self.reranker.rerank(question, results, top_k=self.top_k)
 
 
 def iter_docs():
@@ -131,6 +117,9 @@ def build_index(embedder: Embedder, index_dir: Path, cache_path: Path) -> Vector
 def normalize_text(text: str, strip_punct: bool = False) -> str:
     if not text:
         return ""
+    import re
+    import unicodedata
+
     text = text.lower()
     text = unicodedata.normalize("NFKD", text)
     text = "".join(ch for ch in text if not unicodedata.combining(ch))
@@ -140,80 +129,34 @@ def normalize_text(text: str, strip_punct: bool = False) -> str:
     return text
 
 
-def _chunk_relevance(text: str, expected: List[str], strip_punct: bool) -> float:
-    if not expected:
-        return 0.0
-    text_norm = normalize_text(text, strip_punct=strip_punct)
-    expected_norm = [normalize_text(sub, strip_punct=strip_punct) for sub in expected]
-    hits = sum(1 for sub in expected_norm if sub and sub in text_norm)
-    return hits / len(expected)
-
-
-def score_retrieval(retriever, k: int = 8, strip_punct: bool = False) -> Dict[str, float]:
-    avg_scores = []
-    context_precisions = []
-    recall_hits = 0
-    mrr_sum = 0.0
-    ndcg_sum = 0.0
-
+def score_retrieval(retriever: BM25Retriever, k: int, strip_punct: bool) -> Dict[str, float]:
+    scores = []
+    by_cat: Dict[str, List[float]] = {}
     for test in TEST_SET:
         q = test["question"]
         expected = test["expected"]
+        category = test.get("category", "otros")
         results = retriever.retrieve(q)[:k]
-
-        # average score (matching substrings in concatenated context)
         context = normalize_text(" ".join(r["text"] for r in results), strip_punct=strip_punct)
         expected_norm = [normalize_text(sub, strip_punct=strip_punct) for sub in expected]
         hits = sum(1 for sub in expected_norm if sub and sub in context)
-        avg_score = hits / len(expected) if expected else 0.0
-        avg_scores.append(avg_score)
-        total_tokens = len(context.split())
-        context_precision = hits / total_tokens if total_tokens else 0.0
-        context_precisions.append(context_precision)
-
-        # relevance per chunk (graded)
-        rels = [_chunk_relevance(r["text"], expected, strip_punct=strip_punct) for r in results]
-
-        # Recall@K: any relevant chunk
-        if any(r > 0 for r in rels):
-            recall_hits += 1
-
-        # MRR@K: rank of first relevant chunk
-        first_rel_rank = next((i + 1 for i, r in enumerate(rels) if r > 0), None)
-        if first_rel_rank is not None:
-            mrr_sum += 1.0 / first_rel_rank
-
-        # nDCG@K (graded)
-        dcg = 0.0
-        for i, rel in enumerate(rels):
-            dcg += rel / np.log2(i + 2)
-        ideal_rels = sorted(rels, reverse=True)
-        idcg = 0.0
-        for i, rel in enumerate(ideal_rels):
-            idcg += rel / np.log2(i + 2)
-        if idcg > 0:
-            ndcg_sum += dcg / idcg
-
-
-    n = len(TEST_SET)
-    avg = sum(avg_scores) / len(avg_scores) if avg_scores else 0.0
-    avg_context_precision = (
-        sum(context_precisions) / len(context_precisions) if context_precisions else 0.0
-    )
-    recall_at_k = recall_hits / n if n else 0.0
-    mrr_at_k = mrr_sum / n if n else 0.0
-    ndcg_at_k = ndcg_sum / n if n else 0.0
-
+        score = hits / len(expected) if expected else 0.0
+        scores.append(score)
+        by_cat.setdefault(category, []).append(score)
+    avg = sum(scores) / len(scores) if scores else 0.0
+    breakdown = {}
+    for cat, vals in by_cat.items():
+        breakdown[cat] = {
+            "avg_score": sum(vals) / len(vals) if vals else 0.0,
+            "min_score": min(vals, default=0.0),
+            "max_score": max(vals, default=0.0),
+            "count": len(vals),
+        }
     return {
         "avg_score": avg,
-        "min_score": min(avg_scores, default=0.0),
-        "max_score": max(avg_scores, default=0.0),
-        "context_precision_avg": avg_context_precision,
-        "context_precision_min": min(context_precisions, default=0.0),
-        "context_precision_max": max(context_precisions, default=0.0),
-        "recall_at_k": recall_at_k,
-        "mrr_at_k": mrr_at_k,
-        "ndcg_at_k": ndcg_at_k,
+        "min_score": min(scores, default=0.0),
+        "max_score": max(scores, default=0.0),
+        "breakdown": breakdown,
     }
 
 
@@ -222,24 +165,18 @@ def main():
     INDEX_DIR.mkdir(parents=True, exist_ok=True)
     cfg = load_config()
     strip_punct = bool(cfg.get("llm_similarity_strip_punct", False))
-    bm25_k1 = float(cfg.get("bm25_k1", 1.5))
-    bm25_b = float(cfg.get("bm25_b", 0.75))
+
+    k1_grid = cfg.get("bm25_k1_grid") or [0.9, 1.2, 1.5, 1.8, 2.0]
+    b_grid = cfg.get("bm25_b_grid") or [0.25, 0.5, 0.75, 0.9]
+
     embedder = Embedder(
         backend=cfg.get("embed_backend"),
         model_name=cfg.get("embed_model_name", "nomic-embed-text:latest"),
         st_model_name=cfg.get("st_model_name", "all-mpnet-base-v2"),
         device=cfg.get("embed_device"),
     )
-    reranker = None
-    if cfg.get("rerank_enabled"):
-        reranker = CrossEncoderReranker(
-            model_name=cfg.get("rerank_model_name", "cross-encoder/ms-marco-MiniLM-L-6-v2"),
-            device=cfg.get("rerank_device") or cfg.get("embed_device"),
-            batch_size=int(cfg.get("rerank_batch_size", 16)),
-        )
-    rerank_top_k = int(cfg.get("rerank_top_k", 16))
 
-    index_name = "retrieval_benchmark"
+    index_name = "bm25_benchmark"
     run_index_dir = INDEX_DIR / index_name
     run_cache = run_index_dir / "embeddings_cache.json"
     run_index_dir.mkdir(parents=True, exist_ok=True)
@@ -247,44 +184,58 @@ def main():
     start = time.time()
     store = build_index(embedder, run_index_dir, run_cache)
 
-    modes = {
-        "vector": lambda k: Retriever(embedder, store, k=k),
-        "keyword": lambda k: KeywordRetriever(store, k=k),
-        "bm25": lambda k: BM25Retriever(store, k=k, k1=bm25_k1, b=bm25_b),
-        "hybrid": lambda k: HybridRetriever(embedder, store, k=k, alpha=0.6),
-        "hybrid_bm25": lambda k: HybridBM25Retriever(embedder, store, k=k, alpha=0.6, k1=bm25_k1, b=bm25_b),
-    }
-    if reranker:
-        base_modes = dict(modes)
-        for name, factory in base_modes.items():
-            modes[f"{name}_rerank"] = lambda k, f=factory: RerankWrapper(
-                f(k), reranker=reranker, top_k=rerank_top_k
+    rows = []
+    best = {"avg_score": -1, "k1": None, "b": None, "best_k": None}
+    for k1 in k1_grid:
+        for b in b_grid:
+            metrics_by_k = {}
+            for k in K_VALUES:
+                retriever = BM25Retriever(store, k=k, k1=float(k1), b=float(b))
+                metrics_by_k[str(k)] = score_retrieval(retriever, k=k, strip_punct=strip_punct)
+            best_k = max(metrics_by_k, key=lambda kk: metrics_by_k[kk]["avg_score"])
+            best_metrics = metrics_by_k[best_k]
+            rows.append(
+                {
+                    "k1": float(k1),
+                    "b": float(b),
+                    "best_k": int(best_k),
+                    "avg_score": best_metrics["avg_score"],
+                    "min_score": best_metrics["min_score"],
+                    "max_score": best_metrics["max_score"],
+                    "breakdown": best_metrics.get("breakdown", {}),
+                }
             )
-
-
-    summary = {
-        "runs": [],
-        "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
-    }
-    for mode_name, factory in modes.items():
-        metrics_by_k = {}
-        for k in K_VALUES:
-            retriever = factory(k)
-            metrics_by_k[str(k)] = score_retrieval(retriever, k=k, strip_punct=strip_punct)
-        summary["runs"].append({"mode": mode_name, "metrics_by_k": metrics_by_k})
-        best_k = max(metrics_by_k, key=lambda kk: metrics_by_k[kk]["avg_score"])
-        best = metrics_by_k[best_k]
-        print(
-            f"{mode_name}: best_k={best_k} avg={best['avg_score']:.3f} "
-            f"min={best['min_score']:.3f} max={best['max_score']:.3f}"
-        )
+            if best_metrics["avg_score"] > best["avg_score"]:
+                best = {
+                    "avg_score": best_metrics["avg_score"],
+                    "k1": float(k1),
+                    "b": float(b),
+                    "best_k": int(best_k),
+                }
 
     elapsed = time.time() - start
-    summary["elapsed_seconds"] = round(elapsed, 2)
+    summary = {
+        "best": best,
+        "grid": {"k1": k1_grid, "b": b_grid, "k_values": K_VALUES},
+        "rows": rows,
+        "elapsed_seconds": round(elapsed, 2),
+        "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+    }
 
-    out_path = RESULTS_DIR / "benchmark_retrieval.json"
+    out_path = RESULTS_DIR / "benchmark_bm25.json"
     out_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    print(f"BM25 best: k1={best['k1']} b={best['b']} best_k={best['best_k']} avg={best['avg_score']:.3f}")
     print(f"Resumen guardado en {out_path.resolve()}")
+    config_path = Path("config.json")
+    if config_path.exists():
+        try:
+            cfg_data = json.loads(config_path.read_text(encoding="utf-8"))
+        except Exception:
+            cfg_data = {}
+        cfg_data["bm25_k1"] = best["k1"]
+        cfg_data["bm25_b"] = best["b"]
+        config_path.write_text(json.dumps(cfg_data, indent=2), encoding="utf-8")
+        print(f"Config actualizado en {config_path.resolve()}")
 
 
 if __name__ == "__main__":
