@@ -68,6 +68,7 @@ Cada entrada del test set incluye:
 - **expected**: lista de tokens/entidades que deben aparecer (números, IDs, versiones, emails).
 - **expect_text**: respuesta canónica en texto para comparar similitud semántica.
 - **category**: etiqueta semántica (tablas, configuración, identificadores, procedimientos, inventarios).
+  - Se usa para **desglosar métricas por tipo de pregunta** y detectar qué estrategias de retrieval/LLM funcionan mejor o peor según el tipo de información.
 
 Diseño del test set:
 - **Tablas (CSV)**: busca extraer valores numéricos exactos (SLA, CSAT, tickets).
@@ -306,10 +307,10 @@ Benchmark de embeddings:
   - Interpretación: mayor `avg_score` implica que el embedding recupera chunks que contienen más evidencia exacta (IDs, números, versiones), por tanto es mejor para extraer contexto útil con el mismo pipeline.
   - Limitación: favorece coincidencia literal; no mide orden fino del ranking (eso se analiza en benchmark de retrieval con MRR/nDCG).
   
-**Nota importante**: aquí se usa **solo retrieval vectorial** para aislar el efecto del embedding. No se usa BM25 ni híbrido porque mezclaría señales y haría difícil atribuir la mejora al modelo de embeddings.
+**Nota importante**: aquí se usa **solo retrieval vectorial** para aislar el efecto del embedding.
 
 Selección:
-- Se elige el modelo con mayor `avg_score` medio.
+- Se elige el modelo con mayor `avg_score`.
 
 Resultados (best_k por modelo):
 
@@ -696,7 +697,7 @@ Embeddings `paraphrase-multilingual-mpnet-base-v2` (mejor `avg_score` en el benc
 Métricas de respuesta (`avg_score`, `semantic_similarity`, `groundedness`, `completeness`) y latencias, apoyadas por un test set con tokens esperados y texto canónico; además se mide la cobertura de contexto para aislar el efecto del retrieval.
 
 **¿Cuál fue tu propuesta de mejora y cuál fue su impacto?**  
-Retrieval **híbrido** (vector + BM25) con BM25 tuneado. Mantiene la cobertura (`avg_score`) y mejora el orden del ranking (`MRR@k`, `nDCG@k`), aportando robustez en tokens críticos sin perder semántica.
+Retrieval **híbrido** (vector + BM25) con BM25 tuneado. Mantiene la cobertura (`avg_score`) y mantiene el orden del ranking (`MRR@k`, `nDCG@k`). Sin embargo, se puede dar que al aumentar el `TEST_SET` o cambiar los valores, la recuperación mejore con la robustez que aporta `BM25` a `vector`. Sin embargo, cuando se cambie la documentación o el `TEST_SET`, se recomienda reejecutar los benchmark para obtener siempre la mejor configuración.
 
 **¿Qué aprendiste sobre los sistemas RAG y sus limitaciones?**  
 El retrieval es el factor dominante: sin contexto sólido, el LLM no puede compensar. El chunking y el ranking importan tanto como el modelo. La evaluación automática ayuda, pero sigue siendo limitada sin revisión humana y con test sets pequeños.
