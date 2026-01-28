@@ -1,3 +1,5 @@
+"""Translate model performance into business impact metrics (SLA proxy)."""
+
 import heapq
 import json
 import numpy as np

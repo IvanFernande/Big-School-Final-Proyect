@@ -1,3 +1,5 @@
+"""FastAPI endpoint for ticket priority prediction."""
+
 import joblib
 from fastapi import FastAPI
 from pydantic import BaseModel

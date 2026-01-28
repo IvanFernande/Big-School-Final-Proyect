@@ -3,6 +3,23 @@ Proyecto de clasificación automática de tickets de soporte IT en prioridades *
 
 ---
 
+## 0. Resumen ejecutivo
+- **Objetivo de negocio**: priorizar tickets para reducir violaciones de SLA, con foco en no perder tickets `High`.
+- **Variable objetivo**: `Priority` (categórica multiclase: `high`, `medium`, `low`).
+- **Datos**: dataset público de Kaggle con texto (`Body`) y metadatos (`Department`, `Tags`).
+- **Modelos probados**: TF‑IDF + modelos lineales, embeddings + lineales, SetFit, zero/few‑shot con LLMs.
+- **Modelo final**: TF‑IDF + Linear SVM + metadatos, por mejor equilibrio entre macro‑F1 y recall `High`.
+- **Impacto de negocio (proxy)**: reducción del gap medio vs baseline aleatorio en la simulación de SLA.
+- **Explicabilidad**: importancias globales por coeficientes + SHAP local.
+- **Despliegue conceptual**: API near‑real‑time, monitorización y reentrenamiento con control de drift (ver sección final).
+
+---
+
+## Cómo ejecutar
+Comandos básicos en `RUN.md`.
+
+---
+
 ## 1. Introducción y contexto del problema
 
 ### 1.1 Contexto de negocio
@@ -18,6 +35,11 @@ Objetivos secundarios:
 - Disminuir el coste asociado a errores graves de priorización.
 
 Este objetivo se aborda mediante un **sistema de clasificación supervisada**, entrenado con datos históricos de tickets.
+
+### 1.3 Preguntas que el modelo debe responder
+- ¿Qué prioridad debe asignarse a cada ticket (`high`, `medium`, `low`) para proteger el SLA?
+- ¿Qué señales del texto y metadatos indican que un ticket es crítico (`High`)?
+- ¿Cómo minimizar errores críticos (`High → Low`) manteniendo un rendimiento global estable?
 
 ---
 
@@ -36,7 +58,21 @@ Clasificación supervisada multiclase (`high`, `medium`, `low`).
 - `medium`: impacto moderado.
 - `low`: consultas o mejoras.
 
-La clase **High** es prioritaria aunque no sea la más abundante, porque es la que más impacta en SLA.
+La clase **High** es prioritaria aunque no sea la más abundante, porque es la que más impacta en SLA.  
+Se trata como clasificación multiclase (no regresión), aunque el orden existe y el coste del error es asimétrico.
+
+### 2.3 Esquema del sistema (pipeline)
+```
+Datos (CSV) → limpieza → features → split → entrenamiento/CV → evaluación → reporting → explicabilidad → métricas de negocio → despliegue conceptual
+```
+
+**Componentes clave en el código**:
+- Ingesta/limpieza/feature engineering: `src/data_prep.py`
+- Entrenamiento y comparación: `src/train/main.py` (+ experimentos en `src/train/*_experiments.py`)
+- Evaluación técnica: `src/evaluate.py`
+- Explicabilidad: `src/explainability_tfidf.py`
+- Métricas de negocio: `src/business_metrics.py`
+- API de inferencia (conceptual): `src/serve_api.py`
 
 ---
 
@@ -205,9 +241,24 @@ Una vez determinado que **Linear SVM** obtiene el mejor macro‑F1 en validació
 - Estrategia de `Department`: **OHE completo**
 
 **Resultados en conjunto de test**
-- Macro-F1 **0.762**
-- Recall High **0.811**
-- Accuracy **0.771**
+
+| Métrica | Valor |
+|---|---:|
+| Macro-F1 | **0.762** |
+| Recall High | **0.811** |
+| Precision High | **0.788** |
+| F1 High | **0.799** |
+| Accuracy | **0.771** |
+| Weighted-F1 | **0.771** |
+| Balanced Accuracy (macro recall) | **0.759** |
+
+**Detalle por clase (test)**
+
+| Clase | Precision | Recall | F1 | Soporte |
+|---|---:|---:|---:|---:|
+| High | **0.788** | **0.811** | **0.799** | 2302 |
+| Medium | 0.772 | 0.770 | 0.771 | 2425 |
+| Low | 0.736 | 0.697 | 0.716 | 1203 |
 
 Además de estas metricas para definir el rendimiento del modelo, se obtiene una matriz de confusión:
 
@@ -267,7 +318,7 @@ Estrategias: `concat`, `avg`, pesos (70/30, 30/70, 90/10). Se evalúa el aporte 
 **Figura 6.2-A — Estrategias de combinación (solo texto)**  
 ![Embeddings estrategias A](reports/figures/embeddings_strategies_A.png)
 
-Conclusión A: diferencias pequeñas; `Tags` aporta señal limitada frente a `Body`.
+Conclusión A: diferencias pequeñas; `Tags` y `Department` aportan señal limitada frente a `Body`.
 
 #### B) Embeddings + estructura explícita (OHE)
 Se combina `Body` (y `Tags` cuando procede) con `Department` en OHE + numéricas.
@@ -290,19 +341,27 @@ Se combina `Body` (y `Tags` cuando procede) con `Department` en OHE + numéricas
 
 Conclusión B: OHE + num mejora cuando se añaden campos auxiliares (especialmente `Tags`).
 
-#### Resultados (mejor configuración por encoder)
+#### Resultados (mejor configuración por encoder y clasificador)
 
-| Modelo de embeddings | Estrategia | C | Macro-F1 | Recall High | AP High | Pred High (%) |
-|---------------------|------------|---:|----------|-------------|---------|---------------|
-| all-MiniLM-L6-v2 | body_tags_ohe_num | 2.0 | 0.511 | 0.648 | 0.657 | 41.8 |
-| all-distilroberta-v1 | body_ohe_num | 1.0 | 0.521 | 0.656 | 0.671 | 42.1 |
-| all-mpnet-base-v2 | body_ohe_num | 2.0 | 0.525 | 0.636 | 0.673 | 40.7 |
-| multi-qa-MiniLM-L6-cos-v1 | body_dept_concat | 1.0 | 0.511 | 0.643 | 0.650 | 41.6 |
+| Modelo de embeddings | Clasificador | Estrategia | C | Macro-F1 | Recall High | Precision High | AP High | Pred High (%) |
+|---------------------|--------------|------------|---:|----------|-------------|----------------|---------|---------------|
+| all-MiniLM-L6-v2 | Linear SVM | body_tags_ohe_num | 0.5 | 0.512 | 0.650 | 0.602 | 0.657 | 41.9 |
+| all-MiniLM-L6-v2 | LogReg | body_dept_concat_num | 2.0 | 0.503 | 0.626 | 0.613 | 0.657 | 39.6 |
+| all-distilroberta-v1 | Linear SVM | body_tags_ohe_num | 0.5 | 0.528 | 0.653 | 0.602 | 0.671 | 42.2 |
+| all-distilroberta-v1 | LogReg | body_tags_ohe_num | 2.0 | 0.516 | 0.634 | 0.616 | 0.667 | 40.0 |
+| all-mpnet-base-v2 | Linear SVM | body_tags_ohe_num | 2.0 | 0.526 | 0.650 | 0.610 | 0.668 | 41.4 |
+| all-mpnet-base-v2 | LogReg | body_tags_ohe_num | 2.0 | 0.514 | 0.628 | 0.621 | 0.661 | 39.3 |
+| multi-qa-MiniLM-L6-cos-v1 | Linear SVM | body_tags_ohe_num | 2.0 | 0.516 | 0.641 | 0.603 | 0.653 | 41.3 |
+| multi-qa-MiniLM-L6-cos-v1 | LogReg | body_tags_ohe_num | 2.0 | 0.505 | 0.623 | 0.609 | 0.652 | 39.7 |
+
+Nota breve: en estos experimentos, **Linear SVM** supera a **LogReg** en macro‑F1 y recall `High` para todos los encoders.
 
 **Métricas específicas**: `AP High` (PR‑AUC High vs Rest) y `Pred High (%)` para monitorizar sobre‑priorización.
 
 **Figura 6.2-C — Matriz de confusión (embeddings)**  
 ![Embeddings confusion](reports/figures/embeddings_confusion_matrix.png)
+
+**Configuración usada para la matriz**: `sentence-transformers/all-distilroberta-v1` + **Linear SVM** + `body_tags_ohe_num` (C=0.5), elegida por ser la mejor combinación dentro de embeddings en **macro‑F1** y con recall `High` competitivo.
 
 **Resultado**: no se supera al baseline TF‑IDF en macro‑F1 ni recall High; mayor complejidad y coste.
 En términos operativos, el uso de embeddings **no reduce de forma consistente** los errores críticos en `High`, y el ligero avance en algunas métricas (AP/Pred High) no compensa la pérdida de interpretabilidad y el aumento de complejidad del pipeline.
@@ -423,6 +482,8 @@ Conclusión: el prompt `rules` mejora claramente el **recall High** frente a `ba
 | 2 | 0.370 | 0.410 |
 | **Media ± Std** | **0.385 ± 0.012** | **0.447 ± 0.026** |
 
+Conclusión: aunque la variabilidad entre semillas es moderada, el rendimiento sigue siendo bajo en macro‑F1 y recall `High`, lo que limita su uso operativo frente a modelos supervisados.
+
 **Figura G4 — Estabilidad entre ejecuciones**  
 ![Figura G4](reports/figures/fig_g4_llm_estabilidad.png)
 
@@ -463,7 +524,7 @@ La siguiente tabla resume los resultados más representativos de cada enfoque:
 | Enfoque | Modelo seleccionado | Macro-F1 (test) | Recall High (test) | Complejidad | Rol en el proyecto |
 |-------|---------------------|------------------|--------------------|-------------|-------------------|
 | TF-IDF | Linear SVM + metadatos | **0.762** | **0.811** | Baja | ✅ Modelo final |
-| Embeddings | all-mpnet-base-v2 + body_ohe_num + Linear SVM (C=2.0) | 0.525 | 0.636 | Media | Referencia avanzada |
+| Embeddings | all-distilroberta-v1 + body_tags_ohe_num + Linear SVM (C=0.5) | 0.528 | 0.653 | Media | Referencia avanzada |
 | SetFit | all-MiniLM-L6-v2 fine-tuned | 0.699 | 0.742 | Alta | Alternativa robusta |
 | Zero / Few-shot | DeepSeek-R1:8B (rules, 6) | 0.399 | 0.360 | Muy alta | Benchmark |
 
@@ -530,7 +591,7 @@ El modelo seleccionado cumple el objetivo principal del proyecto:
 
 ## 8. Explicabilidad del modelo
 
-### 8.1 Global (TF-IDF)
+### 8.1 Global (feature importance en TF-IDF)
 TF‑IDF + Linear SVM es **intrínsecamente interpretable**: los coeficientes indican qué n‑gramas empujan cada clase.  
 Los términos mostrados corresponden a los n‑gramas con mayor peso absoluto del clasificador.
 
@@ -566,6 +627,17 @@ Ejemplos de términos distintivos:
 SHAP se usa **como complemento** para auditar instancias.  
 Valores positivos empujan la **clase predicha**; negativos actúan en sentido contrario.
 
+**Por qué SHAP y no LIME (explicación técnica)**:  
+SHAP estima **contribuciones marginales** de cada feature al output comparando el modelo con y sin esa feature sobre un baseline, agregadas como valores de **Shapley**. Esto garantiza **aditividad local** (la suma de contribuciones explica la predicción) y **consistencia** (si una feature incrementa su influencia en el modelo, su contribución no disminuye). En modelos lineales, SHAP se alinea directamente con los coeficientes, lo que permite explicaciones locales coherentes con la interpretación global.  
+LIME, en cambio, ajusta un **modelo sustituto** (p. ej., regresión lineal) en un vecindario sintético generado alrededor de la instancia mediante muestreo aleatorio, ponderando por proximidad. Su explicación depende del **muestreo**, del kernel de proximidad y de la discretización, lo que introduce **varianza** y menor reproducibilidad entre ejecuciones.  
+En este proyecto se prioriza SHAP porque necesitamos explicaciones locales **comparables y estables** para auditar errores críticos (`High → Medium/Low`) y mantener trazabilidad con el modelo lineal principal. LIME se descarta por su sensibilidad al muestreo y menor estabilidad en auditorías repetibles.
+
+**Ejemplos de uso típico**:  
+- **SHAP** se suele preferir en entornos regulados o de auditoría (riesgo, crédito, salud) donde se exige **consistencia** y comparabilidad entre casos.  
+- **LIME** es útil en prototipado rápido o análisis exploratorio cuando se busca una explicación local **rápida y flexible** sin necesidad de alta estabilidad entre ejecuciones.
+
+Además, **SHAP** es especialmente adecuado en modelos lineales o de árboles (explicaciones exactas/estables), mientras que **LIME** suele usarse en cajas negras cuando se prioriza rapidez sobre consistencia, aunque puede ser inestable en texto de alta dimensionalidad.
+
 **Figura E2 — Explicaciones locales (ejemplos TF-IDF + SHAP)**  
 ![TF-IDF Local Example 1](reports/explainability_tfidf/local_5693_high_medium.png)
 ![TF-IDF Local Example 2](reports/explainability_tfidf/local_2127_high_low.png)
@@ -575,9 +647,9 @@ Permiten explicar qué señales empujaron al modelo a fallar y qué términos �
 
 Conclusión (local): las explicaciones por instancia permiten **auditar errores críticos** y justificar por qué el modelo falla en casos concretos.
 
-En términos operativos, esto permite:\n
-- revisar tickets conflictivos con el equipo de soporte,\n
-- identificar patrones de ambigüedad en el texto,\n
+En términos operativos, esto permite:
+- revisar tickets conflictivos con el equipo de soporte,
+- identificar patrones de ambigüedad en el texto,
 - y justificar por qué un ticket crítico no fue priorizado (o por qué se sobre‑priorizó).
 
 ### 8.3 Comparativa entre enfoques
@@ -658,37 +730,29 @@ Parámetros útiles:
 
 ---
 
-## 10. Despliegue conceptual en un entorno real
-
-**Escenario**: integración en un Service Desk para asistir el triaje inicial de tickets.
-
-**Pipeline**: ingesta → limpieza → TF‑IDF + metadatos → predicción → priorización.
-
-**Operación**: modo near‑real‑time (latencia baja) con trazabilidad de decisiones.
-
-**Monitorización**:
-- distribución de predicciones,
-- recall High proxy (auditorías),
-- drift léxico.
-
-**Reentrenamiento**: ante caída sostenida de macro‑F1/recall High o cambios de dominio.
-
-**Arquitectura conceptual (sin implementación técnica)**:
-1. **Entrada**: ticket con `Body`, `Department`, `Tags`.  
-2. **Preprocesado**: limpieza básica + derivación de `n_tags`, `len_words`.  
-3. **Vectorización**: TF‑IDF + OHE + numéricas con el vocabulario entrenado.  
-4. **Predicción**: Linear SVM devuelve prioridad.  
-5. **Salida**: prioridad guardada y usada para ordenación/triage.
-
-**Control operativo**:
-- alertas si `Pred High (%)` se dispara o cae de forma anómala,
-- revisión humana de una muestra de `High` para estimar recall real,
-- auditoría de errores críticos (`High→Low`).
-
-**Actualización y versionado**:
-- congelar vocabulario y modelo por versión,
-- comparar métricas antes/después de cada release,
-- mantener rollback si aparece degradación.
+## 10. Preguntas
+- **¿Cuál es el objetivo de negocio y su impacto?**  
+  Reducir incumplimientos de SLA priorizando correctamente tickets `High`, lo que evita retrasos en incidencias críticas y reduce coste operativo.
+- **¿Qué tipo de variable predices y por qué?**  
+  `Priority` es **categórica multiclase** (`high/medium/low`). Se evita regresión porque el coste del error no es lineal.
+- **¿Qué fuentes de datos utilizaste y cómo las preparaste?**  
+  Dataset público de Kaggle con `Body`, `Department`, `Tags`. Limpieza, normalización, parseo de `Tags`, y derivadas `n_tags`, `len_words`.
+- **¿Qué modelos probaste y por qué?**  
+  TF‑IDF + clasificadores lineales como **baseline interpretable y eficiente** (rápidos, trazables y robustos en texto disperso); embeddings + lineales para aislar el efecto de la **representación semántica** sin añadir complejidad del clasificador; SetFit para **adaptar el encoder al dominio** con fine‑tuning y un head lineal (LogReg) encima; y LLMs zero/few‑shot como **benchmark exploratorio** de máxima flexibilidad, aunque con mayor coste y variabilidad. La elección de SVM/LR frente a modelos más complejos se justifica porque el texto TF‑IDF es **alta dimensión y muy disperso**, los lineales son **estables, rápidos y explicables**, y en este dominio suelen competir bien sin añadir opacidad ni coste extra.
+- **¿Qué métricas técnicas usaste y por qué?**  
+  **Macro‑F1** es la métrica principal porque promedia el F1 de cada clase sin ponderar, evitando que `Medium/High` dominen a `Low`; es la forma más justa de comparar modelos en escenarios con desbalance moderado y coste de error asimétrico. **Recall High** se prioriza por negocio: un falso negativo en `High` implica riesgo directo de SLA, por lo que maximizar la detección de críticos es clave. **Precision High** se incluye para controlar la sobre‑priorización (si marcamos demasiados tickets como `High`, saturamos al equipo), y **F1 High** resume el equilibrio entre ambos en la clase crítica. **Balanced Accuracy** se usa como diagnóstico porque promedia el recall por clase y detecta si el modelo ignora alguna clase, aunque no es la métrica de selección. **Accuracy** y **Weighted‑F1** se reportan solo como contexto, ya que pueden ocultar fallos en clases minoritarias. En embeddings se añade **AP High (PR‑AUC)** porque mide la capacidad de **ordenar por riesgo** (qué bien coloca los `High` arriba cuando se rankea por score), algo relevante para triage operativo incluso cuando el umbral cambia.
+- **¿Qué técnicas de explicabilidad aplicaste?**  
+  Se aplicaron dos niveles: **explicabilidad global** y **local**. En global, usamos **coeficientes del modelo lineal** (feature importance) para identificar qué n‑gramas y metadatos empujan cada clase; esto es directo en TF‑IDF + SVM y permite validar si el modelo se apoya en señales coherentes con el dominio. En local, usamos **SHAP** para descomponer una predicción concreta en contribuciones por feature, garantizando aditividad y consistencia, lo que facilita auditorías de errores críticos (`High→Medium/Low`). **LIME** no se aplicó porque su explicación depende del muestreo local y puede ser menos estable en texto de alta dimensionalidad; **PDP** no se usó porque el modelo combina miles de n‑gramas dispersos, lo que dificulta interpretaciones globales univariadas. En conjunto, estas técnicas cubren tanto el **comportamiento promedio** como el **caso individual**, alineado con la necesidad operativa de trazabilidad.
+- **¿Qué variables influyen más y cómo interpretas su efecto?**  
+  N‑gramas críticos del texto (`Body`) dominan el impacto; `Department`, `n_tags` y `len_words` aportan señal operativa auxiliar.
+- **¿Qué métricas de negocio definiste?**  
+  Se definió un **proxy de SLA** basado en objetivos por clase (`High=4h`, `Medium=8h`, `Low=12h`) y se midió el **gap medio** entre el objetivo real y el predicho. Además, se reportó la **distribución de severidad del error** (0h, 4h, 8h), que distingue entre fallos leves (`High↔Medium`) y fallos críticos (`High↔Low`). Finalmente, se comparó contra un **baseline aleatorio estratificado** para estimar el impacto neto del modelo frente a una priorización sin inteligencia.
+- **¿Qué resultados de negocio obtuviste?**  
+  Reducción del `mean_gap` de **3.21h → 1.08h** y disminución de errores extremos (8h).
+- **¿Cómo llevarías el modelo a producción?**  
+  Ver sección final de despliegue conceptual (modelo en API near‑real‑time + monitorización y retraining).
+- **¿Qué conclusiones extraes y mejoras futuras?**  
+  Ver sección 11.
 
 ## 11. Conclusiones y trabajo futuro
 
@@ -703,3 +767,45 @@ Parámetros útiles:
 - No se dispone de validación temporal para evaluar drift real.  
 - La simulación de negocio utiliza costes proxy, no costes reales del soporte.  
 - No se incorpora feedback humano en producción (loop de mejora continua).  
+
+### 11.3 Mejoras futuras
+
+- Reentrenar con más tickets reales y validación temporal para capturar drift.  
+- Probar encoders adicionales o variantes de SetFit cuando haya más datos anotados.  
+- Optimizar umbrales por segmento (`Department`) y calibrar probabilidades para control operativo.  
+- Incorporar feedback humano (active learning) para corregir errores críticos y mejorar recall `High`.
+
+---
+
+## 12. Despliegue conceptual en un entorno real (sección final)
+
+**Escenario**: integración en un Service Desk para asistir el triaje inicial de tickets.
+
+**Modo de ejecución**:
+- **Tiempo casi real (API)** para priorizar en el momento de creación del ticket.
+- **Batch diario/semanal** para auditorías, reporting y recalibración.
+
+**Pipeline conceptual**: ingesta → limpieza → TF‑IDF + metadatos → predicción → priorización → logging.
+
+**Monitorización y data drift**:
+- Métricas online: distribución de predicciones (`Pred High (%)`), tasas de rechazo/timeout, latencia.
+- Métricas con ground truth: macro‑F1 y recall `High` sobre tickets ya resueltos.
+- Drift: cambios en longitud de texto, OOV (términos fuera de vocabulario), distribución de `Department` y `Tags`, y distancia estadística (PSI/KL).
+
+**Reentrenamiento (criterios y frecuencia)**:
+- **Periódico**: mensual o trimestral según volumen de tickets.
+- **Event‑driven**: caída sostenida de macro‑F1/recall `High`, cambios bruscos en distribución o nuevas categorías operativas.
+- **Criterio operativo ejemplo**: reentrenar si el recall `High` cae > 5 pp durante 3 semanas o si el PSI de `Body`/`Department` supera un umbral (p. ej., 0.2).
+
+**Actualización y versionado del modelo**:
+- Versionar **vectorizador + modelo** como un único artefacto (evita incoherencias).
+- Validación offline antes de desplegar: comparación con el modelo activo y pruebas de regresión.
+- Estrategias de despliegue: **shadow** (comparación pasiva), **A/B** o **canary** con rollback.
+
+**Herramientas/estructura (conceptual)**:
+- **API**: FastAPI/REST para inferencia.
+- **Contenerización**: Docker para reproducibilidad.
+- **Pipeline**: Airflow/Prefect para reentrenamientos programados.
+- **Observabilidad**: dashboards (Grafana/Metabase) + logging centralizado.
+
+Este apartado es conceptual y sirve para demostrar comprensión del proceso de producción, sin implementación técnica.

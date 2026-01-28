@@ -1,3 +1,5 @@
+"""Project paths and global constants."""
+
 from pathlib import Path
 
 SEED = 42

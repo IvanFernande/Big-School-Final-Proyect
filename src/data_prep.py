@@ -1,3 +1,5 @@
+"""Load, clean, and prepare ticket data for modeling."""
+
 import ast
 import logging
 import pandas as pd
