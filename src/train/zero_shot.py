@@ -236,14 +236,7 @@ def build_prompt(
 ) -> str:
     style = (style or "base").strip().lower()
 
-    if style == "business":
-        system = (
-            "Eres un asistente que clasifica tickets de soporte en: high, medium o low. "
-            "Prioriza el impacto en SLA y coste operativo. "
-            "High = servicio caido/bloqueo/impacto alto; Medium = degradacion/impacto moderado; "
-            "Low = consulta/mejora/impacto bajo."
-        )
-    elif style == "rules":
+    if style == "rules":
         system = (
             "Clasifica tickets en: high, medium o low siguiendo estas reglas:\n"
             "- High: caida de servicio, bloqueo total, seguridad, perdida de datos, urgencia critica.\n"

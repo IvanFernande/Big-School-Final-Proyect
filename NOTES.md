@@ -49,9 +49,9 @@ AP High mide qué tan buena es esa lista ordenada:
 si al revisar los primeros tickets casi todos son realmente High, AP es alto; si se mezclan muchos que no lo son, AP baja.
 
 
-Entender que es cada uno: teraciones {5,10}, épocas {1,2}, batch {16,32} (GPU) / {8,16} (CPU), LR {2e‑5, 5e‑5}.
+Entender que es cada uno: iteraciones {5,10}, épocas {1,2}, batch {16,32} (GPU) / {8,16} (CPU), LR {2e‑5, 5e‑5}.
 
-teraciones = cuántas rondas de entrenamiento contrastivo (Entrenamiento contrastivo: el modelo aprende con pares; textos de la misma clase se acercan en el embedding y de clases distintas se alejan, mejorando la separabilidad con pocos datos.) haces; épocas = cuántas veces recorres el dataset completo.
+iteraciones = cuántas rondas de entrenamiento contrastivo (Entrenamiento contrastivo: el modelo aprende con pares; textos de la misma clase se acercan en el embedding y de clases distintas se alejan, mejorando la separabilidad con pocos datos.) haces; épocas = cuántas veces recorres el dataset completo.
 Batch size = cuántos ejemplos entrenas a la vez (más grande = más estable/rápido si hay memoria).
 LR = tamaño del paso de aprendizaje (alto aprende rápido pero puede ser inestable; bajo es más estable).
 

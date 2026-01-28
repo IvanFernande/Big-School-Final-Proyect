@@ -761,6 +761,7 @@ Parámetros útiles:
 - El **modelo final seleccionado (TF-IDF + Linear SVM)** ofrece el mejor equilibrio entre rendimiento, interpretabilidad y control operativo.  
 - En problemas con SLA, **recall High** es la métrica determinante y debe guiar la selección.  
 - La explicabilidad no es un añadido: es un requisito para adopción y confianza en operación.  
+- No siempre los modelos o técnicas más complejas obtienen la mejor respuesta, por eso hay que evaluar diferentes técnicas y modelos.
 
 ### 11.2 Limitaciones reales
 
