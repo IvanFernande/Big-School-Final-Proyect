@@ -1,4 +1,8 @@
-﻿from pathlib import Path
+﻿"""Run a small end-to-end evaluation over TEST_SET.
+
+Uses current config for retrieval + generation and prints per-question scores.
+"""
+from pathlib import Path
 import sys
 import time
 import unicodedata
@@ -24,6 +28,7 @@ RETRY_SLEEP = 60  # segundos para reintentos ante 429/quota
 
 
 def score_answer(answer: str, expected_substrings, strip_punct: bool) -> float:
+    """Token-based expected match score."""
     ans_norm = normalize_text(answer or "", strip_punct=strip_punct)
     if not ans_norm:
         return 0.0
@@ -45,6 +50,7 @@ def normalize_text(text: str, strip_punct: bool = False) -> str:
 
 
 def load_similarity_model(model_name: str, device: str | None):
+    """Lazy-load sentence-transformers model for semantic similarity."""
     try:
         from sentence_transformers import SentenceTransformer
     except Exception as exc:

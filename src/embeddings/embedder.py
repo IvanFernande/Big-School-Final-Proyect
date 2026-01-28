@@ -1,3 +1,4 @@
+"""Embedding wrapper for Ollama or sentence-transformers backends."""
 import os
 from typing import List, Literal
 
@@ -36,6 +37,7 @@ class Embedder:
         return "cuda" if torch.cuda.is_available() else "cpu"
 
     def _encode_ollama(self, texts: List[str]) -> np.ndarray:
+        """Call Ollama embeddings endpoint per text."""
         vectors = []
         for t in texts:
             resp = requests.post(
@@ -51,6 +53,7 @@ class Embedder:
         return np.asarray(vectors, dtype=np.float32)
 
     def _encode_st(self, texts: List[str]) -> np.ndarray:
+        """Encode with sentence-transformers locally."""
         try:
             from sentence_transformers import SentenceTransformer
         except Exception as exc:
@@ -62,6 +65,7 @@ class Embedder:
         return np.asarray(arr, dtype=np.float32)
 
     def encode(self, texts: List[str]) -> np.ndarray:
+        """Return L2-normalized embeddings."""
         if self.backend == "sentence-transformers":
             arr = self._encode_st(texts)
         else:

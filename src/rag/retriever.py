@@ -1,4 +1,5 @@
-﻿from typing import List, Dict
+﻿"""Retrievers: vector, lexical (TF-IDF/BM25), and hybrid combinations."""
+from typing import List, Dict
 
 import math
 import re
@@ -11,6 +12,7 @@ from src.rag.vectorstore import VectorStore
 
 
 class Retriever:
+    """Dense vector retrieval using the embedder + FAISS index."""
     def __init__(self, embedder: Embedder, store: VectorStore, k: int = 8):
         self.embedder = embedder
         self.store = store
@@ -162,6 +164,7 @@ class HybridBM25Retriever:
         bm25_results = self.bm25.retrieve(question)
         bm25_scores = {int(r["index"]): r["score"] for r in bm25_results if "index" in r}
 
+        # Normalize each score range to [0,1] before mixing.
         emb_norm = self._normalize_scores(emb_scores)
         bm25_norm = self._normalize_scores(bm25_scores)
         candidates = set(emb_norm.keys()) | set(bm25_norm.keys())

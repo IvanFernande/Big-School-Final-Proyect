@@ -1,3 +1,8 @@
+"""Benchmark different embedding models using vector retrieval only.
+
+Purpose: isolate embedding quality without mixing lexical signals.
+Outputs: results/benchmark_embeddings.json (+ optional CSV elsewhere).
+"""
 from __future__ import annotations
 
 from pathlib import Path
@@ -62,6 +67,7 @@ MODELS = [
 
 
 def iter_docs():
+    """Yield normalized documents from all supported formats."""
     for ext, loader in LOADERS.items():
         for path in ROOT.rglob(f"*.{ext}"):
             for d in loader(path):
@@ -72,6 +78,7 @@ def iter_docs():
 
 
 def chunk_doc(doc: dict) -> List[dict]:
+    """Chunk by type to avoid mixing structured rows with narrative text."""
     doc_type = doc.get("metadata", {}).get("type")
     if doc_type in {"csv", "json"}:
         return fixed_chunk(doc, size=400, overlap=0)
@@ -90,6 +97,7 @@ def batched(iterable: Iterable[Tuple[str, str, dict]], batch_size: int):
 
 
 def build_index(embedder: Embedder, index_dir: Path, cache_path: Path) -> VectorStore:
+    """Build a temporary FAISS index for a given embedding model."""
     cache = EmbeddingCache(cache_path)
     store = None
     batch_size = 64
@@ -122,6 +130,7 @@ def build_index(embedder: Embedder, index_dir: Path, cache_path: Path) -> Vector
                 missing_positions.append(i)
 
         if missing_texts:
+            # Only embed uncached chunks.
             new_embs = embedder.encode(missing_texts)
             cache.set_many({k: v.tolist() for k, v in zip(missing_ids, new_embs)})
             for pos, emb in zip(missing_positions, new_embs):

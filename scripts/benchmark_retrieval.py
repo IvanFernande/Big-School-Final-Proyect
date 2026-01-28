@@ -1,3 +1,7 @@
+"""Benchmark multiple retrieval strategies (vector, lexical, hybrid, rerank).
+
+Outputs: results/benchmark_retrieval.json.
+"""
 from __future__ import annotations
 
 from pathlib import Path
@@ -34,6 +38,7 @@ K_VALUES = [4, 8, 12, 16]
 
 
 class RerankWrapper:
+    """Thin wrapper to apply reranking on top of a base retriever."""
     def __init__(self, retriever, reranker: CrossEncoderReranker, top_k: int):
         self.retriever = retriever
         self.reranker = reranker
@@ -45,6 +50,7 @@ class RerankWrapper:
 
 
 def iter_docs():
+    """Yield normalized documents from all supported formats."""
     loaders = {
         "pdf": load_pdf,
         "csv": load_csv,
@@ -62,6 +68,7 @@ def iter_docs():
 
 
 def chunk_doc(doc: dict) -> List[dict]:
+    """Chunk by type to avoid mixing structured rows with narrative text."""
     doc_type = doc.get("metadata", {}).get("type")
     if doc_type in {"csv", "json"}:
         return fixed_chunk(doc, size=400, overlap=0)
@@ -80,6 +87,7 @@ def batched(iterable: Iterable[Tuple[str, str, dict]], batch_size: int):
 
 
 def build_index(embedder: Embedder, index_dir: Path, cache_path: Path) -> VectorStore:
+    """Build a shared FAISS index for retrieval benchmarks."""
     cache = EmbeddingCache(cache_path)
     store = None
     batch_size = 64
@@ -150,6 +158,7 @@ def _chunk_relevance(text: str, expected: List[str], strip_punct: bool) -> float
 
 
 def score_retrieval(retriever, k: int = 8, strip_punct: bool = False) -> Dict[str, float]:
+    """Compute retrieval metrics over TEST_SET."""
     avg_scores = []
     context_precisions = []
     recall_hits = 0
@@ -247,6 +256,7 @@ def main():
     start = time.time()
     store = build_index(embedder, run_index_dir, run_cache)
 
+    # Retrieval modes tested in the benchmark.
     modes = {
         "vector": lambda k: Retriever(embedder, store, k=k),
         "keyword": lambda k: KeywordRetriever(store, k=k),

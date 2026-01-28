@@ -1,4 +1,8 @@
-﻿from pathlib import Path
+﻿"""Interactive query script.
+
+Loads the persisted index, retrieves top-k contexts, and calls the configured LLM.
+"""
+from pathlib import Path
 import sys
 
 # Asegura que el proyecto esté en sys.path cuando se ejecuta como script
@@ -71,6 +75,7 @@ def main():
             batch_size=int(cfg.get("rerank_batch_size", 16)),
         )
     rerank_top_k = int(cfg.get("rerank_top_k", retriever_k))
+    # Retrieve top-k chunks (rerank optional).
     results = retriever.retrieve(question)
     if reranker:
         results = reranker.rerank(question, results, top_k=rerank_top_k)
@@ -84,6 +89,7 @@ def main():
         print(f"[{i}] score={r['score']:.3f} | {r['metadata']}\n{r['text'][:400]}...\n")
 
     def ollama_generate(base_url: str, model: str, prompt: str, temperature: float) -> str:
+        """Call Ollama /api/generate or fallback to /api/chat."""
         base = base_url.rstrip("/")
         resp = requests.post(
             f"{base}/api/generate",
@@ -109,6 +115,7 @@ def main():
         return (message.get("content") or "").strip()
 
     def gemini_generate(model: str, prompt: str, temperature: float, api_key: str) -> str:
+        """Call Gemini with a simple generation config."""
         import google.generativeai as genai
 
         genai.configure(api_key=api_key)
@@ -117,6 +124,7 @@ def main():
         return (response.text or "").strip()
 
     def build_prompt(q: str, ctxs, max_contexts: int) -> str:
+        """Concise prompt that enforces grounding on retrieved context."""
         selected = ctxs[:max_contexts]
         context_text = "\n\n".join(f"- {c['text']}" for c in selected)
         return (

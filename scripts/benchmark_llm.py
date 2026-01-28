@@ -1,3 +1,8 @@
+"""Benchmark LLMs on top of a fixed retrieval configuration.
+
+Computes answer quality (token match + semantic similarity + groundedness)
+and saves results to results/benchmark_llm.json + CSV.
+"""
 from __future__ import annotations
 
 import json
@@ -27,6 +32,7 @@ RESULTS_DIR = Path("results")
 
 
 def build_prompt(question: str, contexts: List[Dict], max_contexts: int) -> str:
+    """Concise prompt that enforces grounding on retrieved context."""
     selected = contexts[:max_contexts]
     context_text = "\n\n".join(f"- {c['text']}" for c in selected)
     return (
@@ -39,6 +45,7 @@ def build_prompt(question: str, contexts: List[Dict], max_contexts: int) -> str:
 
 
 def ollama_generate(base_url: str, model: str, prompt: str, temperature: float) -> str:
+    """Call Ollama /api/generate or fallback to /api/chat."""
     base = base_url.rstrip("/")
     resp = requests.post(
         f"{base}/api/generate",
@@ -66,6 +73,7 @@ def ollama_generate(base_url: str, model: str, prompt: str, temperature: float) 
 
 
 def gemini_generate(model: str, prompt: str, temperature: float, api_key: str) -> str:
+    """Call Gemini with a simple generation config."""
     import google.generativeai as genai
 
     genai.configure(api_key=api_key)
@@ -75,6 +83,7 @@ def gemini_generate(model: str, prompt: str, temperature: float, api_key: str) -
 
 
 def score_answer(answer: str, expected: List[str], strip_punct: bool) -> float:
+    """Token-based expected match score."""
     if not expected:
         return 0.0
     ans_norm = normalize_text(answer or "", strip_punct=strip_punct)
@@ -84,6 +93,7 @@ def score_answer(answer: str, expected: List[str], strip_punct: bool) -> float:
 
 
 def context_coverage(contexts: List[Dict], expected: List[str], strip_punct: bool) -> float:
+    """Share of expected tokens present in retrieved context."""
     if not expected:
         return 0.0
     text = normalize_text(" ".join(c["text"] for c in contexts), strip_punct=strip_punct)
@@ -102,6 +112,7 @@ def extract_entities(text: str) -> Dict[str, List[str]]:
 
 
 def groundedness(answer: str, contexts: List[Dict]) -> float:
+    """Penalize entities mentioned in the answer but absent from context."""
     ctx_text = " ".join(c["text"] for c in contexts)
     entities = extract_entities(answer)
     total = sum(len(v) for v in entities.values())
@@ -128,6 +139,7 @@ def normalize_text(text: str, strip_punct: bool = False) -> str:
 
 
 def load_similarity_model(model_name: str, device: str | None):
+    """Lazy-load sentence-transformers model for semantic similarity."""
     try:
         from sentence_transformers import SentenceTransformer
     except Exception as exc:
@@ -158,6 +170,7 @@ def main():
         device=cfg.get("embed_device"),
     )
 
+    # Use the persisted index built by scripts/build_index.py.
     store = VectorStore.load(Path("index"))
     retriever_k = int(cfg.get("retriever_k", 12))
     retriever_type = cfg.get("retriever_type", "vector")

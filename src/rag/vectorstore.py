@@ -1,4 +1,5 @@
-﻿import json
+﻿"""Simple FAISS-backed vector store with metadata persistence."""
+import json
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -7,6 +8,7 @@ import numpy as np
 
 
 class VectorStore:
+    """Minimal vector store wrapper around FAISS IndexFlatIP."""
     def __init__(
         self,
         dim: int | None = None,
@@ -33,6 +35,7 @@ class VectorStore:
         if vecs.size == 0:
             return
         self._ensure_index(vecs.shape[1])
+        # Normalize for cosine similarity using inner product.
         faiss.normalize_L2(vecs)
         self.index.add(vecs)
         self.ids.extend(ids)
@@ -45,6 +48,7 @@ class VectorStore:
         q = np.asarray([query_embedding], dtype=np.float32)
         if q.shape[1] != self.index.d:
             raise ValueError(f"Query dim {q.shape[1]} does not match index dim {self.index.d}")
+        # Normalize query the same way as indexed vectors.
         faiss.normalize_L2(q)
         scores, idxs = self.index.search(q, k)
         docs = []

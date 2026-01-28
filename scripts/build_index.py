@@ -1,4 +1,12 @@
-﻿from pathlib import Path
+﻿"""Builds the main FAISS index from the documents in data/.
+
+Workflow:
+1) Load documents by format.
+2) Clean + chunk per document type.
+3) Embed chunks (with cache).
+4) Persist FAISS index + metadata.
+"""
+from pathlib import Path
 import sys
 import time
 import hashlib
@@ -23,6 +31,7 @@ from src.config import load_config
 ROOT = Path("data")
 INDEX_DIR = Path("index")
 CACHE_PATH = INDEX_DIR / "embeddings_cache.json"
+# File loaders per extension.
 loaders = {
     "pdf": load_pdf,
     "csv": load_csv,
@@ -33,6 +42,7 @@ loaders = {
 
 
 def iter_docs():
+    """Yield normalized documents with minimal metadata."""
     for ext, loader in loaders.items():
         for path in ROOT.rglob(f"*.{ext}"):
             for d in loader(path):
@@ -40,6 +50,7 @@ def iter_docs():
                 md["filename"] = path.name
                 md["ext"] = path.suffix.lstrip(".").lower()
                 md["source_type"] = md.get("type", md["ext"])
+                # Stable ID for traceability across runs.
                 md["doc_id"] = f"{path.stem}:{hashlib.sha1(path.as_posix().encode('utf-8')).hexdigest()[:12]}"
                 doc_type = md.get("type")
                 preserve_newlines = doc_type in {"markdown", "txt", "pdf", "csv", "json"}
@@ -48,6 +59,7 @@ def iter_docs():
 
 
 def batched(iterable, batch_size):
+    """Simple batching helper to reduce memory pressure."""
     batch = []
     for item in iterable:
         batch.append(item)
@@ -59,6 +71,7 @@ def batched(iterable, batch_size):
 
 
 def chunk_doc(doc: dict) -> List[dict]:
+    """Chunk by type to avoid mixing structured rows with narrative text."""
     doc_type = doc.get("metadata", {}).get("type")
     if doc_type in {"csv", "json"}:
         return fixed_chunk(doc, size=400, overlap=0)
@@ -73,6 +86,7 @@ def main():
         st_model_name=cfg.get("st_model_name", "all-mpnet-base-v2"),
         device=cfg.get("embed_device"),
     )
+    # Cache avoids recomputing embeddings for identical chunks.
     cache = EmbeddingCache(CACHE_PATH)
     store = None
     batch_size = 64
@@ -80,6 +94,7 @@ def main():
     start_time = time.time()
 
     def chunk_iter() -> Iterable[Tuple[str, str, dict]]:
+        """Yield (chunk_id, text, metadata) for all chunks in the corpus."""
         for doc in iter_docs():
             for chunk in chunk_doc(doc):
                 chunk_id = make_chunk_id(chunk["text"], chunk["metadata"])
@@ -106,6 +121,7 @@ def main():
                 missing_positions.append(i)
 
         if missing_texts:
+            # Only embed uncached chunks.
             new_embs = embedder.encode(missing_texts)
             cache.set_many({k: v.tolist() for k, v in zip(missing_ids, new_embs)})
             for pos, emb in zip(missing_positions, new_embs):

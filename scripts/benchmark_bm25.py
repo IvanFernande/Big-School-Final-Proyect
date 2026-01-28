@@ -1,3 +1,7 @@
+"""Grid-search BM25 hyperparameters (k1, b) over the test set.
+
+Outputs: results/benchmark_bm25.json and a CSV summary.
+"""
 from __future__ import annotations
 
 from pathlib import Path
@@ -31,6 +35,7 @@ K_VALUES = [4, 8, 12, 16]
 
 
 def iter_docs():
+    """Yield normalized documents from all supported formats."""
     loaders = {
         "pdf": load_pdf,
         "csv": load_csv,
@@ -48,6 +53,7 @@ def iter_docs():
 
 
 def chunk_doc(doc: dict) -> List[dict]:
+    """Chunk by type to avoid mixing structured rows with narrative text."""
     doc_type = doc.get("metadata", {}).get("type")
     if doc_type in {"csv", "json"}:
         return fixed_chunk(doc, size=400, overlap=0)
@@ -66,6 +72,7 @@ def batched(iterable: Iterable[Tuple[str, str, dict]], batch_size: int):
 
 
 def build_index(embedder: Embedder, index_dir: Path, cache_path: Path) -> VectorStore:
+    """Build a temporary FAISS index for BM25 evaluation."""
     cache = EmbeddingCache(cache_path)
     store = None
     batch_size = 64
@@ -130,6 +137,7 @@ def normalize_text(text: str, strip_punct: bool = False) -> str:
 
 
 def score_retrieval(retriever: BM25Retriever, k: int, strip_punct: bool) -> Dict[str, float]:
+    """Compute avg_score and per-category breakdown."""
     scores = []
     by_cat: Dict[str, List[float]] = {}
     for test in TEST_SET:

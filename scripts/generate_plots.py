@@ -1,3 +1,7 @@
+"""Generate plots from benchmark JSON files in results/.
+
+Outputs PNGs into visualizations/.
+"""
 from __future__ import annotations
 
 import json
@@ -16,6 +20,7 @@ OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def _load_json(path: Path) -> Dict:
+    """Read a JSON file from disk."""
     return json.loads(path.read_text(encoding="utf-8"))
 
 
@@ -38,6 +43,7 @@ def _bar_plot(title: str, labels: List[str], values: List[float], outfile: Path)
 
 
 def embeddings_plot() -> None:
+    """Plot avg_score per embedding model (best_k)."""
     data = _load_json(RESULTS_DIR / "benchmark_embeddings.json")
     labels = []
     values = []
@@ -57,6 +63,7 @@ def embeddings_plot() -> None:
 
 
 def bm25_breakdown_plot() -> None:
+    """Plot BM25 avg_score by category."""
     data = _load_json(RESULTS_DIR / "benchmark_bm25.json")
     rows = data.get("rows", [])
     if not rows:
@@ -69,6 +76,7 @@ def bm25_breakdown_plot() -> None:
 
 
 def llm_plot() -> None:
+    """Plot avg_score per LLM."""
     data = _load_json(RESULTS_DIR / "benchmark_llm.json")
     labels = []
     values = []
@@ -79,6 +87,7 @@ def llm_plot() -> None:
 
 
 def retrieval_models_plot() -> None:
+    """Compare retrieval modes on avg_score, MRR, and nDCG."""
     data = _load_json(RESULTS_DIR / "benchmark_retrieval.json")
     modes = []
     avg_scores = []
@@ -112,6 +121,7 @@ def retrieval_models_plot() -> None:
 
 
 def retrieval_k_tradeoff_plot() -> None:
+    """Show how metrics change with k for selected modes."""
     data = _load_json(RESULTS_DIR / "benchmark_retrieval.json")
     modes = ["vector", "bm25", "hybrid"]
     metrics_by_mode: Dict[str, Dict[int, Dict[str, float]]] = {}
