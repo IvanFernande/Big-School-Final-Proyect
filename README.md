@@ -1,4 +1,4 @@
-# 📊 Ticket Priority Classification
+# Clasificación de prioridad de Tickets
 Proyecto de clasificación automática de tickets de soporte IT en prioridades **high / medium / low**, combinando NLP, metadatos operativos y métricas de negocio (SLA / coste).
 
 ---
